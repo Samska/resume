@@ -12,9 +12,9 @@ Atuação ao longo de todo o ciclo de desenvolvimento com Java, Python, TypeScri
 
 ## Habilidades Técnicas
 
-**Linguagens:** Java, Python, TypeScript, JavaScript, SQL  
+**Linguagens de Programação:** Java, Python, TypeScript, JavaScript, SQL  
 **Automação de Testes:** Playwright, Selenium, Selenide, Cypress, Appium, Pytest, Robot Framework, REST Assured, Cucumber, JUnit, TestNG, BackstopJS, Vividus  
-**Testes:** Web, Mobile, API, E2E, Integração, Exploratórios, Acessibilidade, Regressão Visual, Performance  
+**Testes:** Testes Web, Testes Mobile, Testes de API, Testes E2E, Testes de Integração, Testes Exploratórios, Testes de Acessibilidade (WCAG), Testes de Regressão Visual, Testes de Performance  
 **Entrega e Observabilidade:** GitHub Actions, Jenkins, Azure DevOps, New Relic, ELK Stack  
 **Ferramentas:** Git, Postman, Bruno, JMeter, Applitools, Sauce Labs, LambdaTest, Charles Proxy, Jira, Zephyr Scale, Xray  
 **Engenharia Assistida por IA:** GitHub Copilot, Claude Code, Cursor, workflows com MCP  
@@ -40,7 +40,7 @@ Set 2024 - Jan 2026 | Campinas, SP
 - Validação de implementações de analytics e eventos no Segment, contribuindo para a confiabilidade dos dados do produto.
 - Uso de Xcode, Android Studio, LambdaTest, Firebase Remote Config, New Relic, Jira e Zephyr Scale nas entregas multiplataforma.
 
-### Mid-Level QA Engineer → Senior QA Engineer | CI&T
+### Senior QA Engineer (promovido de Mid-Level QA Engineer) | CI&T
 Jan 2022 - Ago 2024 | Campinas, SP
 
 - Progressão de Mid-Level para Senior QA Engineer, atuando em produtos globais de grande escala em diferentes domínios de negócio.
@@ -65,8 +65,8 @@ Mar 2019 - Jul 2021 | Santo André, SP
 
 ## Formação
 
-### Tecnólogo em Análise e Desenvolvimento de Sistemas | Universidade Cruzeiro do Sul
-Fev 2018 - Ago 2020
-
 ### Pós-graduação em Cybersecurity | Universidade Cruzeiro do Sul
 Mar 2021 - Mar 2022
+
+### Tecnólogo em Análise e Desenvolvimento de Sistemas | Universidade Cruzeiro do Sul
+Fev 2018 - Ago 2020

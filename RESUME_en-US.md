@@ -12,13 +12,13 @@ Works across the software development lifecycle with Java, Python, TypeScript, C
 
 ## Technical Skills
 
-**Languages:** Java, Python, TypeScript, JavaScript, SQL  
+**Programming Languages:** Java, Python, TypeScript, JavaScript, SQL  
 **Test Automation:** Playwright, Selenium, Selenide, Cypress, Appium, Pytest, Robot Framework, REST Assured, Cucumber, JUnit, TestNG, BackstopJS, Vividus  
-**Testing:** Web, Mobile, API, E2E, Integration, Exploratory, Accessibility, Visual Regression, Performance  
+**Testing:** Web Testing, Mobile Testing, API Testing, E2E Testing, Integration Testing, Exploratory Testing, Accessibility Testing (WCAG), Visual Regression Testing, Performance Testing  
 **Delivery and Observability:** GitHub Actions, Jenkins, Azure DevOps, New Relic, ELK Stack  
 **Tools:** Git, Postman, Bruno, JMeter, Applitools, Sauce Labs, LambdaTest, Charles Proxy, Jira, Zephyr Scale, Xray  
 **AI-Assisted Engineering:** GitHub Copilot, Claude Code, Cursor, MCP workflows  
-**Languages:** Portuguese (native), English (professional working proficiency)
+**Spoken Languages:** Portuguese (native), English (professional working proficiency)
 
 ## Professional Experience
 
@@ -40,7 +40,7 @@ Sep 2024 - Jan 2026 | Campinas, Brazil
 - Verified analytics implementations and event data with Segment, supporting reliable product insights.
 - Used Xcode, Android Studio, LambdaTest, Firebase Remote Config, New Relic, Jira, and Zephyr Scale during cross-platform delivery.
 
-### Mid-Level QA Engineer → Senior QA Engineer | CI&T
+### Senior QA Engineer (promoted from Mid-Level QA Engineer) | CI&T
 Jan 2022 - Aug 2024 | Campinas, Brazil
 
 - Progressed from Mid-Level to Senior QA Engineer while supporting large-scale global products across multiple business domains.
@@ -65,8 +65,8 @@ Mar 2019 - Jul 2021 | Santo Andre, Brazil
 
 ## Education
 
-### Technologist Degree in Systems Analysis and Development | Universidade Cruzeiro do Sul
-Feb 2018 - Aug 2020
-
 ### Postgraduate Program in Cybersecurity | Universidade Cruzeiro do Sul
 Mar 2021 - Mar 2022
+
+### Technologist Degree in Systems Analysis and Development | Universidade Cruzeiro do Sul
+Feb 2018 - Aug 2020
