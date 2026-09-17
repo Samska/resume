@@ -1,10 +1,13 @@
 # Samuel Andrade
 
+Software Engineering | Quality Engineering | Test Automation  
+Jundiaí, SP, Brazil | Open to remote opportunities  
 [samuel.andradetp@live.com](mailto:samuel.andradetp@live.com) | [linkedin.com/in/Samska](https://linkedin.com/in/Samska) | [github.com/Samska](https://github.com/Samska)
 
 ## Professional Summary
 
-Senior Quality Engineer and Software Engineer with 7+ years of experience supporting global digital products in fintech, healthcare, and commerce. Hands-on experience defining test strategies and building automation for web, mobile, APIs, accessibility, visual regression, and distributed integrations.
+Senior Quality Engineer with 7+ years of experience in software engineering and quality for global digital products across fintech, healthcare, and commerce. Hands-on experience defining test strategies and building automation for web, mobile, APIs, accessibility, visual regression, and distributed integrations.
+
 Works across the software development lifecycle with Java, Python, TypeScript, CI/CD, observability, and AI-assisted engineering practices to identify risks early and improve delivery confidence.
 
 ## Technical Skills
@@ -14,7 +17,8 @@ Works across the software development lifecycle with Java, Python, TypeScript, C
 **Testing:** Web, Mobile, API, E2E, Integration, Exploratory, Accessibility, Visual Regression, Performance  
 **Delivery and Observability:** GitHub Actions, Jenkins, Azure DevOps, New Relic, ELK Stack  
 **Tools:** Git, Postman, Bruno, JMeter, Applitools, Sauce Labs, LambdaTest, Charles Proxy, Jira, Zephyr Scale, Xray  
-**AI-Assisted Engineering:** GitHub Copilot, Claude Code, Cursor, MCP workflows, Prompt Engineering
+**AI-Assisted Engineering:** GitHub Copilot, Claude Code, Cursor, MCP workflows  
+**Languages:** Portuguese (native), English (professional working proficiency)
 
 ## Professional Experience
 
@@ -58,6 +62,15 @@ Mar 2019 - Jul 2021 | Santo Andre, Brazil
 - Developed web and mobile applications with GeneXus and customized interfaces with WorkWithPlus and Smart Devices Plus.
 - Designed and implemented solutions using SQL Server, PostgreSQL, and MySQL.
 - Maintained Jenkins delivery pipelines and implemented functional test automation with GXTest.
+
+## Selected Project
+
+### Samska Sandbox | Personal engineering project
+2026 - Present | [github.com/Samska/samska-sandbox](https://github.com/Samska/samska-sandbox)
+
+- Public educational platform built around a fictional commerce and logistics domain to practice end-to-end software engineering.
+- Building Java/Spring Boot and React/TypeScript foundations, a local PostgreSQL and Docker Compose runtime, testing, and CI.
+- Using AI coding agents while retaining human ownership of requirements, architecture, engineering decisions, review, and validation.
 
 ## Education
 
