@@ -51,7 +51,7 @@ jobs:
         run: python scripts/validate.py
 
       - name: Upload generated resumes
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: Samuel-Andrade-Resumes
           path: dist/
