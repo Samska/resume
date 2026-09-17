@@ -63,15 +63,6 @@ Mar 2019 - Jul 2021 | Santo André, SP
 - Modelagem e implementação de soluções com SQL Server, PostgreSQL e MySQL.
 - Manutenção de pipelines Jenkins e desenvolvimento de automações de testes funcionais com GXTest.
 
-## Projeto Selecionado
-
-### Samska Sandbox | Projeto pessoal de engenharia
-2026 - Atual | [github.com/Samska/samska-sandbox](https://github.com/Samska/samska-sandbox)
-
-- Plataforma educacional pública baseada em um domínio fictício de comércio e logística para praticar engenharia de ponta a ponta.
-- Construção de fundações Java/Spring Boot e React/TypeScript, runtime local com PostgreSQL e Docker Compose, testes e CI.
-- Uso de agentes de IA para desenvolvimento, com responsabilidade humana por requisitos, arquitetura, decisões de engenharia, revisão e validação.
-
 ## Formação
 
 ### Tecnologia em Análise e Desenvolvimento de Sistemas | Universidade Cruzeiro do Sul
