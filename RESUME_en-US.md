@@ -40,7 +40,7 @@ Sep 2024 - Jan 2026 | Campinas, Brazil
 - Verified analytics implementations and event data with Segment, supporting reliable product insights.
 - Used Xcode, Android Studio, LambdaTest, Firebase Remote Config, New Relic, Jira, and Zephyr Scale during cross-platform delivery.
 
-### Senior QA Engineer / Mid-Level QA Engineer | CI&T
+### Mid-Level QA Engineer → Senior QA Engineer | CI&T
 Jan 2022 - Aug 2024 | Campinas, Brazil
 
 - Progressed from Mid-Level to Senior QA Engineer while supporting large-scale global products across multiple business domains.
@@ -77,5 +77,5 @@ Mar 2019 - Jul 2021 | Santo Andre, Brazil
 ### Technology Degree in Systems Analysis and Development | Universidade Cruzeiro do Sul
 Feb 2018 - Aug 2020
 
-### Cybersecurity Coursework | Universidade Cruzeiro do Sul
+### Postgraduate Program in Cybersecurity | Universidade Cruzeiro do Sul
 Mar 2021 - Mar 2022
