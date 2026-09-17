@@ -1,7 +1,7 @@
 # Samuel Andrade
 
 Software Engineering | Quality Engineering | Test Automation  
-Jundiaí, SP, Brazil | Open to remote opportunities  
+Jundiaí, SP, Brasil | Disponível para oportunidades remotas  
 [samuel.andradetp@live.com](mailto:samuel.andradetp@live.com) | [linkedin.com/in/Samska](https://linkedin.com/in/Samska) | [github.com/Samska](https://github.com/Samska)
 
 ## Resumo Profissional
@@ -65,7 +65,7 @@ Mar 2019 - Jul 2021 | Santo André, SP
 
 ## Formação
 
-### Tecnologia em Análise e Desenvolvimento de Sistemas | Universidade Cruzeiro do Sul
+### Tecnólogo em Análise e Desenvolvimento de Sistemas | Universidade Cruzeiro do Sul
 Fev 2018 - Ago 2020
 
 ### Pós-graduação em Cybersecurity | Universidade Cruzeiro do Sul
