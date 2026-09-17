@@ -63,15 +63,6 @@ Mar 2019 - Jul 2021 | Santo Andre, Brazil
 - Designed and implemented solutions using SQL Server, PostgreSQL, and MySQL.
 - Maintained Jenkins delivery pipelines and implemented functional test automation with GXTest.
 
-## Selected Project
-
-### Samska Sandbox | Personal engineering project
-2026 - Present | [github.com/Samska/samska-sandbox](https://github.com/Samska/samska-sandbox)
-
-- Public educational platform built around a fictional commerce and logistics domain to practice end-to-end software engineering.
-- Building Java/Spring Boot and React/TypeScript foundations, a local PostgreSQL and Docker Compose runtime, testing, and CI.
-- Using AI coding agents while retaining human ownership of requirements, architecture, engineering decisions, review, and validation.
-
 ## Education
 
 ### Technology Degree in Systems Analysis and Development | Universidade Cruzeiro do Sul
