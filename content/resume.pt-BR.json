@@ -1,0 +1,94 @@
+{
+  "locale": "pt-BR",
+  "name": "Samuel Andrade",
+  "contact": [
+    {"label": "E-mail", "text": "samuel.andradetp@live.com", "url": "mailto:samuel.andradetp@live.com"},
+    {"label": "LinkedIn", "text": "linkedin.com/in/Samska", "url": "https://linkedin.com/in/Samska"},
+    {"label": "GitHub", "text": "github.com/Samska", "url": "https://github.com/Samska"}
+  ],
+  "section_labels": {
+    "summary": "Resumo Profissional",
+    "skills": "Habilidades Técnicas",
+    "experience": "Experiência Profissional",
+    "education": "Formação"
+  },
+  "summary": [
+    "Engenheiro de Qualidade de Software Sênior e Software Engineer com mais de 7 anos de experiência em produtos digitais globais nos setores de fintech, saúde e comércio. Experiência prática na definição de estratégias e automação de testes web, mobile, APIs, acessibilidade, regressão visual e integrações distribuídas.",
+    "Atuação ao longo de todo o ciclo de desenvolvimento com Java, Python, TypeScript, CI/CD, observabilidade e práticas de engenharia assistidas por IA para antecipar riscos e aumentar a confiabilidade das entregas."
+  ],
+  "skills": [
+    {"category": "Linguagens", "items": ["Java", "Python", "TypeScript", "JavaScript", "SQL"]},
+    {"category": "Automação de Testes", "items": ["Playwright", "Selenium", "Selenide", "Cypress", "Appium", "Pytest", "Robot Framework", "REST Assured", "Cucumber", "JUnit", "TestNG", "BackstopJS", "Vividus"]},
+    {"category": "Testes", "items": ["Web", "Mobile", "API", "E2E", "Integração", "Exploratório", "Acessibilidade", "Regressão Visual", "Performance"]},
+    {"category": "Entrega e Observabilidade", "items": ["GitHub Actions", "Jenkins", "Azure DevOps", "New Relic", "ELK Stack"]},
+    {"category": "Ferramentas", "items": ["Git", "Postman", "Bruno", "JMeter", "Applitools", "Sauce Labs", "LambdaTest", "Charles Proxy", "Jira", "Zephyr Scale", "Xray"]},
+    {"category": "Engenharia Assistida por IA", "items": ["GitHub Copilot", "Claude Code", "Cursor", "workflows com MCP", "Prompt Engineering"]}
+  ],
+  "experience": [
+    {
+      "role": "Senior QA Engineer",
+      "company": "Trustly",
+      "location": "Brasil",
+      "dates": "Jan 2026 - Set 2026",
+      "bullets": [
+        "Definição e execução de estratégias de testes baseadas em risco para jornadas críticas de pagamentos em ambientes de integração e aceitação.",
+        "Desenvolvimento e manutenção de automações E2E com Java, Selenide e Cucumber para fluxos críticos de frontend.",
+        "Criação de cobertura de regressão visual com TypeScript, Playwright, BackstopJS e Cucumber.",
+        "Validação de acessibilidade desktop e mobile com VoiceOver, TalkBack, NVDA e JAWS, seguindo diretrizes WCAG.",
+        "Aplicação de GitHub Copilot, Claude Code e workflows baseados em MCP para acelerar atividades recorrentes de engenharia e testes."
+      ]
+    },
+    {
+      "role": "Senior QA Engineer",
+      "company": "AB InBev",
+      "location": "Campinas, SP",
+      "dates": "Set 2024 - Jan 2026",
+      "bullets": [
+        "Planejamento e execução de estratégias de qualidade para jornadas de comércio web e mobile do BEES Customer em iOS e Android.",
+        "Desenvolvimento de automações E2E com Python, Pytest, Selenium e Appium.",
+        "Investigação de integrações e validação de APIs utilizando Charles Proxy e Postman.",
+        "Validação de implementações de analytics e eventos no Segment, contribuindo para a confiabilidade dos dados do produto.",
+        "Uso de Xcode, Android Studio, LambdaTest, Firebase Remote Config, New Relic, Jira e Zephyr Scale nas entregas multiplataforma."
+      ]
+    },
+    {
+      "role": "Senior QA Engineer / Mid-Level QA Engineer",
+      "company": "CI&T",
+      "location": "Campinas, SP",
+      "dates": "Jan 2022 - Ago 2024",
+      "bullets": [
+        "Progressão de Mid-Level para Senior QA Engineer, atuando em produtos globais de grande escala em diferentes domínios de negócio.",
+        "Definição de estratégias e automação de cenários E2E, API e integração com Vividus, Robot Framework, Pytest, Selenium, Postman e REST Assured.",
+        "Implementação de regressão visual com Applitools Eyes e cobertura cross-browser com Sauce Labs.",
+        "Validação de dados com SQL Server e investigação de incidentes por meio de logs, métricas e evidências operacionais no ELK Stack.",
+        "Integração contínua dos testes com Jenkins e Azure DevOps e monitoramento do comportamento das aplicações com New Relic."
+      ]
+    },
+    {
+      "role": "Software QA Engineer",
+      "company": "e.Mix",
+      "location": "Campinas, SP",
+      "dates": "Jul 2021 - Jan 2022",
+      "bullets": [
+        "Planejamento e execução de testes funcionais e não funcionais para aplicações web e APIs REST.",
+        "Automação de cenários de API e E2E com Postman, Newman e Robot Framework.",
+        "Execução de testes de performance, carga e estresse com JMeter e integração dos testes em pipelines Azure DevOps."
+      ]
+    },
+    {
+      "role": "Software Engineer",
+      "company": "DNGX",
+      "location": "Santo André, SP",
+      "dates": "Mar 2019 - Jul 2021",
+      "bullets": [
+        "Desenvolvimento de aplicações web e mobile com GeneXus e customização de interfaces com WorkWithPlus e Smart Devices Plus.",
+        "Modelagem e implementação de soluções com SQL Server, PostgreSQL e MySQL.",
+        "Manutenção de pipelines Jenkins e desenvolvimento de automações de testes funcionais com GXTest."
+      ]
+    }
+  ],
+  "education": [
+    {"program": "Tecnologia em Análise e Desenvolvimento de Sistemas", "institution": "Universidade Cruzeiro do Sul", "dates": "Fev 2018 - Ago 2020"},
+    {"program": "Formação em Cybersecurity", "institution": "Universidade Cruzeiro do Sul", "dates": "Mar 2021 - Mar 2022"}
+  ]
+}
