@@ -65,7 +65,7 @@ Mar 2019 - Jul 2021 | Santo Andre, Brazil
 
 ## Education
 
-### Technology Degree in Systems Analysis and Development | Universidade Cruzeiro do Sul
+### Technologist Degree in Systems Analysis and Development | Universidade Cruzeiro do Sul
 Feb 2018 - Aug 2020
 
 ### Postgraduate Program in Cybersecurity | Universidade Cruzeiro do Sul
