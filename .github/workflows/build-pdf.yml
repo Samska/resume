@@ -1,0 +1,37 @@
+name: Build resume PDFs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "RESUME_*.md"
+      - ".github/workflows/build-pdf.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install PDF tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pandoc texlive-xetex
+
+      - name: Generate PDFs
+        run: |
+          mkdir -p pdf
+          pandoc RESUME_en-US.md --pdf-engine=xelatex -V geometry:margin=0.65in -V fontsize=10pt -o pdf/Samuel-Andrade-Resume-en-US.pdf
+          pandoc RESUME_pt-BR.md --pdf-engine=xelatex -V geometry:margin=0.65in -V fontsize=10pt -o pdf/Samuel-Andrade-Resume-pt-BR.pdf
+
+      - name: Commit updated PDFs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add pdf
+          git diff --cached --quiet || git commit -m "docs: update resume PDFs [skip ci]"
+          git push

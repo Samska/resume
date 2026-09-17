@@ -9,17 +9,18 @@ Works across the software development lifecycle with Java, Python, TypeScript, C
 
 ## Technical Skills
 
-**Languages:** Java, Python, TypeScript, JavaScript, SQL
-**Test Automation:** Playwright, Selenium, Selenide, Cypress, Appium, Pytest, Robot Framework, REST Assured, Cucumber, JUnit, TestNG, BackstopJS, Vividus
-**Testing:** Web, Mobile, API, E2E, Integration, Exploratory, Accessibility, Visual Regression, Performance
-**Delivery and Observability:** GitHub Actions, Jenkins, Azure DevOps, New Relic, ELK Stack
-**Tools:** Git, Postman, Bruno, JMeter, Applitools, Sauce Labs, LambdaTest, Charles Proxy, Jira, Zephyr Scale, Xray
+**Languages:** Java, Python, TypeScript, JavaScript, SQL  
+**Test Automation:** Playwright, Selenium, Selenide, Cypress, Appium, Pytest, Robot Framework, REST Assured, Cucumber, JUnit, TestNG, BackstopJS, Vividus  
+**Testing:** Web, Mobile, API, E2E, Integration, Exploratory, Accessibility, Visual Regression, Performance  
+**Delivery and Observability:** GitHub Actions, Jenkins, Azure DevOps, New Relic, ELK Stack  
+**Tools:** Git, Postman, Bruno, JMeter, Applitools, Sauce Labs, LambdaTest, Charles Proxy, Jira, Zephyr Scale, Xray  
 **AI-Assisted Engineering:** GitHub Copilot, Claude Code, Cursor, MCP workflows, Prompt Engineering
 
 ## Professional Experience
 
 ### Senior QA Engineer | Trustly
 Jan 2026 - Sep 2026 | Brazil
+
 - Defined and executed risk-based test strategies for critical payment journeys across integration and acceptance environments.
 - Developed and maintained E2E automation with Java, Selenide, and Cucumber for critical frontend flows.
 - Built visual regression coverage with TypeScript, Playwright, BackstopJS, and Cucumber.
@@ -28,6 +29,7 @@ Jan 2026 - Sep 2026 | Brazil
 
 ### Senior QA Engineer | AB InBev
 Sep 2024 - Jan 2026 | Campinas, Brazil
+
 - Planned and executed quality strategies for BEES Customer web and mobile commerce journeys on iOS and Android.
 - Developed E2E automation with Python, Pytest, Selenium, and Appium.
 - Investigated integrations and validated APIs using Charles Proxy and Postman.
@@ -36,6 +38,7 @@ Sep 2024 - Jan 2026 | Campinas, Brazil
 
 ### Senior QA Engineer / Mid-Level QA Engineer | CI&T
 Jan 2022 - Aug 2024 | Campinas, Brazil
+
 - Progressed from Mid-Level to Senior QA Engineer while supporting large-scale global products across multiple business domains.
 - Designed test strategies and automated E2E, API, and integration scenarios with Vividus, Robot Framework, Pytest, Selenium, Postman, and REST Assured.
 - Implemented visual regression with Applitools Eyes and cross-browser coverage with Sauce Labs.
@@ -44,12 +47,14 @@ Jan 2022 - Aug 2024 | Campinas, Brazil
 
 ### Software QA Engineer | e.Mix
 Jul 2021 - Jan 2022 | Campinas, Brazil
+
 - Planned and executed functional and non-functional testing for web applications and REST APIs.
 - Automated API and E2E scenarios with Postman, Newman, and Robot Framework.
 - Executed performance, load, and stress tests with JMeter and integrated test execution into Azure DevOps pipelines.
 
 ### Software Engineer | DNGX
 Mar 2019 - Jul 2021 | Santo Andre, Brazil
+
 - Developed web and mobile applications with GeneXus and customized interfaces with WorkWithPlus and Smart Devices Plus.
 - Designed and implemented solutions using SQL Server, PostgreSQL, and MySQL.
 - Maintained Jenkins delivery pipelines and implemented functional test automation with GXTest.
