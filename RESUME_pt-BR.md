@@ -40,7 +40,7 @@ Set 2024 - Jan 2026 | Campinas, SP
 - Validação de implementações de analytics e eventos no Segment, contribuindo para a confiabilidade dos dados do produto.
 - Uso de Xcode, Android Studio, LambdaTest, Firebase Remote Config, New Relic, Jira e Zephyr Scale nas entregas multiplataforma.
 
-### Senior QA Engineer / Mid-Level QA Engineer | CI&T
+### Mid-Level QA Engineer → Senior QA Engineer | CI&T
 Jan 2022 - Ago 2024 | Campinas, SP
 
 - Progressão de Mid-Level para Senior QA Engineer, atuando em produtos globais de grande escala em diferentes domínios de negócio.
@@ -77,5 +77,5 @@ Mar 2019 - Jul 2021 | Santo André, SP
 ### Tecnologia em Análise e Desenvolvimento de Sistemas | Universidade Cruzeiro do Sul
 Fev 2018 - Ago 2020
 
-### Formação em Cybersecurity | Universidade Cruzeiro do Sul
+### Pós-graduação em Cybersecurity | Universidade Cruzeiro do Sul
 Mar 2021 - Mar 2022
