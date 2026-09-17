@@ -1,20 +1,24 @@
 # Samuel Andrade
 
+Software Engineering | Quality Engineering | Test Automation  
+Jundiaí, SP, Brazil | Open to remote opportunities  
 [samuel.andradetp@live.com](mailto:samuel.andradetp@live.com) | [linkedin.com/in/Samska](https://linkedin.com/in/Samska) | [github.com/Samska](https://github.com/Samska)
 
 ## Resumo Profissional
 
-Engenheiro de Qualidade de Software Sênior e Software Engineer com mais de 7 anos de experiência em produtos digitais globais nos setores de fintech, saúde e comércio. Experiência prática na definição de estratégias e automação de testes web, mobile, APIs, acessibilidade, regressão visual e integrações distribuídas.
+Senior Quality Engineer com mais de 7 anos de experiência em engenharia de software e qualidade de produtos digitais globais nos setores de fintech, saúde e comércio. Experiência prática na definição de estratégias e automação de testes web, mobile, APIs, acessibilidade, regressão visual e integrações distribuídas.
+
 Atuação ao longo de todo o ciclo de desenvolvimento com Java, Python, TypeScript, CI/CD, observabilidade e práticas de engenharia assistidas por IA para antecipar riscos e aumentar a confiabilidade das entregas.
 
 ## Habilidades Técnicas
 
 **Linguagens:** Java, Python, TypeScript, JavaScript, SQL  
 **Automação de Testes:** Playwright, Selenium, Selenide, Cypress, Appium, Pytest, Robot Framework, REST Assured, Cucumber, JUnit, TestNG, BackstopJS, Vividus  
-**Testes:** Web, Mobile, API, E2E, Integração, Exploratório, Acessibilidade, Regressão Visual, Performance  
+**Testes:** Web, Mobile, API, E2E, Integração, Exploratórios, Acessibilidade, Regressão Visual, Performance  
 **Entrega e Observabilidade:** GitHub Actions, Jenkins, Azure DevOps, New Relic, ELK Stack  
 **Ferramentas:** Git, Postman, Bruno, JMeter, Applitools, Sauce Labs, LambdaTest, Charles Proxy, Jira, Zephyr Scale, Xray  
-**Engenharia Assistida por IA:** GitHub Copilot, Claude Code, Cursor, workflows com MCP, Prompt Engineering
+**Engenharia Assistida por IA:** GitHub Copilot, Claude Code, Cursor, workflows com MCP  
+**Idiomas:** Português (nativo), Inglês (proficiência profissional)
 
 ## Experiência Profissional
 
@@ -58,6 +62,15 @@ Mar 2019 - Jul 2021 | Santo André, SP
 - Desenvolvimento de aplicações web e mobile com GeneXus e customização de interfaces com WorkWithPlus e Smart Devices Plus.
 - Modelagem e implementação de soluções com SQL Server, PostgreSQL e MySQL.
 - Manutenção de pipelines Jenkins e desenvolvimento de automações de testes funcionais com GXTest.
+
+## Projeto Selecionado
+
+### Samska Sandbox | Projeto pessoal de engenharia
+2026 - Atual | [github.com/Samska/samska-sandbox](https://github.com/Samska/samska-sandbox)
+
+- Plataforma educacional pública baseada em um domínio fictício de comércio e logística para praticar engenharia de ponta a ponta.
+- Construção de fundações Java/Spring Boot e React/TypeScript, runtime local com PostgreSQL e Docker Compose, testes e CI.
+- Uso de agentes de IA para desenvolvimento, com responsabilidade humana por requisitos, arquitetura, decisões de engenharia, revisão e validação.
 
 ## Formação
 
