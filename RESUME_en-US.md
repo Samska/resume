@@ -6,7 +6,7 @@ Jundiaí, SP, Brazil | Open to remote opportunities
 
 ## Professional Summary
 
-Senior Quality Engineer with 7+ years of experience in software engineering and quality for global digital products across fintech, healthcare, and commerce. Hands-on experience defining test strategies and building automation for web, mobile, APIs, accessibility, visual regression, and distributed integrations.
+Software engineering professional with 7+ years of combined experience in software development and quality, including Senior QA Engineer roles supporting global digital products across fintech, healthcare, and commerce. Hands-on experience defining test strategies and building automation for web, mobile, APIs, accessibility, visual regression, and distributed integrations.
 
 Works across the software development lifecycle with Java, Python, TypeScript, CI/CD, observability, and AI-assisted engineering practices to identify risks early and improve delivery confidence.
 
@@ -40,10 +40,10 @@ Sep 2024 - Jan 2026 | Campinas, Brazil
 - Verified analytics implementations and event data with Segment, supporting reliable product insights.
 - Used Xcode, Android Studio, LambdaTest, Firebase Remote Config, New Relic, Jira, and Zephyr Scale during cross-platform delivery.
 
-### Senior QA Engineer (promoted from Mid-Level QA Engineer) | CI&T
+### QA Engineer | CI&T
 Jan 2022 - Aug 2024 | Campinas, Brazil
 
-- Progressed from Mid-Level to Senior QA Engineer while supporting large-scale global products across multiple business domains.
+- Promoted from Mid-Level QA Engineer to Senior QA Engineer while supporting large-scale global products across multiple business domains.
 - Designed test strategies and automated E2E, API, and integration scenarios with Vividus, Robot Framework, Pytest, Selenium, Postman, and REST Assured.
 - Implemented visual regression with Applitools Eyes and cross-browser coverage with Sauce Labs.
 - Validated data with SQL Server and investigated incidents through ELK Stack logs, metrics, and operational evidence.

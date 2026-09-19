@@ -6,7 +6,7 @@ Jundiaí, SP, Brasil | Disponível para oportunidades remotas
 
 ## Resumo Profissional
 
-Senior Quality Engineer com mais de 7 anos de experiência em engenharia de software e qualidade de produtos digitais globais nos setores de fintech, saúde e comércio. Experiência prática na definição de estratégias e automação de testes web, mobile, APIs, acessibilidade, regressão visual e integrações distribuídas.
+Profissional de engenharia de software com mais de 7 anos de experiência combinada em desenvolvimento e qualidade, incluindo atuação como Senior QA Engineer em produtos digitais globais nos setores de fintech, saúde e comércio. Experiência prática na definição de estratégias e automação de testes web, mobile, APIs, acessibilidade, regressão visual e integrações distribuídas.
 
 Atuação ao longo de todo o ciclo de desenvolvimento com Java, Python, TypeScript, CI/CD, observabilidade e práticas de engenharia assistidas por IA para antecipar riscos e aumentar a confiabilidade das entregas.
 
@@ -40,10 +40,10 @@ Set 2024 - Jan 2026 | Campinas, SP
 - Validação de implementações de analytics e eventos no Segment, contribuindo para a confiabilidade dos dados do produto.
 - Uso de Xcode, Android Studio, LambdaTest, Firebase Remote Config, New Relic, Jira e Zephyr Scale nas entregas multiplataforma.
 
-### Senior QA Engineer (promovido de Mid-Level QA Engineer) | CI&T
+### QA Engineer | CI&T
 Jan 2022 - Ago 2024 | Campinas, SP
 
-- Progressão de Mid-Level para Senior QA Engineer, atuando em produtos globais de grande escala em diferentes domínios de negócio.
+- Promoção de Mid-Level QA Engineer para Senior QA Engineer, atuando em produtos globais de grande escala em diferentes domínios de negócio.
 - Definição de estratégias e automação de cenários E2E, API e integração com Vividus, Robot Framework, Pytest, Selenium, Postman e REST Assured.
 - Implementação de regressão visual com Applitools Eyes e cobertura cross-browser com Sauce Labs.
 - Validação de dados com SQL Server e investigação de incidentes por meio de logs, métricas e evidências operacionais no ELK Stack.
