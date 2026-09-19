@@ -32,9 +32,11 @@ Never put the key in a Markdown file, workflow input, commit, issue, or Actions 
 ### For each vacancy
 
 1. Open **Actions → Generate tailored resume → Run workflow**.
-2. Enter the company and role, select `en-US` or `pt-BR`, and paste the complete job description.
+2. Enter the company and role, select `en-US` or `pt-BR`, and paste the vacancy URL into **Job URL**. This is the recommended mobile flow.
 3. Choose one of the human-readable model options. **Automatic (recommended)** lets OpenRouter select an appropriate model; the other options prioritize a specific model family.
 4. After the run succeeds, download the `tailored-resume-*` artifact from the workflow run.
+
+If the URL is inaccessible, you can leave **Job URL** empty and paste the complete text into **Complete job description** instead. At least one of these two fields must be provided. URL retrieval uses OpenRouter web tools and may add a small search/fetch charge to the model cost. The workflow fails rather than generating a resume when it cannot retrieve enough vacancy information.
 
 The artifact contains the tailored Markdown, its PDF, and an advisory match report. It is retained for 30 days and is not committed to the repository. The job description and source resume are sent to OpenRouter and the selected model provider during generation.
 

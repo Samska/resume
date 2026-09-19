@@ -30,9 +30,13 @@ on:
           - Anthropic Claude Sonnet (high quality)
           - Google Gemini Flash (economical)
           - DeepSeek Chat (economical)
+      job_url:
+        description: Job URL (recommended on mobile)
+        required: false
+        type: string
       job_description:
-        description: Paste the complete job description
-        required: true
+        description: Complete job description (optional alternative)
+        required: false
         type: string
 
 permissions:
@@ -43,6 +47,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+      JOB_URL: ${{ inputs.job_url }}
       JOB_DESCRIPTION: ${{ inputs.job_description }}
       TARGET_COMPANY: ${{ inputs.company }}
       TARGET_ROLE: ${{ inputs.role }}
