@@ -1,5 +1,7 @@
 # Samuel Andrade — Resume
 
+[![Build resume PDFs](https://github.com/Samska/resume/actions/workflows/build-pdf.yml/badge.svg)](https://github.com/Samska/resume/actions/workflows/build-pdf.yml)
+
 Version-controlled, ATS-friendly resumes written in Markdown and automatically generated as PDF with GitHub Actions.
 
 [Download — English (PDF)](pdf/Samuel-Andrade-Resume-en-US.pdf) · [Baixar — Português (PDF)](pdf/Samuel-Andrade-Resume-pt-BR.pdf)
