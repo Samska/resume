@@ -33,7 +33,7 @@ Never put the key in a Markdown file, workflow input, commit, issue, or Actions 
 
 1. Open **Actions → Generate tailored resume → Run workflow**.
 2. Enter the company and role, select `en-US` or `pt-BR`, and paste the complete job description.
-3. Keep the default OpenRouter model or enter another model slug available in your account.
+3. Choose one of the human-readable model options. **Automatic (recommended)** lets OpenRouter select an appropriate model; the other options prioritize a specific model family.
 4. After the run succeeds, download the `tailored-resume-*` artifact from the workflow run.
 
 The artifact contains the tailored Markdown, its PDF, and an advisory match report. It is retained for 30 days and is not committed to the repository. The job description and source resume are sent to OpenRouter and the selected model provider during generation.

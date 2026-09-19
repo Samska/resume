@@ -20,10 +20,16 @@ on:
           - en-US
           - pt-BR
       model:
-        description: OpenRouter model slug
+        description: AI model
         required: true
-        default: "~openai/gpt-mini-latest"
-        type: string
+        default: Automatic (recommended)
+        type: choice
+        options:
+          - Automatic (recommended)
+          - OpenAI GPT Mini (balanced)
+          - Anthropic Claude Sonnet (high quality)
+          - Google Gemini Flash (economical)
+          - DeepSeek Chat (economical)
       job_description:
         description: Paste the complete job description
         required: true
@@ -41,7 +47,7 @@ jobs:
       TARGET_COMPANY: ${{ inputs.company }}
       TARGET_ROLE: ${{ inputs.role }}
       TARGET_LANGUAGE: ${{ inputs.language }}
-      OPENROUTER_MODEL: ${{ inputs.model }}
+      MODEL_CHOICE: ${{ inputs.model }}
     steps:
       - uses: actions/checkout@v7
 
@@ -56,6 +62,19 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y pandoc texlive-xetex poppler-utils
+
+      - name: Select OpenRouter model
+        run: |
+          case "$MODEL_CHOICE" in
+            "Automatic (recommended)") model="openrouter/auto" ;;
+            "OpenAI GPT Mini (balanced)") model="~openai/gpt-mini-latest" ;;
+            "Anthropic Claude Sonnet (high quality)") model="~anthropic/claude-sonnet-latest" ;;
+            "Google Gemini Flash (economical)") model="~google/gemini-flash-latest" ;;
+            "DeepSeek Chat (economical)") model="deepseek/deepseek-chat" ;;
+            *) echo "Unknown model selection: $MODEL_CHOICE"; exit 1 ;;
+          esac
+          echo "OPENROUTER_MODEL=$model" >> "$GITHUB_ENV"
+          echo "Selected model: $MODEL_CHOICE"
 
       - name: Generate tailored Markdown and match report
         run: |
