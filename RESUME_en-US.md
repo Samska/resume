@@ -46,9 +46,7 @@ São Paulo, Brazil | Remote
 **Senior QA Engineer** | Dec 2022 - Aug 2024  
 **Mid-Level QA Engineer** | Jan 2022 - Dec 2022
 
-Responsibilities across both roles:
-
-- Supported large-scale global products across multiple business domains.
+- Supported global digital products in the beverage, medical device, and food industries.
 - Designed test strategies and automated E2E, API, and integration scenarios with Vividus, Robot Framework, Pytest, Selenium, Postman, and REST Assured.
 - Implemented visual regression with Applitools Eyes and cross-browser coverage with Sauce Labs.
 - Validated data with SQL Server and investigated incidents through ELK Stack logs, metrics, and operational evidence.

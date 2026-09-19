@@ -46,9 +46,7 @@ São Paulo, SP | Remoto
 **Senior QA Engineer** | Dez 2022 - Ago 2024  
 **Mid-Level QA Engineer** | Jan 2022 - Dez 2022
 
-Atuação ao longo dos dois cargos:
-
-- Atuação em produtos globais de grande escala em diferentes domínios de negócio.
+- Atuação em produtos digitais globais nos setores de bebidas, dispositivos médicos e alimentos.
 - Definição de estratégias e automação de cenários E2E, API e integração com Vividus, Robot Framework, Pytest, Selenium, Postman e REST Assured.
 - Implementação de regressão visual com Applitools Eyes e cobertura cross-browser com Sauce Labs.
 - Validação de dados com SQL Server e investigação de incidentes por meio de logs, métricas e evidências operacionais no ELK Stack.
