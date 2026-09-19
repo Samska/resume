@@ -1,0 +1,93 @@
+name: Generate tailored resume
+
+on:
+  workflow_dispatch:
+    inputs:
+      company:
+        description: Target company
+        required: true
+        type: string
+      role:
+        description: Target role
+        required: true
+        type: string
+      language:
+        description: Resume language
+        required: true
+        default: en-US
+        type: choice
+        options:
+          - en-US
+          - pt-BR
+      model:
+        description: OpenRouter model slug
+        required: true
+        default: "~openai/gpt-mini-latest"
+        type: string
+      job_description:
+        description: Paste the complete job description
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    env:
+      OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+      JOB_DESCRIPTION: ${{ inputs.job_description }}
+      TARGET_COMPANY: ${{ inputs.company }}
+      TARGET_ROLE: ${{ inputs.role }}
+      TARGET_LANGUAGE: ${{ inputs.language }}
+      OPENROUTER_MODEL: ${{ inputs.model }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Check OpenRouter secret
+        run: |
+          if [ -z "$OPENROUTER_API_KEY" ]; then
+            echo "Repository secret OPENROUTER_API_KEY is not configured."
+            exit 1
+          fi
+
+      - name: Install PDF tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pandoc texlive-xetex poppler-utils
+
+      - name: Generate tailored Markdown and match report
+        run: |
+          python3 scripts/tailor_resume.py \
+            --source "RESUME_${TARGET_LANGUAGE}.md" \
+            --company "$TARGET_COMPANY" \
+            --role "$TARGET_ROLE" \
+            --language "$TARGET_LANGUAGE" \
+            --model "$OPENROUTER_MODEL"
+
+      - name: Generate tailored PDF
+        run: |
+          pandoc "$TAILORED_MARKDOWN" \
+            --pdf-engine=xelatex \
+            -V geometry:margin=0.65in \
+            -V fontsize=10pt \
+            -V header-includes='\usepackage{needspace}\usepackage{etoolbox}\pretocmd{\subsubsection}{\Needspace{10\baselineskip}}{}{}' \
+            -o "$TAILORED_PDF"
+
+      - name: Validate tailored resume
+        run: |
+          python3 scripts/validate_tailored_resume.py \
+            --pdf "$TAILORED_PDF" \
+            --source "RESUME_${TARGET_LANGUAGE}.md" \
+            --report "$MATCH_REPORT"
+
+      - name: Upload tailored resume
+        uses: actions/upload-artifact@v4
+        with:
+          name: tailored-resume-${{ github.run_number }}
+          path: |
+            ${{ env.TAILORED_MARKDOWN }}
+            ${{ env.TAILORED_PDF }}
+            ${{ env.MATCH_REPORT }}
+          retention-days: 30
