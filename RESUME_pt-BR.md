@@ -40,17 +40,22 @@ Set 2024 - Jan 2026 | Campinas, SP
 - Validação de implementações de analytics e eventos no Segment, contribuindo para a confiabilidade dos dados do produto.
 - Uso de Xcode, Android Studio, LambdaTest, Firebase Remote Config, New Relic, Jira e Zephyr Scale nas entregas multiplataforma.
 
-### QA Engineer | CI&T
-Jan 2022 - Ago 2024 | Campinas, SP
+### CI&T
+São Paulo, SP | Remoto
 
-- Promoção de Mid-Level QA Engineer para Senior QA Engineer, atuando em produtos globais de grande escala em diferentes domínios de negócio.
+**Senior QA Engineer** | Dez 2022 - Ago 2024  
+**Mid-Level QA Engineer** | Jan 2022 - Dez 2022
+
+Atuação ao longo dos dois cargos:
+
+- Atuação em produtos globais de grande escala em diferentes domínios de negócio.
 - Definição de estratégias e automação de cenários E2E, API e integração com Vividus, Robot Framework, Pytest, Selenium, Postman e REST Assured.
 - Implementação de regressão visual com Applitools Eyes e cobertura cross-browser com Sauce Labs.
 - Validação de dados com SQL Server e investigação de incidentes por meio de logs, métricas e evidências operacionais no ELK Stack.
 - Integração contínua dos testes com Jenkins e Azure DevOps e monitoramento do comportamento das aplicações com New Relic.
 
 ### Software QA Engineer | e.Mix
-Jul 2021 - Jan 2022 | Campinas, SP
+Jul 2021 - Jan 2022 | São Paulo, SP | Remoto
 
 - Planejamento e execução de testes funcionais e não funcionais para aplicações web e APIs REST.
 - Automação de cenários de API e E2E com Postman, Newman e Robot Framework.
@@ -65,8 +70,8 @@ Mar 2019 - Jul 2021 | Santo André, SP
 
 ## Formação
 
-### Pós-graduação em Cybersecurity | Universidade Cruzeiro do Sul
-Mar 2021 - Mar 2022
+### Pós-graduação Lato Sensu em Cybersecurity (Especialização) | Universidade Cruzeiro do Sul
+Mar 2021 - Mar 2022 | Concluída
 
 ### Tecnólogo em Análise e Desenvolvimento de Sistemas | Universidade Cruzeiro do Sul
 Fev 2018 - Ago 2020

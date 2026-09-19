@@ -40,17 +40,22 @@ Sep 2024 - Jan 2026 | Campinas, Brazil
 - Verified analytics implementations and event data with Segment, supporting reliable product insights.
 - Used Xcode, Android Studio, LambdaTest, Firebase Remote Config, New Relic, Jira, and Zephyr Scale during cross-platform delivery.
 
-### QA Engineer | CI&T
-Jan 2022 - Aug 2024 | Campinas, Brazil
+### CI&T
+São Paulo, Brazil | Remote
 
-- Promoted from Mid-Level QA Engineer to Senior QA Engineer while supporting large-scale global products across multiple business domains.
+**Senior QA Engineer** | Dec 2022 - Aug 2024  
+**Mid-Level QA Engineer** | Jan 2022 - Dec 2022
+
+Responsibilities across both roles:
+
+- Supported large-scale global products across multiple business domains.
 - Designed test strategies and automated E2E, API, and integration scenarios with Vividus, Robot Framework, Pytest, Selenium, Postman, and REST Assured.
 - Implemented visual regression with Applitools Eyes and cross-browser coverage with Sauce Labs.
 - Validated data with SQL Server and investigated incidents through ELK Stack logs, metrics, and operational evidence.
 - Integrated continuous testing through Jenkins and Azure DevOps pipelines and monitored application behavior with New Relic.
 
 ### Software QA Engineer | e.Mix
-Jul 2021 - Jan 2022 | Campinas, Brazil
+Jul 2021 - Jan 2022 | São Paulo, Brazil | Remote
 
 - Planned and executed functional and non-functional testing for web applications and REST APIs.
 - Automated API and E2E scenarios with Postman, Newman, and Robot Framework.
@@ -65,8 +70,8 @@ Mar 2019 - Jul 2021 | Santo Andre, Brazil
 
 ## Education
 
-### Postgraduate Program in Cybersecurity | Universidade Cruzeiro do Sul
-Mar 2021 - Mar 2022
+### Postgraduate Specialization in Cybersecurity (Lato Sensu) | Universidade Cruzeiro do Sul
+Mar 2021 - Mar 2022 | Completed
 
 ### Technologist Degree in Systems Analysis and Development | Universidade Cruzeiro do Sul
 Feb 2018 - Aug 2020
