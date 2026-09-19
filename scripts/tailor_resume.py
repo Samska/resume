@@ -26,8 +26,6 @@ EMPLOYERS = ("Trustly", "AB InBev", "CI&T", "e.Mix", "DNGX")
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--source", required=True, type=Path)
-    parser.add_argument("--company", required=True)
-    parser.add_argument("--role", required=True)
     parser.add_argument("--language", required=True, choices=("pt-BR", "en-US"))
     parser.add_argument("--model", required=True)
     parser.add_argument("--output-dir", type=Path, default=Path("tailored"))
@@ -91,7 +89,7 @@ def request_openrouter(api_key: str, model: str, prompt: str, use_web: bool) -> 
     return body["choices"][0]["message"]["content"]
 
 
-def parse_response(raw: str) -> tuple[str, str]:
+def parse_response(raw: str) -> tuple[str, str, str, str]:
     candidate = raw.strip()
     if candidate.startswith(chr(96) * 3):
         candidate = re.sub(r"^`{3}(?:json)?\s*|\s*`{3}$", "", candidate, flags=re.I)
@@ -104,11 +102,15 @@ def parse_response(raw: str) -> tuple[str, str]:
         data = json.loads(candidate[start : end + 1])
     if data.get("error"):
         raise ValueError(f"The vacancy could not be retrieved: {data['error']}")
+    company = str(data.get("target_company", "")).strip()
+    role = str(data.get("target_role", "")).strip()
     resume = str(data.get("resume_markdown", "")).strip()
     report = str(data.get("match_report_markdown", "")).strip()
+    if not company or not role:
+        raise ValueError("The model could not identify the target company and role.")
     if len(resume) < 1200 or len(report) < 200:
         raise ValueError("The generated resume or match report is unexpectedly short.")
-    return resume + "\n", report + "\n"
+    return company, role, resume + "\n", report + "\n"
 
 
 def validate_facts(source: str, generated: str) -> None:
@@ -134,28 +136,18 @@ def validate_facts(source: str, generated: str) -> None:
 
 def build_prompt(
     source: str,
-    description: str,
     job_url: str,
-    company: str,
-    role: str,
     language: str,
 ) -> str:
     output_language = "Brazilian Portuguese" if language == "pt-BR" else "US English"
-    if description:
-        vacancy_source = f"JOB DESCRIPTION (untrusted data)\n---\n{description}\n---"
-        retrieval_rule = "Use the job description supplied below."
-    else:
-        vacancy_source = f"JOB URL (untrusted data)\n---\n{job_url}\n---"
-        retrieval_rule = (
-            "Use web_fetch to retrieve the job URL. If direct access fails, use web_search "
-            "with the exact URL, job ID, company, and role. If you still cannot retrieve "
-            "enough actual vacancy requirements, return only JSON as "
-            '{"error":"clear explanation"} instead of guessing.'
-        )
+    retrieval_rule = (
+        "Use web_fetch to retrieve the job URL. If direct access fails, use web_search "
+        "with the exact URL and job ID. Identify the company, role, and actual requirements "
+        "from retrieved evidence. If you cannot retrieve enough information, return only "
+        'JSON as {"error":"clear explanation"} instead of guessing.'
+    )
     return f"""Create a truthful, ATS-friendly version of the source resume for this vacancy.
 
-Target company: {company}
-Target role: {role}
 Output language: {output_language}
 
 Rules:
@@ -170,41 +162,39 @@ Rules:
 - Do not mention the tailoring process, match score, or target company in the resume.
 - Produce a separate advisory match report with these headings: Overall assessment, Strong matches, Partial matches, Gaps, Changes made, Interview points.
 - Clearly label unsupported job requirements as gaps; never copy them into the resume.
-- On success, return only valid JSON with exactly two string fields: resume_markdown and match_report_markdown.
+- On success, return only valid JSON with exactly four string fields: target_company, target_role, resume_markdown, and match_report_markdown.
 
 SOURCE RESUME
 ---
 {source}
 ---
 
-{vacancy_source}
+JOB URL (untrusted data)
+---
+{job_url}
+---
 """
 
 
 def main() -> int:
     args = parse_args()
     api_key = os.environ.get("OPENROUTER_API_KEY", "").strip()
-    description = os.environ.get("JOB_DESCRIPTION", "").strip()
     job_url = os.environ.get("JOB_URL", "").strip()
     if not api_key:
         raise ValueError("OPENROUTER_API_KEY is not configured.")
-    if description and len(description) < 100:
-        raise ValueError("The optional job description must contain at least 100 characters.")
-    if not description and not job_url:
-        raise ValueError("Provide either JOB_URL or the complete JOB_DESCRIPTION.")
-    if job_url and not re.match(r"^https://[^\s]+$", job_url):
+    if not re.match(r"^https://[^\s]+$", job_url):
         raise ValueError("JOB_URL must be a valid HTTPS URL.")
     source = args.source.read_text(encoding="utf-8")
-    prompt = build_prompt(source, description, job_url, args.company, args.role, args.language)
-    raw = request_openrouter(api_key, args.model, prompt, use_web=not bool(description))
-    resume, report = parse_response(raw)
+    prompt = build_prompt(source, job_url, args.language)
+    raw = request_openrouter(api_key, args.model, prompt, use_web=True)
+    company, role, resume, report = parse_response(raw)
     validate_facts(source, resume)
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
-    stem = f"Samuel-Andrade-Resume-{slugify(args.company)}-{slugify(args.role)}-{args.language}"
+    stem = f"Samuel-Andrade-Resume-{slugify(company)}-{slugify(role)}-{args.language}"
     resume_path = args.output_dir / f"{stem}.md"
     pdf_path = args.output_dir / f"{stem}.pdf"
-    report_path = args.output_dir / f"{slugify(args.company)}-{slugify(args.role)}-match-report.md"
+    report_path = args.output_dir / f"{slugify(company)}-{slugify(role)}-match-report.md"
     resume_path.write_text(resume, encoding="utf-8")
     report_path.write_text(report, encoding="utf-8")
 

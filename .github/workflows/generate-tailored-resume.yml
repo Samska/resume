@@ -3,14 +3,6 @@ name: Generate tailored resume
 on:
   workflow_dispatch:
     inputs:
-      company:
-        description: Target company
-        required: true
-        type: string
-      role:
-        description: Target role
-        required: true
-        type: string
       language:
         description: Resume language
         required: true
@@ -31,12 +23,8 @@ on:
           - Google Gemini Flash (economical)
           - DeepSeek Chat (economical)
       job_url:
-        description: Job URL (recommended on mobile)
-        required: false
-        type: string
-      job_description:
-        description: Complete job description (optional alternative)
-        required: false
+        description: Job URL
+        required: true
         type: string
 
 permissions:
@@ -48,9 +36,6 @@ jobs:
     env:
       OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
       JOB_URL: ${{ inputs.job_url }}
-      JOB_DESCRIPTION: ${{ inputs.job_description }}
-      TARGET_COMPANY: ${{ inputs.company }}
-      TARGET_ROLE: ${{ inputs.role }}
       TARGET_LANGUAGE: ${{ inputs.language }}
       MODEL_CHOICE: ${{ inputs.model }}
     steps:
@@ -85,8 +70,6 @@ jobs:
         run: |
           python3 scripts/tailor_resume.py \
             --source "RESUME_${TARGET_LANGUAGE}.md" \
-            --company "$TARGET_COMPANY" \
-            --role "$TARGET_ROLE" \
             --language "$TARGET_LANGUAGE" \
             --model "$OPENROUTER_MODEL"
 
