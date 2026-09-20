@@ -1768,6 +1768,44 @@ class GeneratedV2Tests(unittest.TestCase):
         self.assertNotIn("may paraphrase", prompt)
         self.assertNotIn("paraphrase and reorder", prompt)
 
+    def test_v2_prompt_requires_skill_item_provenance(self):
+        prompt = build_prompt(make_source(), "https://example.test/job", schema_version=2)
+        for fragment in (
+            "source_fragment_ids must",
+            "include the exact source skill fragment that owns that item or label",
+            "does not replace the owning skill fragment",
+            "For example, mentioning Java in the headline requires",
+            "skills.linguagens-de-programacao",
+            "skills.automacao-de-testes",
+            "audit every generated headline, summary, and experience bullet",
+        ):
+            self.assertIn(fragment, prompt)
+        contract_text = prompt.split("REQUIRED JSON CONTRACT\n---\n", 1)[1].split("\n---\n", 1)[0]
+        contract = json.loads(contract_text)
+        self.assertEqual(
+            contract["headline"]["source_fragment_ids"],
+            ["headline", "skills.linguagens-de-programacao", "skills.automacao-de-testes"],
+        )
+        self.assertIn("skills.linguagens-de-programacao", contract["summary"][0]["source_fragment_ids"])
+        self.assertIn(
+            "known owning skill fragment ID",
+            contract["experience"][0]["bullets"][0]["source_fragment_ids"],
+        )
+
+    def test_v2_skill_item_requires_owning_fragment(self):
+        response = generated_response()
+        response["headline"]["text"] = "Quality Engineering | Java Test Automation"
+        response["headline"]["source_fragment_ids"] = ["headline"]
+        with self.assertRaisesRegex(GroundingError, "skill_item 'Java' without citing"):
+            self._parse(response)
+
+        response = generated_response()
+        response["headline"]["text"] = "Quality Engineering | Java Test Automation"
+        response["headline"]["source_fragment_ids"] = ["headline", "skills.programming-languages"]
+        source, generation = self._parse(response)
+        self.assertIn("Java", generation.headline.text)
+        self.assertIn("**Programming Languages:** Python, Java", render_resume(source, generation))
+
     def test_v2_unadapted_bullet_is_rejected(self):
         for text in (
             "Planned test strategies for web applications.",

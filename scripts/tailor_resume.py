@@ -414,14 +414,18 @@ def build_prompt(source: SourceResume, job_url: str, schema_version: int = 1) ->
                 {"requirement_id": "req-1", "status": "strong|partial|gap", "evidence_ids": ["known source fragment ID"]}
             ],
             "headline": {
-                "text": "candidate-facing text in the output language",
-                "source_fragment_ids": ["headline"],
+                "text": "Java and Selenium test automation",
+                "source_fragment_ids": [
+                    "headline",
+                    "skills.linguagens-de-programacao",
+                    "skills.automacao-de-testes",
+                ],
                 "requirement_ids": ["req-1"],
             },
             "summary": [
                 {
-                    "text": "candidate-facing text in the output language",
-                    "source_fragment_ids": ["summary.1"],
+                    "text": "Software engineering professional specializing in Java and Python automation",
+                    "source_fragment_ids": ["summary.1", "skills.linguagens-de-programacao"],
                     "requirement_ids": ["req-1"],
                 }
             ],
@@ -437,8 +441,11 @@ def build_prompt(source: SourceResume, job_url: str, schema_version: int = 1) ->
                     "employer": "exact source employer name",
                     "bullets": [
                         {
-                            "text": "candidate-facing text in the output language",
-                            "source_fragment_ids": ["known same-employer bullet ID"],
+                            "text": "Automated E2E scenarios with Selenium and Python",
+                            "source_fragment_ids": [
+                                "known same-employer bullet ID",
+                                "known owning skill fragment ID",
+                            ],
                             "requirement_ids": ["req-1"],
                         }
                     ],
@@ -475,6 +482,14 @@ PROVENANCE CONTRACT
   unadapted bullet.
 - You may combine facts from multiple source bullets belonging to the same employer and from skill
   fragments, provided you cite every supporting fragment and every stated fact is supported.
+- Whenever generated text contains a source skill item or skill label, source_fragment_ids must
+  include the exact source skill fragment that owns that item or label. A summary or experience
+  fragment containing the same word does not replace the owning skill fragment when the text uses
+  it as a skill item. For example, mentioning Java in the headline requires
+  skills.linguagens-de-programacao, and mentioning Selenium requires skills.automacao-de-testes.
+- Before finalizing the JSON, audit every generated headline, summary, and experience bullet for
+  skill items, skill labels, technologies, proper nouns, employers, titles, numbers, and dates,
+  and ensure every supporting source fragment is cited.
 - Do not add tools, technologies, certifications, metrics, dates, titles, employers,
   responsibilities, or achievements that are not present in the cited fragments.
 - Emphasize relevant vacancy terminology whenever the cited evidence supports it, using the exact
