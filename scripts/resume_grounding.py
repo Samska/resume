@@ -745,15 +745,11 @@ NUMERIC_TOKEN_RE = re.compile(r"\d+(?:[.,]\d+)?[%+]?")
 NUMERIC_FACT_RE = re.compile(
     r"(?<![0-9A-Za-zÀ-ÖØ-öø-ÿ])"
     r"(\d+(?:[.,]\d+)?)\+?"
-    r"(?:\s*(%|[xXkKmMhH]|[A-Za-zÀ-ÖØ-öø-ÿ]{2,12}))?"
+    r"(?:\s*(%|[A-Za-zÀ-ÖØ-öø-ÿ]{1,20}))?"
     r"(?![0-9A-Za-zÀ-ÖØ-öø-ÿ])"
 )
-NUMERIC_UNITS = frozenset({
-    "ano", "anos", "mes", "meses", "dia", "dias", "hora", "horas", "minuto", "minutos",
-    "semana", "semanas",
-    "year", "years", "month", "months", "day", "days", "hour", "hours", "minute", "minutes",
-    "week", "weeks",
-    "x", "k", "m", "mil", "h", "%", "pct",
+PERCENT_UNIT_ALIASES = frozenset({
+    "%", "percent", "pct", "porcento", "porcentos", "porcentagem", "porcentagens",
 })
 GENERATED_FORBIDDEN_RE = re.compile(r"[#`<>*_]")
 SENTENCE_SPLIT_RE = re.compile(r"(?<=[.!?:;|…—])\s+")
@@ -967,13 +963,30 @@ def _normalize_numeric_text(text: str) -> str:
     return "".join(char for char in normalized if unicodedata.category(char)[0] != "C" or char in "\t\n\r")
 
 
+def _numeric_unit(token: str) -> str:
+    """Normalize a unit or unit-like context token.
+
+    Percentage expressions are folded to the canonical ``%`` unit. Every other
+    alphabetic token after a number is preserved as unit-like context instead
+    of being silently discarded, so ``2 defects`` cannot be supported by a
+    cited ``2 years``.
+    """
+
+    candidate = _normalize_token(token)
+    if _token_variants(candidate) & PERCENT_UNIT_ALIASES:
+        return "%"
+    return candidate
+
+
 def _numeric_facts(text: str) -> tuple[tuple[str, str | None], ...]:
     """Extract boundary-delimited numeric facts as (value, unit) pairs.
 
     Digits embedded in alphanumeric tokens such as ``E2E`` are not numbers, so
     they can never support an unrelated claim like ``2 years``. A numeric fact
-    only matches an identical value; when the generated text attaches a unit,
-    the cited evidence must attach the same (plural-normalized) unit.
+    only matches an identical value; when the generated text attaches a unit or
+    unit-like context, the cited evidence must attach the same
+    (plural-normalized) unit. A bare generated number matches the same cited
+    value with any unit, and ``+`` is a modifier rather than a unit.
     """
 
     facts: list[tuple[str, str | None]] = []
@@ -982,9 +995,7 @@ def _numeric_facts(text: str) -> tuple[tuple[str, str | None], ...]:
         value = match.group(1).replace(",", ".")
         unit: str | None = None
         if match.group(2):
-            candidate = _normalize_token(match.group(2))
-            if candidate in NUMERIC_UNITS or _token_variants(candidate) & NUMERIC_UNITS:
-                unit = candidate
+            unit = _numeric_unit(match.group(2))
         fact = (value, unit)
         if fact not in seen:
             seen.add(fact)
@@ -1003,7 +1014,10 @@ def _numeric_fact_supported(
     if unit is None:
         return True
     variants = _token_variants(unit)
-    return any(cited_unit is not None and variants & _token_variants(cited_unit) for cited_unit in candidates)
+    return any(
+        cited_unit is not None and variants & _token_variants(cited_unit)
+        for cited_unit in candidates
+    )
 
 
 def _token_variants(token: str) -> frozenset[str]:

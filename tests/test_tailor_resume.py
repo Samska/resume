@@ -1434,7 +1434,7 @@ class GeneratedV2Tests(unittest.TestCase):
             "en-US",
         )
         supported = generated_response()
-        supported["summary"][0]["text"] = "QA engineer with 400 targeted strategies and reliable delivery."
+        supported["summary"][0]["text"] = "QA engineer with 400 test strategies and reliable delivery."
         supported["summary"][0]["source_fragment_ids"] = [
             "summary.1",
             "summary.2",
@@ -1466,7 +1466,7 @@ class GeneratedV2Tests(unittest.TestCase):
             self._parse(e2e, pt_source)
 
         valid = generated_response()
-        valid["summary"][0]["text"] = "QA engineer with 2024 delivery experience and reliable software delivery."
+        valid["summary"][0]["text"] = "QA engineer with reliable software delivery since Jan 2024."
         valid["summary"][0]["source_fragment_ids"] = [
             "summary.1",
             "summary.2",
@@ -1490,6 +1490,108 @@ class GeneratedV2Tests(unittest.TestCase):
             "skills.programming-languages",
         ]
         self._parse(plus, plus_source)
+
+    def test_v2_numeric_unit_context_must_match(self):
+        years_source = parse_source(
+            SYNTHETIC_SOURCE.replace(
+                "Experienced in reliable software delivery.",
+                "Experienced in 2 years of reliable software delivery.",
+            ),
+            "en-US",
+        )
+        response = generated_response()
+        response["summary"][0]["text"] = "QA engineer with 2 defects and reliable delivery."
+        response["summary"][0]["source_fragment_ids"] = [
+            "summary.1",
+            "summary.2",
+            "skills.programming-languages",
+        ]
+        with self.assertRaisesRegex(GroundingError, "metric or date '2 defects'"):
+            self._parse(response, years_source)
+
+        months_source = parse_source(
+            SYNTHETIC_SOURCE.replace(
+                "Experienced in reliable software delivery.",
+                "Experienced in 2 months of reliable software delivery.",
+            ),
+            "en-US",
+        )
+        response = generated_response()
+        response["summary"][0]["text"] = "QA engineer with 2 years of Python automation and reliable delivery."
+        response["summary"][0]["source_fragment_ids"] = [
+            "summary.1",
+            "summary.2",
+            "skills.programming-languages",
+        ]
+        with self.assertRaisesRegex(GroundingError, "metric or date '2 years'"):
+            self._parse(response, months_source)
+
+        response = generated_response()
+        response["summary"][0]["text"] = "QA engineer with 2 months of Python automation and reliable delivery."
+        response["summary"][0]["source_fragment_ids"] = [
+            "summary.1",
+            "summary.2",
+            "skills.programming-languages",
+        ]
+        self._parse(response, months_source)
+
+        defects_source = parse_source(
+            SYNTHETIC_SOURCE.replace(
+                "Planned test strategies for web applications.",
+                "Planned 2 defects for web applications.",
+            ),
+            "en-US",
+        )
+        response = generated_response()
+        response["experience"][1]["bullets"][0]["text"] = "Planned 2 defects for web applications."
+        response["experience"][1]["bullets"][0]["source_fragment_ids"] = ["experience.beta.bullet.1"]
+        self._parse(response, defects_source)
+
+        response = generated_response()
+        response["experience"][1]["bullets"][0]["text"] = "Planned 2 tests for web applications."
+        response["experience"][1]["bullets"][0]["source_fragment_ids"] = ["experience.beta.bullet.1"]
+        with self.assertRaisesRegex(GroundingError, "metric or date '2 tests'"):
+            self._parse(response, defects_source)
+
+    def test_v2_percentage_unit_aliases(self):
+        percent_source = parse_source(
+            SYNTHETIC_SOURCE.replace(
+                "Experienced in reliable software delivery.",
+                "Improved reliable software delivery by 40% across teams.",
+            ),
+            "en-US",
+        )
+        for phrase in ("40 percent", "40 porcento", "40 porcentagem", "40%", "40 pct"):
+            with self.subTest(phrase=phrase):
+                response = generated_response()
+                response["summary"][0]["text"] = (
+                    f"QA engineer with {phrase} faster Python automation and reliable delivery."
+                )
+                response["summary"][0]["source_fragment_ids"] = [
+                    "summary.1",
+                    "summary.2",
+                    "skills.programming-languages",
+                ]
+                self._parse(response, percent_source)
+
+        years_source = parse_source(
+            SYNTHETIC_SOURCE.replace(
+                "Experienced in reliable software delivery.",
+                "Experienced in 40 years of reliable software delivery.",
+            ),
+            "en-US",
+        )
+        response = generated_response()
+        response["summary"][0]["text"] = (
+            "QA engineer with 40 percent faster Python automation and reliable delivery."
+        )
+        response["summary"][0]["source_fragment_ids"] = [
+            "summary.1",
+            "summary.2",
+            "skills.programming-languages",
+        ]
+        with self.assertRaisesRegex(GroundingError, "metric or date '40"):
+            self._parse(response, years_source)
 
     def test_v2_gap_generic_words_stay_usable_and_full_claim_fails(self):
         source = make_pt_source()
