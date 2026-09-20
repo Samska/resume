@@ -39,18 +39,18 @@ Never put the key in a Markdown file, workflow input, commit, issue, or Actions 
 
 ### How the LLM is used
 
-1. Repository code validates the master resume, then sends the vacancy URL and selectable source fragments to one model through OpenRouter.
-2. The model retrieves and analyzes the vacancy and returns structured JSON: vacancy requirements, a `strong`/`partial`/`gap` classification per requirement, evidence IDs, selected source-fragment IDs, and interview topics.
-3. Repository code validates the response schema, fragment IDs, selection limits, and evidence mappings. Unsupported requirements remain explicit gaps.
-4. The resume and match report are composed deterministically from exact master-resume fragments; the PDF is generated from that Markdown and validated for structure, extractable text, reading order, page count, and source provenance.
+1. Repository code validates the master resume, then sends the vacancy URL and source fragments to one model through OpenRouter.
+2. The model retrieves and analyzes the vacancy and returns structured JSON: vacancy requirements, a `strong`/`partial`/`gap` classification per requirement, evidence IDs, and generated candidate-facing blocks (headline, summary, skill presentation, and experience bullets) with the source fragment IDs each block was adapted from.
+3. Repository code validates the response schema, fragment and requirement IDs, evidence mappings, generation limits, skill items (exact source echo), protected terms (tools, technologies, metrics, dates, titles, certifications, and employers), gap requirements, and output language. Unsupported objective claims fail the run instead of producing a resume.
+4. Fixed identity, contact, employer, title, date, and education facts are rendered deterministically from the master resume. Generated wording is adapted only from cited fragments. The match report lists every adapted block with its evidence, and advisory warnings flag semantic paraphrases for human review. The PDF is generated from that Markdown and validated for structure, extractable text, reading order, page count, fixed facts, and generated-block presence.
 
-The LLM does not write or rewrite candidate-facing resume claims, report prose, or evidence excerpts. Invalid sources, insufficient vacancy retrieval, and malformed or unsupported model responses fail the run instead of producing a resume, with no automatic paid retry.
+Each generated block carries source provenance, and every protected term in generated text must be supported by the cited evidence. Vacancy requirements classified as gaps never appear in generated candidate-facing text. Invalid sources, insufficient vacancy retrieval, and malformed or unsupported model responses fail the run with no automatic paid retry. The previous selector-only contract remains validated internally as a fallback but is no longer requested.
 
 ### Output, retention, and limitations
 
 A successful run produces exactly three files in the `tailored-resume-*` artifact: the tailored Markdown, its PDF, and a match report. The artifact is retained for 30 days and is not committed to the repository. Each successful generation uses one OpenRouter request, and vacancy retrieval through OpenRouter web tools may add provider search/fetch charges. The vacancy and source fragments are sent to OpenRouter and the selected model provider.
 
-Review the generated resume before applying. Relevance depends on the requirements and keywords retrieved from the vacancy, and model classifications can still require human correction. This is not an ATS score, a job-fit guarantee, or a hallucination-proof process.
+Review the generated resume before applying. Deterministic validation protects objective facts (names, employers, titles, dates, education, metrics, and named tools), but the semantic equivalence of paraphrased wording is advisory and flagged in the match report. Relevance depends on the requirements and keywords retrieved from the vacancy, and model classifications can still require human correction. This is not an ATS score, a job-fit guarantee, or a hallucination-proof process.
 
 ## Files
 

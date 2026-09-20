@@ -44,7 +44,77 @@ def _fragment_is_extracted(variants: tuple[str, ...], fragment_text: str) -> boo
     return any(expected in variant for variant in variants)
 
 
+def _generated_skill_line(group) -> str:
+    return f"**{group.label}:** {', '.join(group.items)}"
+
+
+def _generated_output_strings(source, generation) -> list[tuple[str, str]]:
+    expected: list[tuple[str, str]] = []
+    for fragment in source.fragments.values():
+        if fragment.mandatory and fragment.kind != "headline":
+            expected.append((fragment.id, fragment.text))
+    if generation.headline is None:
+        expected.append(("headline", source.fragments["headline"].text))
+    else:
+        expected.append((generation.headline.block_id, generation.headline.text))
+    for block in generation.summaries:
+        expected.append((block.block_id, block.text))
+    for group in generation.skill_groups:
+        expected.append((group.source_fragment_id, _generated_skill_line(group)))
+    for entry in generation.experience:
+        for bullet in entry.bullets:
+            expected.append((bullet.block_id, bullet.text))
+    return expected
+
+
+def _validate_pdf_v2(pdf: Path, source, generation) -> list[tuple[bool, str]]:
+    if not pdf.exists() or pdf.stat().st_size <= 10_000:
+        return [(False, "PDF exists and is not empty")]
+    try:
+        text = command("pdftotext", "-layout", str(pdf), "-")
+        info = command("pdfinfo", str(pdf))
+    except (FileNotFoundError, subprocess.CalledProcessError) as exc:
+        return [(False, f"PDF tools could not validate the file: {exc}")]
+    page_match = re.search(r"^Pages:\s+(\d+)$", info, re.MULTILINE)
+    pages = int(page_match.group(1)) if page_match else 0
+    normalized_pdf = normalize_extracted(text)
+    variants = extracted_text_variants(text)
+    expected = _generated_output_strings(source, generation)
+    missing = [
+        label for label, value in expected
+        if not _fragment_is_extracted(variants, value)
+    ]
+    generated_labels = {generation.headline.block_id} if generation.headline is not None else set()
+    generated_labels.update(block.block_id for block in generation.summaries)
+    generated_labels.update(group.source_fragment_id for group in generation.skill_groups)
+    generated_labels.update(
+        bullet.block_id for entry in generation.experience for bullet in entry.bullets
+    )
+    missing_generated = [label for label in missing if label in generated_labels]
+    employer_positions = [normalized_pdf.find(normalize_extracted(employer.name)) for employer in source.employers]
+    return [
+        (1 <= pages <= 2, f"Page count is within the two-page limit ({pages})"),
+        (len(text.strip()) >= 1500, "PDF contains enough extractable text"),
+        (
+            not missing,
+            "Fixed source facts and generated blocks are preserved"
+            if not missing
+            else "Missing content: " + ", ".join(missing),
+        ),
+        (
+            not missing_generated,
+            "Generated candidate-facing blocks are present in the PDF"
+            if not missing_generated
+            else "Missing generated blocks: " + ", ".join(missing_generated),
+        ),
+        (all(position >= 0 for position in employer_positions), "All employers are preserved"),
+        (employer_positions == sorted(employer_positions), "Experience remains in reverse chronological order"),
+    ]
+
+
 def validate_pdf(pdf: Path, source, selection) -> list[tuple[bool, str]]:
+    if getattr(selection, "schema_version", 1) == 2:
+        return _validate_pdf_v2(pdf, source, selection)
     if not pdf.exists() or pdf.stat().st_size <= 10_000:
         return [(False, "PDF exists and is not empty")]
     try:
@@ -116,10 +186,12 @@ def main() -> int:
         args.report,
         args.manifest,
     )
+    warning_count = len(getattr(selection, "warnings", ()))
     if args.mode == "content":
         print(
             "Content validation passed "
-            f"(selected={len(selection.selected_fragment_ids)}, employers={len(source.employers)})"
+            f"(selected={len(selection.selected_fragment_ids)}, employers={len(source.employers)}, "
+            f"warnings={warning_count})"
         )
         return 0
 
@@ -146,6 +218,7 @@ def main() -> int:
             f"- Grounding statistics — selected fragments: {len(selection.selected_fragment_ids)}; "
             f"strong matches: {len(selection.strong_matches)}; partial matches: {len(selection.partial_matches)}; "
             f"gaps: {len(selection.gaps)}; employers: {len(source.employers)}",
+            f"- Advisory warnings requiring human review: {warning_count}",
         ]
     )
     write_summary(lines)

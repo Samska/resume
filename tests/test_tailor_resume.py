@@ -7,16 +7,32 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from scripts.tailor_resume import MAX_RESPONSE_TOKENS, build_request_body, request_openrouter
+from scripts.tailor_resume import (
+    MAX_RESPONSE_TOKENS,
+    MODEL_RESPONSE_SCHEMA_V2,
+    build_prompt,
+    build_request_body,
+    request_openrouter,
+)
 from scripts.resume_grounding import (
+    MAX_BULLET_CHARS,
+    MAX_HEADLINE_CHARS,
+    MAX_SKILL_GROUP_CHARS,
+    MAX_SUMMARY_BLOCKS,
+    MAX_SUMMARY_CHARS,
+    MAX_TOTAL_BULLETS,
+    MAX_TOTAL_CANDIDATE_CHARS,
     GroundingError,
+    load_manifest,
     parse_and_validate_response,
     parse_source,
     plain_markdown,
     render_report,
     render_resume,
+    validate_manifest,
     validate_rendered_markdown,
     validate_rendered_report,
+    write_manifest,
 )
 
 
@@ -722,6 +738,1035 @@ class ResponseAndRenderingTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, "valid HTTPS URL"):
                     main()
                 request.assert_not_called()
+
+
+def generated_response():
+    return {
+        "schema_version": 2,
+        "target_company": "Example Systems",
+        "target_role": "QA Automation Engineer",
+        "vacancy_requirements": [
+            {"id": "req-python", "text": "Python automation", "priority": "required"},
+            {"id": "req-swagger", "text": "Swagger documentation", "priority": "preferred"},
+        ],
+        "requirement_classifications": [
+            {
+                "requirement_id": "req-python",
+                "status": "strong",
+                "evidence_ids": ["experience.acme.bullet.1", "skills.programming-languages"],
+            },
+            {"requirement_id": "req-swagger", "status": "gap", "evidence_ids": []},
+        ],
+        "headline": {
+            "text": "Quality Engineering | Python and API Test Automation",
+            "source_fragment_ids": ["headline", "skills.programming-languages", "experience.acme.bullet.1"],
+            "requirement_ids": ["req-python"],
+        },
+        "summary": [
+            {
+                "text": "QA engineer with experience in Python automation and reliable software delivery.",
+                "source_fragment_ids": ["summary.1", "summary.2", "skills.programming-languages"],
+                "requirement_ids": ["req-python"],
+            }
+        ],
+        "skill_groups": [
+            {
+                "source_fragment_id": "skills.programming-languages",
+                "items": ["Python", "Java"],
+                "requirement_ids": ["req-python"],
+            },
+            {"source_fragment_id": "skills.tools", "items": ["Git", "LambdaTest"]},
+            {"source_fragment_id": "skills.spoken-languages", "items": ["English (professional)"]},
+        ],
+        "experience": [
+            {
+                "employer": "Acme",
+                "bullets": [
+                    {
+                        "text": "Automated API tests with Python.",
+                        "source_fragment_ids": ["experience.acme.bullet.1"],
+                        "requirement_ids": ["req-python"],
+                    }
+                ],
+            },
+            {
+                "employer": "Beta",
+                "bullets": [
+                    {
+                        "text": "Planned test strategies for web applications.",
+                        "source_fragment_ids": ["experience.beta.bullet.1"],
+                    }
+                ],
+            },
+        ],
+        "interview_topics": [{"requirement_id": "req-swagger"}],
+    }
+
+
+def starta_generated_response():
+    def bullet(text, citations, requirements=None):
+        block = {"text": text, "source_fragment_ids": citations}
+        if requirements:
+            block["requirement_ids"] = requirements
+        return block
+
+    return {
+        "schema_version": 2,
+        "target_company": "Starta",
+        "target_role": "Analista de Qualidade Sênior",
+        "vacancy_requirements": [
+            {"id": "req-java-automation", "text": "Automação de testes com Java", "priority": "required"},
+            {"id": "req-selenium", "text": "Selenium", "priority": "required"},
+            {"id": "req-functional-nonfunctional", "text": "Testes funcionais e não funcionais", "priority": "required"},
+            {"id": "req-performance", "text": "Testes de performance, carga e estresse", "priority": "required"},
+            {"id": "req-jenkins-ci", "text": "Jenkins e integração contínua", "priority": "required"},
+            {"id": "req-databases", "text": "Bancos de dados", "priority": "preferred"},
+            {"id": "req-api-integration", "text": "Testes de API e integração", "priority": "required"},
+            {"id": "req-tdd", "text": "TDD", "priority": "required"},
+            {"id": "req-sonar", "text": "Sonar", "priority": "preferred"},
+        ],
+        "requirement_classifications": [
+            {
+                "requirement_id": "req-java-automation",
+                "status": "strong",
+                "evidence_ids": ["experience.trustly.bullet.2", "skills.linguagens-de-programacao"],
+            },
+            {
+                "requirement_id": "req-selenium",
+                "status": "strong",
+                "evidence_ids": ["skills.automacao-de-testes", "experience.ab-inbev.bullet.2"],
+            },
+            {
+                "requirement_id": "req-functional-nonfunctional",
+                "status": "strong",
+                "evidence_ids": ["skills.testes", "experience.e-mix.bullet.1"],
+            },
+            {
+                "requirement_id": "req-performance",
+                "status": "strong",
+                "evidence_ids": ["experience.e-mix.bullet.3", "skills.ferramentas"],
+            },
+            {
+                "requirement_id": "req-jenkins-ci",
+                "status": "strong",
+                "evidence_ids": ["experience.ci-t.bullet.5", "skills.entrega-e-observabilidade"],
+            },
+            {
+                "requirement_id": "req-databases",
+                "status": "strong",
+                "evidence_ids": ["experience.dngx.bullet.2", "experience.ci-t.bullet.4"],
+            },
+            {
+                "requirement_id": "req-api-integration",
+                "status": "strong",
+                "evidence_ids": [
+                    "experience.ab-inbev.bullet.3",
+                    "experience.ci-t.bullet.2",
+                    "experience.e-mix.bullet.2",
+                ],
+            },
+            {"requirement_id": "req-tdd", "status": "gap", "evidence_ids": []},
+            {"requirement_id": "req-sonar", "status": "gap", "evidence_ids": []},
+        ],
+        "headline": {
+            "text": "Engenharia de Qualidade | Automação de Testes | Java e Selenium",
+            "source_fragment_ids": [
+                "headline",
+                "summary.1",
+                "skills.automacao-de-testes",
+                "skills.linguagens-de-programacao",
+            ],
+            "requirement_ids": ["req-java-automation", "req-selenium"],
+        },
+        "summary": [
+            {
+                "text": (
+                    "Profissional de engenharia de software com mais de 7 anos de experiência combinada em "
+                    "desenvolvimento e qualidade, com automação de testes web, mobile, APIs e acessibilidade."
+                ),
+                "source_fragment_ids": ["summary.1", "skills.testes"],
+                "requirement_ids": ["req-functional-nonfunctional"],
+            },
+            {
+                "text": (
+                    "Atuação ao longo do ciclo de desenvolvimento com Java, Python e TypeScript, CI/CD e "
+                    "observabilidade para antecipar riscos e aumentar a confiabilidade das entregas."
+                ),
+                "source_fragment_ids": [
+                    "summary.2",
+                    "skills.linguagens-de-programacao",
+                    "skills.entrega-e-observabilidade",
+                ],
+                "requirement_ids": ["req-java-automation", "req-jenkins-ci"],
+            },
+        ],
+        "skill_groups": [
+            {
+                "source_fragment_id": "skills.automacao-de-testes",
+                "items": ["Selenium", "Pytest", "Robot Framework", "REST Assured"],
+                "requirement_ids": ["req-selenium"],
+            },
+            {
+                "source_fragment_id": "skills.linguagens-de-programacao",
+                "items": ["Java", "Python", "SQL"],
+            },
+            {
+                "source_fragment_id": "skills.testes",
+                "items": [
+                    "Testes de API",
+                    "Testes de Integração",
+                    "Testes de Performance",
+                    "Testes Web",
+                    "Testes Mobile",
+                ],
+                "requirement_ids": ["req-functional-nonfunctional"],
+            },
+            {
+                "source_fragment_id": "skills.ferramentas",
+                "items": ["JMeter", "Postman", "Charles Proxy"],
+            },
+            {
+                "source_fragment_id": "skills.entrega-e-observabilidade",
+                "items": ["Jenkins", "Azure DevOps", "GitHub Actions"],
+            },
+            {
+                "source_fragment_id": "skills.idiomas",
+                "items": ["Português (nativo)", "Inglês (proficiência profissional)"],
+            },
+        ],
+        "experience": [
+            {
+                "employer": "Trustly",
+                "bullets": [
+                    bullet(
+                        "Execução de estratégias de testes baseadas em risco para jornadas críticas de pagamentos.",
+                        ["experience.trustly.bullet.1"],
+                    ),
+                    bullet(
+                        "Desenvolvimento de automações E2E com Java, Selenide e Cucumber para fluxos de frontend.",
+                        ["experience.trustly.bullet.2"],
+                        ["req-java-automation"],
+                    ),
+                ],
+            },
+            {
+                "employer": "AB InBev",
+                "bullets": [
+                    bullet(
+                        "Automação de testes E2E com Selenium, Python e Pytest para aplicações mobile.",
+                        [
+                            "experience.ab-inbev.bullet.2",
+                            "experience.ab-inbev.bullet.1",
+                            "skills.testes",
+                            "skills.automacao-de-testes",
+                        ],
+                        ["req-selenium", "req-functional-nonfunctional"],
+                    ),
+                    bullet(
+                        "Validação de APIs e investigação de integrações com Charles Proxy e Postman.",
+                        ["experience.ab-inbev.bullet.3"],
+                        ["req-api-integration"],
+                    ),
+                    bullet(
+                        "Planejamento de estratégias de qualidade para jornadas de comércio web e mobile.",
+                        ["experience.ab-inbev.bullet.1"],
+                    ),
+                ],
+            },
+            {
+                "employer": "CI&T",
+                "bullets": [
+                    bullet(
+                        "Automação de cenários E2E, API e integração com Selenium, Pytest e REST Assured.",
+                        ["experience.ci-t.bullet.2"],
+                        ["req-api-integration"],
+                    ),
+                    bullet(
+                        "Validação de dados com SQL Server e investigação de incidentes no ELK Stack.",
+                        ["experience.ci-t.bullet.4"],
+                        ["req-databases"],
+                    ),
+                    bullet(
+                        "Integração contínua de testes com Jenkins e Azure DevOps.",
+                        ["experience.ci-t.bullet.5"],
+                        ["req-jenkins-ci"],
+                    ),
+                ],
+            },
+            {
+                "employer": "e.Mix",
+                "bullets": [
+                    bullet(
+                        "Planejamento e execução de testes funcionais e não funcionais para aplicações web e APIs REST.",
+                        ["experience.e-mix.bullet.1"],
+                        ["req-functional-nonfunctional"],
+                    ),
+                    bullet(
+                        "Automação de cenários de API e E2E com Postman, Newman e Robot Framework.",
+                        ["experience.e-mix.bullet.2"],
+                        ["req-api-integration"],
+                    ),
+                    bullet(
+                        "Execução de testes de performance, carga e estresse com JMeter em pipelines Azure DevOps.",
+                        ["experience.e-mix.bullet.3"],
+                        ["req-performance"],
+                    ),
+                ],
+            },
+            {
+                "employer": "DNGX",
+                "bullets": [
+                    bullet(
+                        "Desenvolvimento de aplicações web e mobile com GeneXus e customização de interfaces.",
+                        ["experience.dngx.bullet.1"],
+                    ),
+                    bullet(
+                        "Modelagem de soluções com SQL Server, PostgreSQL e MySQL.",
+                        ["experience.dngx.bullet.2"],
+                        ["req-databases"],
+                    ),
+                ],
+            },
+        ],
+        "interview_topics": [{"requirement_id": "req-tdd"}, {"requirement_id": "req-sonar"}],
+    }
+
+
+def make_pt_source() -> object:
+    return parse_source(Path("RESUME_pt-BR.md").read_text(encoding="utf-8"), "pt-BR")
+
+
+class GeneratedV2Tests(unittest.TestCase):
+    def _parse(self, response, source=None):
+        source = source if source is not None else make_source()
+        return source, parse_and_validate_response(json.dumps(response), source)
+
+    def test_v2_adapted_generation_renders_with_provenance_and_warnings(self):
+        source, generation = self._parse(generated_response())
+        resume = render_resume(source, generation)
+        report = render_report(source, generation)
+        validate_rendered_markdown(source, generation, resume)
+        validate_rendered_report(source, generation, report)
+        self.assertIn("Quality Engineering | Python and API Test Automation", resume)
+        self.assertIn("QA engineer with experience in Python automation and reliable software delivery.", resume)
+        self.assertIn("**Programming Languages:** Python, Java", resume)
+        self.assertIn("- Automated API tests with Python.", resume)
+        self.assertNotIn("Built API automation with Python.", resume)
+        self.assertIn("# Example Candidate", resume)
+        self.assertIn("[candidate@example.test](mailto:candidate@example.test)", resume)
+        self.assertIn("### QA Engineer | Acme", resume)
+        self.assertIn("Jan 2024 - Feb 2024 | Brazil", resume)
+        self.assertIn("### Systems Degree | Example University", resume)
+        self.assertIn("## Adapted candidate-facing content", report)
+        self.assertIn("## Advisory warnings", report)
+        self.assertIn("`experience.acme.bullet.1`", report)
+        codes = {warning.code for warning in generation.warnings}
+        self.assertIn("UNSUPPORTED_CONTENT_WORD", codes)
+        self.assertIn("PARAPHRASE_REVIEW", codes)
+        self.assertIn("LOW_BULLET_COVERAGE", codes)
+        with self.assertRaisesRegex(GroundingError, "differs from deterministic"):
+            validate_rendered_markdown(source, generation, resume + "\n- invented claim\n")
+        with self.assertRaisesRegex(GroundingError, "differs from deterministic"):
+            validate_rendered_report(source, generation, report + "\nCandidate probably knows Swagger.\n")
+
+    def test_v2_headline_is_optional_and_anchors_are_required(self):
+        response = generated_response()
+        del response["headline"]
+        source, generation = self._parse(response)
+        self.assertIsNone(generation.headline)
+        self.assertIn("Quality Engineering | Test Automation", render_resume(source, generation))
+
+        response = generated_response()
+        response["headline"]["source_fragment_ids"] = ["skills.programming-languages"]
+        with self.assertRaisesRegex(GroundingError, "must cite the master resume headline fragment"):
+            self._parse(response)
+
+        response = generated_response()
+        response["summary"][0]["source_fragment_ids"] = ["experience.beta.bullet.1"]
+        with self.assertRaisesRegex(GroundingError, "master summary fragment"):
+            self._parse(response)
+
+        response = generated_response()
+        response["summary"] = []
+        with self.assertRaisesRegex(GroundingError, "summary must contain"):
+            self._parse(response)
+
+    def test_v2_skill_groups_reorder_subset_and_strict_item_echo(self):
+        response = generated_response()
+        response["skill_groups"].reverse()
+        tools = next(group for group in response["skill_groups"] if group["source_fragment_id"] == "skills.tools")
+        tools["items"] = ["LambdaTest", "Git"]
+        source, generation = self._parse(response)
+        self.assertEqual(generation.skill_groups[-1].label, "Programming Languages")
+        resume = render_resume(source, generation)
+        self.assertIn("**Tools:** LambdaTest, Git", resume)
+
+        punctuation = generated_response()
+        punctuation["skill_groups"][0]["items"] = ["Python  ", "Java"]
+        source, generation = self._parse(punctuation)
+        resume = render_resume(source, generation)
+        self.assertIn("**Programming Languages:** Python, Java", resume)
+        self.assertNotIn("Python  ,", resume)
+
+        lowered = generated_response()
+        lowered["skill_groups"][0]["items"] = ["python", "Java"]
+        with self.assertRaisesRegex(GroundingError, "not an exact source item"):
+            self._parse(lowered)
+
+        accented = generated_response()
+        accented["skill_groups"][0]["items"] = ["Pythón", "Java"]
+        with self.assertRaisesRegex(GroundingError, "not an exact source item"):
+            self._parse(accented)
+
+        duplicated = generated_response()
+        duplicated["skill_groups"][0]["items"] = ["Python", "Python "]
+        with self.assertRaisesRegex(GroundingError, "duplicate skill items"):
+            self._parse(duplicated)
+
+        emitted_kind = generated_response()
+        emitted_kind["skill_groups"][0]["kind"] = "skill"
+        with self.assertRaisesRegex(GroundingError, "unknown: kind"):
+            self._parse(emitted_kind)
+
+        emitted_label = generated_response()
+        emitted_label["skill_groups"][0]["label"] = "Programming"
+        with self.assertRaisesRegex(GroundingError, "unknown: label"):
+            self._parse(emitted_label)
+
+        non_skill = generated_response()
+        non_skill["skill_groups"][0]["source_fragment_id"] = "summary.1"
+        with self.assertRaisesRegex(GroundingError, "not a skill category"):
+            self._parse(non_skill)
+
+        missing_spoken = generated_response()
+        missing_spoken["skill_groups"] = missing_spoken["skill_groups"][:2]
+        with self.assertRaisesRegex(GroundingError, "spoken-language category"):
+            self._parse(missing_spoken)
+
+        too_many = generated_response()
+        too_many["skill_groups"] = too_many["skill_groups"] + [too_many["skill_groups"][0]]
+        with self.assertRaisesRegex(GroundingError, "skill groups must contain 2-3 items"):
+            self._parse(too_many)
+
+    def test_v2_employer_evidence_mismatch_fails(self):
+        response = generated_response()
+        response["experience"][0]["bullets"][0]["source_fragment_ids"] = ["experience.beta.bullet.1"]
+        with self.assertRaisesRegex(GroundingError, "owned by Beta, not Acme"):
+            self._parse(response)
+
+        response = generated_response()
+        response["experience"][1]["employer"] = "Acme"
+        with self.assertRaisesRegex(GroundingError, "duplicate experience entry"):
+            self._parse(response)
+
+        response = generated_response()
+        response["experience"] = response["experience"][:1]
+        with self.assertRaisesRegex(GroundingError, "experience omits employers: Beta"):
+            self._parse(response)
+
+        response = generated_response()
+        response["experience"][0]["bullets"][0]["source_fragment_ids"] = ["summary.1"]
+        with self.assertRaisesRegex(GroundingError, "same-employer bullets or skill fragments"):
+            self._parse(response)
+
+    def test_v2_unsupported_mobile_word_requires_grounding(self):
+        source = make_pt_source()
+        response = starta_generated_response()
+        bullet = response["experience"][1]["bullets"][0]
+        bullet["text"] = "Automação E2E para aplicações mobile."
+        bullet["source_fragment_ids"] = [
+            "experience.ab-inbev.bullet.2",
+            "skills.automacao-de-testes",
+        ]
+        source, generation = self._parse(response, source)
+        warnings = [warning for warning in generation.warnings if "mobile" in warning.message]
+        self.assertTrue(warnings, [warning.message for warning in generation.warnings])
+        self.assertTrue(all(warning.code == "UNSUPPORTED_CONTENT_WORD" for warning in warnings))
+
+        response = starta_generated_response()
+        bullet = response["experience"][1]["bullets"][0]
+        bullet["text"] = "Automação E2E para aplicações mobile."
+        bullet["source_fragment_ids"] = [
+            "experience.ab-inbev.bullet.2",
+            "experience.ab-inbev.bullet.1",
+            "skills.automacao-de-testes",
+        ]
+        source, generation = self._parse(response, source)
+        self.assertFalse([warning for warning in generation.warnings if "mobile" in warning.message])
+
+        phrased = starta_generated_response()
+        phrase_bullet = phrased["experience"][1]["bullets"][0]
+        phrase_bullet["text"] = "Execução de Testes Mobile sem suporte declarado."
+        phrase_bullet["source_fragment_ids"] = ["experience.ab-inbev.bullet.2"]
+        with self.assertRaisesRegex(GroundingError, "skill_label 'Testes' without citing supporting evidence"):
+            self._parse(phrased, source)
+
+    def test_v2_unsupported_tool_metric_title_date_and_certification_fail(self):
+        response = generated_response()
+        response["headline"]["text"] = "Quality Engineering | Modern Kubernetes Test Automation"
+        with self.assertRaisesRegex(GroundingError, "Kubernetes"):
+            self._parse(response)
+
+        response = generated_response()
+        response["experience"][1]["bullets"][0]["text"] = "Planned test strategies for web applications with 40% fewer defects."
+        with self.assertRaisesRegex(GroundingError, "metric or date '40"):
+            self._parse(response)
+
+        response = generated_response()
+        response["experience"][1]["bullets"][0]["text"] = "Acted as Head of Quality."
+        with self.assertRaisesRegex(GroundingError, "Head"):
+            self._parse(response)
+
+        response = generated_response()
+        response["experience"][1]["bullets"][0]["text"] = "Planned test strategies since 2019."
+        with self.assertRaisesRegex(GroundingError, "metric or date '2019'"):
+            self._parse(response)
+
+        response = generated_response()
+        response["experience"][1]["bullets"][0]["text"] = "Holds certification in Quality Engineering."
+        with self.assertRaisesRegex(GroundingError, "certification claim"):
+            self._parse(response)
+
+        response = generated_response()
+        response["experience"][1]["bullets"][0]["text"] = "Maintained AWS Certified Developer credentials."
+        with self.assertRaisesRegex(GroundingError, "AWS"):
+            self._parse(response)
+
+    def test_v2_missing_provenance_unknown_and_duplicate_ids_fail(self):
+        response = generated_response()
+        del response["experience"][0]["bullets"][0]["source_fragment_ids"]
+        with self.assertRaisesRegex(GroundingError, "missing: source_fragment_ids"):
+            self._parse(response)
+
+        response = generated_response()
+        response["experience"][0]["bullets"][0]["source_fragment_ids"] = []
+        with self.assertRaisesRegex(GroundingError, "at least 1 items"):
+            self._parse(response)
+
+        response = generated_response()
+        response["experience"][0]["bullets"][0]["source_fragment_ids"] = ["experience.missing.bullet.1"]
+        with self.assertRaisesRegex(GroundingError, "unknown source fragment ID"):
+            self._parse(response)
+
+        response = generated_response()
+        response["experience"][0]["bullets"][0]["source_fragment_ids"] = [
+            "experience.acme.bullet.1",
+            "experience.acme.bullet.1",
+        ]
+        with self.assertRaisesRegex(GroundingError, "duplicate values"):
+            self._parse(response)
+
+        response = generated_response()
+        response["experience"][0]["bullets"][0]["requirement_ids"] = ["req-missing"]
+        with self.assertRaisesRegex(GroundingError, "unknown requirement"):
+            self._parse(response)
+
+    def test_v2_gap_requirement_terms_and_links_fail_closed(self):
+        response = generated_response()
+        response["experience"][1]["bullets"][0]["text"] = "Planned test strategies for Swagger documentation."
+        with self.assertRaisesRegex(GroundingError, "UNSUPPORTED_REQUIREMENT"):
+            self._parse(response)
+
+        response = generated_response()
+        response["experience"][1]["bullets"][0]["requirement_ids"] = ["req-swagger"]
+        with self.assertRaisesRegex(GroundingError, "still classified as a gap"):
+            self._parse(response)
+
+        response = generated_response()
+        response["vacancy_requirements"][1] = {"id": "req-git", "text": "Git", "priority": "preferred"}
+        response["requirement_classifications"][1] = {
+            "requirement_id": "req-git",
+            "status": "gap",
+            "evidence_ids": [],
+        }
+        response["interview_topics"] = [{"requirement_id": "req-git"}]
+        response["experience"][0]["bullets"][0]["text"] = "Used Git for version control."
+        response["experience"][0]["bullets"][0]["source_fragment_ids"] = [
+            "experience.acme.bullet.1",
+            "skills.tools",
+        ]
+        with self.assertRaisesRegex(GroundingError, "CLASSIFICATION_CONFLICT"):
+            self._parse(response)
+
+        response = generated_response()
+        response["vacancy_requirements"][1] = {"id": "req-git", "text": "Git", "priority": "preferred"}
+        response["requirement_classifications"][1] = {
+            "requirement_id": "req-git",
+            "status": "partial",
+            "evidence_ids": ["skills.tools"],
+        }
+        response["interview_topics"] = []
+        response["experience"][0]["bullets"][0]["text"] = "Used Git for version control."
+        response["experience"][0]["bullets"][0]["source_fragment_ids"] = [
+            "experience.acme.bullet.1",
+            "skills.tools",
+        ]
+        self._parse(response)
+
+    def test_v2_classification_evidence_is_bounded(self):
+        response = generated_response()
+        response["requirement_classifications"][0]["evidence_ids"] = [
+            "summary.1",
+            "summary.2",
+            "skills.tools",
+            "skills.programming-languages",
+            "skills.spoken-languages",
+            "experience.acme.bullet.1",
+            "experience.acme.bullet.2",
+            "experience.beta.bullet.1",
+            "headline",
+        ]
+        with self.assertRaisesRegex(GroundingError, "at most 8 items"):
+            self._parse(response)
+
+        evidence = [
+            "summary.1",
+            "summary.2",
+            "skills.tools",
+            "skills.programming-languages",
+            "skills.spoken-languages",
+            "experience.acme.bullet.1",
+            "experience.acme.bullet.2",
+            "experience.beta.bullet.1",
+        ]
+        requirements = [{"id": f"req-{index}", "text": f"Requirement {index}", "priority": "context"} for index in range(1, 9)]
+        classifications = [
+            {"requirement_id": f"req-{index}", "status": "strong", "evidence_ids": list(evidence)}
+            for index in range(1, 9)
+        ]
+        response = generated_response()
+        response["vacancy_requirements"] = requirements
+        response["requirement_classifications"] = classifications
+        response["interview_topics"] = []
+        for block in (
+            response["headline"],
+            response["summary"][0],
+            response["experience"][0]["bullets"][0],
+            response["experience"][1]["bullets"][0],
+        ):
+            block.pop("requirement_ids", None)
+        with self.assertRaisesRegex(GroundingError, "exceeds 60 entries"):
+            self._parse(response)
+
+    def test_v2_language_contract_and_wrong_language_content(self):
+        response = generated_response()
+        response["headline"]["text"] = "Quality Engineering | Experiência Profissional"
+        with self.assertRaisesRegex(GroundingError, "wrong output language"):
+            self._parse(response)
+
+        source = make_pt_source()
+        response = starta_generated_response()
+        response["experience"][0]["bullets"][0]["text"] = (
+            "Planned and executed tests for web applications with the team."
+        )
+        response["experience"][0]["bullets"][0]["source_fragment_ids"] = ["experience.trustly.bullet.1"]
+        source, generation = self._parse(response, source)
+        self.assertIn("LANGUAGE_MISMATCH", {warning.code for warning in generation.warnings})
+
+    def test_v2_bullet_limits_and_duplicate_text(self):
+        response = generated_response()
+        bullets = response["experience"][1]["bullets"]
+        bullets.extend([
+            {"text": "Reviewed release evidence for web releases.", "source_fragment_ids": ["experience.beta.bullet.1"]},
+            {"text": "Documented defects for web releases.", "source_fragment_ids": ["experience.beta.bullet.1"]},
+            {"text": "Coordinated defect triage for web releases.", "source_fragment_ids": ["experience.beta.bullet.1"]},
+            {"text": "Tracked release readiness for web releases.", "source_fragment_ids": ["experience.beta.bullet.1"]},
+        ])
+        with self.assertRaisesRegex(GroundingError, "must contain 1-4 bullets"):
+            self._parse(response)
+
+        response = generated_response()
+        response["experience"][1]["bullets"].append(
+            {"text": "Planned test strategies for web applications.", "source_fragment_ids": ["experience.beta.bullet.1"]}
+        )
+        with self.assertRaisesRegex(GroundingError, "duplicate experience bullet text"):
+            self._parse(response)
+
+        source = make_pt_source()
+        verbatim = starta_generated_response()
+        verbatim["experience"] = []
+        for employer in source.employers:
+            blocks = [
+                {
+                    "text": source.fragments[bullet_id].text[2:].strip(),
+                    "source_fragment_ids": [bullet_id],
+                }
+                for bullet_id in employer.bullet_ids[:4]
+            ]
+            verbatim["experience"].append({"employer": employer.name, "bullets": blocks})
+        with self.assertRaisesRegex(GroundingError, "more than 16 bullets"):
+            self._parse(verbatim, source)
+
+    def test_v2_limits_are_jointly_satisfiable(self):
+        for path, language in (("RESUME_pt-BR.md", "pt-BR"), ("RESUME_en-US.md", "en-US")):
+            with self.subTest(language=language):
+                source = parse_source(Path(path).read_text(encoding="utf-8"), language)
+                self.assertEqual(len(source.skill_ids), 7)
+                self.assertLessEqual(
+                    MAX_HEADLINE_CHARS
+                    + MAX_SUMMARY_BLOCKS * MAX_SUMMARY_CHARS
+                    + len(source.skill_ids) * MAX_SKILL_GROUP_CHARS
+                    + MAX_TOTAL_BULLETS * MAX_BULLET_CHARS,
+                    MAX_TOTAL_CANDIDATE_CHARS,
+                )
+        response = generated_response()
+        response["summary"][0]["text"] = "QA engineer " + "automation " * 80
+        with self.assertRaisesRegex(GroundingError, f"exceeds {MAX_SUMMARY_CHARS} characters"):
+            self._parse(response)
+
+    def test_v2_numeric_facts_are_boundary_aware(self):
+        response = generated_response()
+        response["summary"][0]["text"] = "QA engineer with 2 years of Python automation and reliable delivery."
+        response["summary"][0]["source_fragment_ids"] = [
+            "summary.1",
+            "summary.2",
+            "skills.programming-languages",
+            "experience.acme.date.1",
+        ]
+        with self.assertRaisesRegex(GroundingError, "metric or date '2"):
+            self._parse(response)
+
+        custom_source = parse_source(
+            SYNTHETIC_SOURCE.replace(
+                "- Planned test strategies for web applications.",
+                "- Planned 400 test strategies for web applications.",
+            ),
+            "en-US",
+        )
+        supported = generated_response()
+        supported["summary"][0]["text"] = "QA engineer with 400 test strategies and reliable delivery."
+        supported["summary"][0]["source_fragment_ids"] = [
+            "summary.1",
+            "summary.2",
+            "skills.programming-languages",
+            "experience.beta.bullet.1",
+        ]
+        self._parse(supported, custom_source)
+
+        fabricated = generated_response()
+        fabricated["summary"][0]["text"] = "QA engineer with 40% faster delivery."
+        fabricated["summary"][0]["source_fragment_ids"] = [
+            "summary.1",
+            "summary.2",
+            "skills.programming-languages",
+            "experience.beta.bullet.1",
+        ]
+        with self.assertRaisesRegex(GroundingError, "metric or date '40"):
+            self._parse(fabricated, custom_source)
+
+        pt_source = make_pt_source()
+        e2e = starta_generated_response()
+        e2e["summary"][1]["text"] = "Atuação com 2 anos de experiência em automação E2E."
+        e2e["summary"][1]["source_fragment_ids"] = [
+            "summary.2",
+            "skills.automacao-de-testes",
+            "experience.trustly.bullet.2",
+        ]
+        with self.assertRaisesRegex(GroundingError, "metric or date '2"):
+            self._parse(e2e, pt_source)
+
+        valid = generated_response()
+        valid["summary"][0]["text"] = "QA engineer with reliable software delivery since Jan 2024."
+        valid["summary"][0]["source_fragment_ids"] = [
+            "summary.1",
+            "summary.2",
+            "skills.programming-languages",
+            "experience.acme.date.1",
+        ]
+        self._parse(valid)
+
+        plus_source = parse_source(
+            SYNTHETIC_SOURCE.replace(
+                "Experienced in reliable software delivery.",
+                "Experienced in 7 years of reliable software delivery.",
+            ),
+            "en-US",
+        )
+        plus = generated_response()
+        plus["summary"][0]["text"] = "QA engineer with 7+ years of Python automation and reliable delivery."
+        plus["summary"][0]["source_fragment_ids"] = [
+            "summary.1",
+            "summary.2",
+            "skills.programming-languages",
+        ]
+        self._parse(plus, plus_source)
+
+    def test_v2_numeric_unit_context_must_match(self):
+        years_source = parse_source(
+            SYNTHETIC_SOURCE.replace(
+                "Experienced in reliable software delivery.",
+                "Experienced in 2 years of reliable software delivery.",
+            ),
+            "en-US",
+        )
+        response = generated_response()
+        response["summary"][0]["text"] = "QA engineer with 2 defects and reliable delivery."
+        response["summary"][0]["source_fragment_ids"] = [
+            "summary.1",
+            "summary.2",
+            "skills.programming-languages",
+        ]
+        with self.assertRaisesRegex(GroundingError, "metric or date '2 defects'"):
+            self._parse(response, years_source)
+
+        months_source = parse_source(
+            SYNTHETIC_SOURCE.replace(
+                "Experienced in reliable software delivery.",
+                "Experienced in 2 months of reliable software delivery.",
+            ),
+            "en-US",
+        )
+        response = generated_response()
+        response["summary"][0]["text"] = "QA engineer with 2 years of Python automation and reliable delivery."
+        response["summary"][0]["source_fragment_ids"] = [
+            "summary.1",
+            "summary.2",
+            "skills.programming-languages",
+        ]
+        with self.assertRaisesRegex(GroundingError, "metric or date '2 years'"):
+            self._parse(response, months_source)
+
+        response = generated_response()
+        response["summary"][0]["text"] = "QA engineer with 2 months of Python automation and reliable delivery."
+        response["summary"][0]["source_fragment_ids"] = [
+            "summary.1",
+            "summary.2",
+            "skills.programming-languages",
+        ]
+        self._parse(response, months_source)
+
+        defects_source = parse_source(
+            SYNTHETIC_SOURCE.replace(
+                "Planned test strategies for web applications.",
+                "Planned 2 defects for web applications.",
+            ),
+            "en-US",
+        )
+        response = generated_response()
+        response["experience"][1]["bullets"][0]["text"] = "Planned 2 defects for web applications."
+        response["experience"][1]["bullets"][0]["source_fragment_ids"] = ["experience.beta.bullet.1"]
+        self._parse(response, defects_source)
+
+        response = generated_response()
+        response["experience"][1]["bullets"][0]["text"] = "Planned 2 tests for web applications."
+        response["experience"][1]["bullets"][0]["source_fragment_ids"] = ["experience.beta.bullet.1"]
+        with self.assertRaisesRegex(GroundingError, "metric or date '2 tests'"):
+            self._parse(response, defects_source)
+
+    def test_v2_percentage_unit_aliases(self):
+        percent_source = parse_source(
+            SYNTHETIC_SOURCE.replace(
+                "Experienced in reliable software delivery.",
+                "Improved reliable software delivery by 40% across teams.",
+            ),
+            "en-US",
+        )
+        for phrase in ("40 percent", "40 porcento", "40 porcentagem", "40%", "40 pct"):
+            with self.subTest(phrase=phrase):
+                response = generated_response()
+                response["summary"][0]["text"] = (
+                    f"QA engineer with {phrase} faster Python automation and reliable delivery."
+                )
+                response["summary"][0]["source_fragment_ids"] = [
+                    "summary.1",
+                    "summary.2",
+                    "skills.programming-languages",
+                ]
+                self._parse(response, percent_source)
+
+        years_source = parse_source(
+            SYNTHETIC_SOURCE.replace(
+                "Experienced in reliable software delivery.",
+                "Experienced in 40 years of reliable software delivery.",
+            ),
+            "en-US",
+        )
+        response = generated_response()
+        response["summary"][0]["text"] = (
+            "QA engineer with 40 percent faster Python automation and reliable delivery."
+        )
+        response["summary"][0]["source_fragment_ids"] = [
+            "summary.1",
+            "summary.2",
+            "skills.programming-languages",
+        ]
+        with self.assertRaisesRegex(GroundingError, "metric or date '40"):
+            self._parse(response, years_source)
+
+    def test_v2_gap_generic_words_stay_usable_and_full_claim_fails(self):
+        source = make_pt_source()
+        base = starta_generated_response()
+        base["vacancy_requirements"].append(
+            {"id": "req-unit", "text": "testes unitários", "priority": "required"}
+        )
+        base["requirement_classifications"].append(
+            {"requirement_id": "req-unit", "status": "gap", "evidence_ids": []}
+        )
+        base["interview_topics"].append({"requirement_id": "req-unit"})
+        generation = parse_and_validate_response(json.dumps(base), source)
+        self.assertTrue(any("testes" in bullet.text for bullet in generation.all_bullets()))
+
+        claimed = json.loads(json.dumps(base))
+        claimed["experience"][0]["bullets"][0]["text"] = (
+            "Execução de testes unitários para jornadas críticas de pagamentos."
+        )
+        with self.assertRaisesRegex(GroundingError, "UNSUPPORTED_REQUIREMENT"):
+            parse_and_validate_response(json.dumps(claimed), source)
+
+        grounded = json.loads(json.dumps(base))
+        grounded["vacancy_requirements"][-1] = {"id": "req-unit", "text": "Git", "priority": "required"}
+        grounded["experience"][0]["bullets"][0]["text"] = (
+            "Execução de testes com Git para jornadas críticas de pagamentos."
+        )
+        grounded["experience"][0]["bullets"][0]["source_fragment_ids"] = [
+            "experience.trustly.bullet.1",
+            "skills.ferramentas",
+        ]
+        with self.assertRaisesRegex(GroundingError, "CLASSIFICATION_CONFLICT"):
+            parse_and_validate_response(json.dumps(grounded), source)
+
+    def test_v2_strict_skill_echo_rejects_compatibility_forms(self):
+        response = generated_response()
+        response["skill_groups"][0]["items"] = ["Ｐｙｔｈｏｎ", "Java"]
+        with self.assertRaisesRegex(GroundingError, "not an exact source item"):
+            self._parse(response)
+
+        response = generated_response()
+        response["skill_groups"][0]["items"] = ["Python\u00a0", "Java"]
+        source, generation = self._parse(response)
+        self.assertIn(
+            "**Programming Languages:** Python, Java",
+            render_resume(source, generation),
+        )
+
+    def test_v2_classification_evidence_is_report_only(self):
+        response = generated_response()
+        response["requirement_classifications"][0]["evidence_ids"] = [
+            "experience.acme.bullet.1",
+            "experience.acme.bullet.2",
+            "skills.programming-languages",
+        ]
+        source, generation = self._parse(response)
+        self.assertIn("experience.acme.bullet.2", generation.classification_evidence_ids)
+        self.assertNotIn("experience.acme.bullet.2", generation.rendered_fragment_ids)
+        resume = render_resume(source, generation)
+        self.assertNotIn("Used LambdaTest during cross-platform delivery.", resume)
+        self.assertIn("Used LambdaTest during cross-platform delivery.", render_report(source, generation))
+        manifest = generation.to_manifest()
+        self.assertIn("experience.acme.bullet.2", manifest["classification_evidence_ids"])
+        self.assertNotIn("experience.acme.bullet.2", manifest["rendered_fragment_ids"])
+
+    def test_v2_manifest_round_trip_and_tamper_rejection(self):
+        source, generation = self._parse(generated_response())
+        manifest = generation.to_manifest()
+        self.assertEqual(manifest["schema_version"], 2)
+        self.assertTrue(manifest["review_required"])
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "manifest.json"
+            write_manifest(path, generation)
+            restored = validate_manifest(source, load_manifest(path))
+        self.assertEqual(render_resume(source, restored), render_resume(source, generation))
+        self.assertEqual(len(restored.warnings), len(generation.warnings))
+
+        tampered = json.loads(json.dumps(manifest))
+        tampered["warnings"] = []
+        with self.assertRaisesRegex(GroundingError, "warnings are inconsistent"):
+            validate_manifest(source, tampered)
+
+        tampered = json.loads(json.dumps(manifest))
+        tampered["language"] = "pt-BR"
+        with self.assertRaisesRegex(GroundingError, "does not belong"):
+            validate_manifest(source, tampered)
+
+        tampered = json.loads(json.dumps(manifest))
+        tampered["experience"][0]["bullets"][0]["text"] = "Automated API tests with Kubernetes."
+        with self.assertRaisesRegex(GroundingError, "Kubernetes"):
+            validate_manifest(source, tampered)
+
+    def test_v2_starta_like_fixture(self):
+        source = make_pt_source()
+        generation = parse_and_validate_response(json.dumps(starta_generated_response()), source)
+        bullets = generation.all_bullets()
+        self.assertGreaterEqual(len(bullets), 12)
+        self.assertLessEqual(len(bullets), 16)
+        self.assertEqual(len(generation.experience), 5)
+        self.assertEqual(len(generation.skill_groups), 6)
+        self.assertEqual({group.source_fragment_id for group in generation.skill_groups} & {source.spoken_language_id}, {source.spoken_language_id})
+        codes = {warning.code for warning in generation.warnings}
+        self.assertIn("UNSUPPORTED_CONTENT_WORD", codes)
+        self.assertTrue(any("aplicacoes" in warning.message for warning in generation.warnings))
+        self.assertEqual(
+            codes & {
+                "UNSUPPORTED_CLAIM",
+                "UNSUPPORTED_PROVENANCE",
+                "UNSUPPORTED_REQUIREMENT",
+                "CLASSIFICATION_CONFLICT",
+            },
+            set(),
+        )
+        resume = render_resume(source, generation)
+        report = render_report(source, generation)
+        validate_rendered_markdown(source, generation, resume)
+        validate_rendered_report(source, generation, report)
+        for keyword in ("Selenium", "JMeter", "Jenkins", "SQL Server", "GeneXus", "REST"):
+            self.assertIn(keyword, resume)
+        self.assertIn("Automação de testes E2E com Selenium, Python e Pytest para aplicações mobile.", resume)
+        self.assertIn("## Experiência Profissional", resume)
+        self.assertIn("### Pós-graduação Lato Sensu em Cybersecurity", resume)
+        self.assertIn("TDD", report)
+        self.assertIn("req-tdd", report)
+        for block_id in [bullet.block_id for bullet in bullets]:
+            self.assertIn(f"`{block_id}`", report)
+        manifest = generation.to_manifest()
+        restored = validate_manifest(source, json.loads(json.dumps(manifest)))
+        self.assertEqual(restored.rendered_fragment_ids, generation.rendered_fragment_ids)
+
+    def test_v2_starta_like_tdd_sonar_claims_fail(self):
+        source = make_pt_source()
+        response = starta_generated_response()
+        response["experience"][0]["bullets"][0]["text"] = (
+            "Execução de estratégias de testes com TDD e Sonar para jornadas críticas de pagamentos."
+        )
+        with self.assertRaisesRegex(GroundingError, "UNSUPPORTED_REQUIREMENT"):
+            parse_and_validate_response(json.dumps(response), source)
+
+    def test_v2_missing_employer_entry_and_unknown_employer_fail(self):
+        response = generated_response()
+        response["experience"][1]["employer"] = "Gamma"
+        with self.assertRaisesRegex(GroundingError, "not an exact master employer name"):
+            self._parse(response)
+
+    def test_v2_prompt_and_request_schema(self):
+        prompt = build_prompt(make_source(), "https://example.test/job", schema_version=2)
+        for fragment in (
+            "LANGUAGE CONTRACT",
+            "PROVENANCE CONTRACT",
+            "GAP CONTRACT",
+            "BUDGETS",
+            "US English",
+            "Never translate, re-case, or re-pluralize them.",
+            "must cite the master headline fragment",
+            "Never cite another employer's bullet.",
+            "Do not return a label or kind field.",
+            "at most 8 IDs per requirement and at most 60 evidence IDs in total",
+        ):
+            self.assertIn(fragment, prompt)
+        pt_prompt = build_prompt(make_pt_source(), "https://example.test/job", schema_version=2)
+        self.assertIn("Brazilian Portuguese", pt_prompt)
+        self.assertIn("2 to 7 skill groups", pt_prompt)
+        schema = MODEL_RESPONSE_SCHEMA_V2
+        self.assertFalse(schema["additionalProperties"])
+        self.assertEqual(set(schema["required"]), set(schema["properties"]) - {"headline"})
+        self.assertEqual(schema["properties"]["summary"]["maxItems"], 2)
+        self.assertEqual(schema["properties"]["experience"]["items"]["properties"]["bullets"]["maxItems"], 4)
+        self.assertEqual(
+            schema["properties"]["requirement_classifications"]["items"]["properties"]["evidence_ids"]["maxItems"],
+            8,
+        )
+        payload = build_request_body("example/model", prompt, use_web=True, schema_version=2)
+        self.assertEqual(payload["response_format"]["json_schema"]["name"], "tailored_resume_generation")
+        self.assertTrue(payload["response_format"]["json_schema"]["strict"])
+        self.assertIn("Every generated block must cite", payload["messages"][0]["content"])
 
 
 class StartaLikeCoverageTests(unittest.TestCase):
