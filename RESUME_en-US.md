@@ -69,7 +69,7 @@ Mar 2019 - Jul 2021 | Santo Andre, Brazil
 ## Education
 
 ### Postgraduate Specialization in Cybersecurity (Lato Sensu) | Universidade Cruzeiro do Sul
-Mar 2021 - Mar 2022 | Completed
+Mar 2021 - Mar 2022
 
 ### Technologist Degree in Systems Analysis and Development | Universidade Cruzeiro do Sul
 Feb 2018 - Aug 2020
