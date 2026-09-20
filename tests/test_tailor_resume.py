@@ -9,6 +9,7 @@ from unittest.mock import patch
 
 from scripts.tailor_resume import (
     MAX_RESPONSE_TOKENS,
+    MAX_RESPONSE_TOKENS_V2,
     MODEL_RESPONSE_SCHEMA_V2,
     build_prompt,
     build_request_body,
@@ -1349,6 +1350,107 @@ class GeneratedV2Tests(unittest.TestCase):
             block.pop("requirement_ids", None)
         with self.assertRaisesRegex(GroundingError, "exceeds 60 entries"):
             self._parse(response)
+
+    def test_v1_and_v2_completion_budgets_are_separate(self):
+        v1 = build_request_body("example/model", "prompt", use_web=True)
+        v2 = build_request_body("example/model", "prompt", use_web=True, schema_version=2)
+        self.assertEqual(v1["max_tokens"], MAX_RESPONSE_TOKENS)
+        self.assertEqual(v1["max_tokens"], 12000)
+        self.assertEqual(v2["max_tokens"], MAX_RESPONSE_TOKENS_V2)
+        self.assertGreater(v2["max_tokens"], v1["max_tokens"])
+        self.assertLessEqual(MAX_RESPONSE_TOKENS_V2, 16000)
+        self.assertEqual(v1["response_format"]["json_schema"]["name"], "tailored_resume_selection")
+        self.assertEqual(v2["response_format"]["json_schema"]["name"], "tailored_resume_generation")
+
+        block_schema = MODEL_RESPONSE_SCHEMA_V2["properties"]["experience"]["items"]["properties"]["bullets"]["items"]
+        self.assertIn("source_fragment_ids", block_schema["required"])
+        self.assertEqual(block_schema["properties"]["source_fragment_ids"]["maxItems"], 4)
+        classification_schema = MODEL_RESPONSE_SCHEMA_V2["properties"]["requirement_classifications"]["items"]
+        self.assertEqual(classification_schema["required"], ["requirement_id", "status"])
+        self.assertEqual(classification_schema["properties"]["evidence_ids"]["maxItems"], 8)
+
+    def test_v2_classification_evidence_can_be_derived(self):
+        response = generated_response()
+        del response["requirement_classifications"][0]["evidence_ids"]
+        source, generation = self._parse(response)
+        match = generation.strong_matches[0]
+        self.assertEqual(match.requirement_id, "req-python")
+        self.assertEqual(
+            match.evidence_ids,
+            (
+                "headline",
+                "skills.programming-languages",
+                "experience.acme.bullet.1",
+                "summary.1",
+                "summary.2",
+            ),
+        )
+        manifest = generation.to_manifest()
+        self.assertEqual(
+            manifest["classifications"]["req-python"]["evidence_ids"],
+            list(match.evidence_ids),
+        )
+        self.assertIn("skills.programming-languages", render_report(source, generation))
+        restored = validate_manifest(source, json.loads(json.dumps(manifest)))
+        self.assertEqual(restored.strong_matches[0].evidence_ids, match.evidence_ids)
+        self.assertEqual(restored.classification_evidence_ids, generation.classification_evidence_ids)
+
+    def test_v2_evidence_required_when_no_block_links(self):
+        response = generated_response()
+        del response["requirement_classifications"][0]["evidence_ids"]
+        for block in (
+            response["headline"],
+            response["summary"][0],
+            response["experience"][0]["bullets"][0],
+        ):
+            block.pop("requirement_ids", None)
+        with self.assertRaisesRegex(GroundingError, "strong classification requires evidence: req-python"):
+            self._parse(response)
+
+    def test_v2_gap_evidence_still_rejected(self):
+        response = generated_response()
+        response["requirement_classifications"][1]["evidence_ids"] = ["skills.tools"]
+        with self.assertRaisesRegex(GroundingError, "gap classification cannot contain evidence"):
+            self._parse(response)
+
+    def test_v2_prompt_requires_compact_response(self):
+        prompt = build_prompt(make_source(), "https://example.test/job", schema_version=2)
+        for fragment in (
+            "COMPACT RESPONSE",
+            "no explanations, comments, Markdown, or text outside it",
+            "Do not repeat a source fragment ID more than once per block",
+            "Omit requirement_classifications[].evidence_ids whenever generated blocks already cite the",
+            "derives the evidence deterministically",
+            "never pad, repeat, or duplicate sentences",
+        ):
+            self.assertIn(fragment, prompt)
+        self.assertIn("at most 8 IDs per requirement and at most 60 evidence IDs in total", prompt)
+
+    def test_v2_completion_length_is_rejected_without_retry(self):
+        response_body = {
+            "choices": [{
+                "finish_reason": "length",
+                "message": {"content": '{"secret":"must not leak"}'},
+            }],
+        }
+
+        class FakeResponse(io.BytesIO):
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *args):
+                self.close()
+
+        with patch(
+            "scripts.tailor_resume.urllib.request.urlopen",
+            return_value=FakeResponse(json.dumps(response_body).encode()),
+        ) as urlopen:
+            with self.assertRaisesRegex(RuntimeError, "completion failed: length") as raised:
+                request_openrouter("not-used", "example/model", "prompt", use_web=False, schema_version=2)
+        self.assertNotIn("must not leak", str(raised.exception))
+        urlopen.assert_called_once()
+        request_data = json.loads(urlopen.call_args[0][0].data.decode("utf-8"))
+        self.assertEqual(request_data["max_tokens"], MAX_RESPONSE_TOKENS_V2)
 
     def test_v2_language_contract_and_wrong_language_content(self):
         response = generated_response()

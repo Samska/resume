@@ -1443,8 +1443,21 @@ def _v2_skill_items(value: Any, field: str, fragment: Fragment) -> tuple[str, ..
     return tuple(items)
 
 
-def validate_generated_response(data: dict[str, Any], source: SourceResume) -> ValidatedGeneration:
-    """Validate the v2 generated-content contract and return a manifest-ready generation."""
+def validate_generated_response(
+    data: dict[str, Any],
+    source: SourceResume,
+    *,
+    evidence_total_limit: int | None = MAX_CLASSIFICATION_EVIDENCE_TOTAL,
+) -> ValidatedGeneration:
+    """Validate the v2 generated-content contract and return a manifest-ready generation.
+
+    ``evidence_ids`` are optional for strong/partial classifications. When they
+    are omitted, the evidence index is derived deterministically from the
+    ``source_fragment_ids`` of generated blocks that cite the requirement, so
+    the response stays compact without losing provenance. Manifest replay passes
+    ``evidence_total_limit=None`` because derived evidence can legitimately be
+    shared across requirements.
+    """
 
     core = {
         "schema_version",
@@ -1503,12 +1516,20 @@ def validate_generated_response(data: dict[str, Any], source: SourceResume) -> V
     partial_matches: list[Match] = []
     gaps: list[str] = []
     classified: set[str] = set()
-    evidence_union: list[str] = []
+    pending_evidence: list[tuple[str, str, tuple[str, ...] | None]] = []
     evidence_total = 0
     for item in classification_items:
         if not isinstance(item, dict):
             _fail("MODEL_SCHEMA", "requirement classifications must be objects")
-        _exact_keys(item, {"requirement_id", "status", "evidence_ids"}, "requirement classification")
+        unknown = sorted(set(item) - {"requirement_id", "status", "evidence_ids"})
+        missing = sorted({"requirement_id", "status"} - set(item))
+        if unknown or missing:
+            detail: list[str] = []
+            if unknown:
+                detail.append("unknown: " + ", ".join(unknown))
+            if missing:
+                detail.append("missing: " + ", ".join(missing))
+            _fail("MODEL_SCHEMA", f"requirement classification fields are invalid ({'; '.join(detail)})")
         requirement_id = item["requirement_id"]
         if requirement_id not in requirement_ids:
             _fail("MODEL_SCHEMA", f"classification references unknown requirement: {requirement_id}")
@@ -1518,29 +1539,24 @@ def validate_generated_response(data: dict[str, Any], source: SourceResume) -> V
         status = item["status"]
         if status not in {"strong", "partial", "gap"}:
             _fail("MODEL_SCHEMA", f"invalid requirement classification: {status!r}")
-        evidence_values = _v2_string_list(
-            item["evidence_ids"],
-            f"{requirement_id}.evidence_ids",
-            max_items=MAX_CLASSIFICATION_EVIDENCE,
-        )
+        explicit: tuple[str, ...] | None = None
+        if "evidence_ids" in item:
+            explicit = tuple(_v2_string_list(
+                item["evidence_ids"],
+                f"{requirement_id}.evidence_ids",
+                max_items=MAX_CLASSIFICATION_EVIDENCE,
+            ))
         if status == "gap":
-            if evidence_values:
+            if explicit:
                 _fail("EVIDENCE_MAPPING", f"gap classification cannot contain evidence: {requirement_id}")
             gaps.append(requirement_id)
             continue
-        if not evidence_values:
-            _fail("EVIDENCE_MAPPING", f"{status} classification requires evidence: {requirement_id}")
-        for evidence_id in evidence_values:
-            if evidence_id not in source.fragments:
-                _fail("EVIDENCE_MAPPING", f"unknown evidence ID: {evidence_id}")
-            if evidence_id not in evidence_union:
-                evidence_union.append(evidence_id)
-        evidence_total += len(evidence_values)
-        match = Match(requirement_id, tuple(evidence_values))
-        if status == "strong":
-            strong_matches.append(match)
-        else:
-            partial_matches.append(match)
+        if explicit:
+            for evidence_id in explicit:
+                if evidence_id not in source.fragments:
+                    _fail("EVIDENCE_MAPPING", f"unknown evidence ID: {evidence_id}")
+            evidence_total += len(explicit)
+        pending_evidence.append((requirement_id, status, explicit))
     if classified != requirement_ids:
         missing_requirements = sorted(requirement_ids - classified)
         _fail(
@@ -1548,10 +1564,10 @@ def validate_generated_response(data: dict[str, Any], source: SourceResume) -> V
             "every vacancy requirement must be classified exactly once (missing: "
             + ", ".join(missing_requirements) + ")",
         )
-    if evidence_total > MAX_CLASSIFICATION_EVIDENCE_TOTAL:
+    if evidence_total_limit is not None and evidence_total > evidence_total_limit:
         _fail(
             "EVIDENCE_MAPPING",
-            f"classification evidence exceeds {MAX_CLASSIFICATION_EVIDENCE_TOTAL} entries",
+            f"classification evidence exceeds {evidence_total_limit} entries",
         )
     gap_set = set(gaps)
 
@@ -1753,6 +1769,28 @@ def validate_generated_response(data: dict[str, Any], source: SourceResume) -> V
                 f"duplicate experience bullet text: {bullet.block_id} duplicates {seen_bullet_texts[text_key]}",
             )
         seen_bullet_texts[text_key] = bullet.block_id
+
+    derived_evidence: dict[str, list[str]] = {}
+    for block, _fragments in assessed_blocks:
+        for requirement_id in block.requirement_ids:
+            bucket = derived_evidence.setdefault(requirement_id, [])
+            for fragment_id in block.source_fragment_ids:
+                if fragment_id not in bucket:
+                    bucket.append(fragment_id)
+    evidence_union: list[str] = []
+    for requirement_id, status, explicit in pending_evidence:
+        effective = list(explicit) if explicit else list(derived_evidence.get(requirement_id, ()))
+        effective = effective[:MAX_CLASSIFICATION_EVIDENCE]
+        if not effective:
+            _fail("EVIDENCE_MAPPING", f"{status} classification requires evidence: {requirement_id}")
+        for evidence_id in effective:
+            if evidence_id not in evidence_union:
+                evidence_union.append(evidence_id)
+        match = Match(requirement_id, tuple(effective))
+        if status == "strong":
+            strong_matches.append(match)
+        else:
+            partial_matches.append(match)
 
     topic_items = _list_field(data, "interview_topics")
     topics: list[str] = []
@@ -1972,7 +2010,7 @@ def _validate_manifest_v2(source: SourceResume, manifest: dict[str, Any]) -> Val
     }
     if "headline" in manifest:
         raw["headline"] = manifest["headline"]
-    generation = validate_generated_response(raw, source)
+    generation = validate_generated_response(raw, source, evidence_total_limit=None)
     expected_warnings = [
         {"code": item.code, "block_id": item.block_id, "message": item.message}
         for item in generation.warnings
