@@ -260,19 +260,26 @@ guess. A response without usable requirements will be rejected safely by reposit
 The source fragments below are the only candidate evidence. Select existing fragment IDs only.
 Do not write resume Markdown, match-report prose, evidence excerpts, explanations, reasons, scores,
 or any other fields. Candidate-facing text will be rendered by repository code from exact source
-fragments. Select one or two summary fragments, spoken languages plus at least one other skill
-category, and at least one bullet for every employer. Select no more than four bullets per employer
-and sixteen bullets total. Add only selectable fragment IDs to selected_fragment_ids. Mandatory
-structural fragments are always rendered in the resume, so they are valid evidence, but they must
+fragments. Optimize for evidence coverage instead of the smallest valid selection: select every
+selectable fragment that materially supports at least one vacancy requirement. For a strongly
+aligned vacancy, when the source contains enough supporting evidence, target approximately twelve
+to sixteen relevant experience bullets. Never pad the resume with weak or unrelated fragments.
+Select the one or two summary fragments most relevant to the vacancy, spoken languages, and every
+other skill category that materially matches the vacancy, and keep at least one bullet for every
+employer. Respect the configured budgets: no more than four bullets per employer, sixteen bullets
+total, and twenty-five selectable fragments total. Add only selectable fragment IDs to
+selected_fragment_ids. Mandatory structural fragments are always rendered in the resume, so they
+are valid evidence, but they must
 never be added to selected_fragment_ids. Every evidence ID must be either a selected fragment ID or
 a known mandatory structural fragment ID. Before finalizing the response, verify that every
 selectable evidence ID used in a strong or partial classification also appears in
 selected_fragment_ids; a missing selectable evidence ID is a contract violation. Include every
 vacancy requirement exactly once in requirement_classifications, with status strong, partial, or
-gap. Strong and partial entries must list at least one valid evidence ID; gap entries must use an
-empty evidence_ids array. Interview topics contain only requirement_id. Use no Markdown or prose
-outside the JSON object. Keep the JSON compact: include only relevant requirements and necessary
-evidence.
+gap. Strong and partial entries must list at least one valid evidence ID and include every selected
+fragment that materially supports the requirement, not only its strongest evidence; gap entries
+must use an empty evidence_ids array. Interview topics contain only requirement_id. Use no Markdown
+or prose outside the JSON object. Keep the JSON compact: report only vacancy requirements grounded
+in the retrieved vacancy data, but do not omit selected evidence that supports them.
 
 REQUIRED JSON CONTRACT
 ---
