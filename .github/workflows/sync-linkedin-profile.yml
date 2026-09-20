@@ -1,0 +1,164 @@
+name: Sync LinkedIn profile
+
+# Imports incoming/linkedin-profile.pdf into proposed updates for the two
+# master resumes (RESUME_en-US.md and RESUME_pt-BR.md).
+#
+# Automatic runs process the PDF only on main. Manual runs require an explicit
+# source branch, PDF path, and target branch. The workflow creates a reviewable
+# pull request and never merges it. The uploaded PDF is not committed to the
+# output branch, is not uploaded as an artifact, and raw extracted text is
+# never written to the repository.
+#
+# The source PDF is only read from the runner's temporary checkout. Deleting it
+# from the output branch does not remove it from the repository's Git history.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "incoming/linkedin-profile.pdf"
+  workflow_dispatch:
+    inputs:
+      source_branch:
+        description: Branch that contains the LinkedIn profile PDF
+        required: true
+        type: string
+      pdf_path:
+        description: Repository-relative path of the LinkedIn profile PDF
+        required: true
+        type: string
+      target_branch:
+        description: Branch whose master resumes are updated and that receives the pull request
+        required: true
+        default: main
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: sync-linkedin-profile
+  cancel-in-progress: false
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    env:
+      EVENT_NAME: ${{ github.event_name }}
+      # Manual runs never fall back to an implicit source branch or PDF path:
+      # an empty dispatch input stays empty and fails input validation below.
+      SOURCE_BRANCH: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.source_branch || (github.event_name == 'push' && 'main' || '') }}
+      PDF_PATH: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.pdf_path || (github.event_name == 'push' && 'incoming/linkedin-profile.pdf' || '') }}
+      TARGET_BRANCH: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.target_branch || 'main' }}
+      OUTPUT_BRANCH: sync/linkedin-profile-${{ github.run_id }}
+      OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+      OPENROUTER_MODEL: ${{ vars.OPENROUTER_MODEL || 'openrouter/auto' }}
+      REPORT_PATH: ${{ runner.temp }}/linkedin-import-report.md
+    steps:
+      - name: Validate workflow inputs
+        run: |
+          set -euo pipefail
+          for value in "$SOURCE_BRANCH" "$PDF_PATH" "$TARGET_BRANCH"; do
+            if [ -z "$value" ]; then
+              echo "source_branch, pdf_path, and target_branch are all required." >&2
+              exit 1
+            fi
+          done
+          case "$PDF_PATH" in
+            /*|*..*) echo "pdf_path must be repository-relative and must not contain '..'." >&2; exit 1 ;;
+            *.pdf) ;;
+            *) echo "pdf_path must end with .pdf." >&2; exit 1 ;;
+          esac
+
+      - name: Check out target branch
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ env.TARGET_BRANCH }}
+
+      - name: Check out source branch
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ env.SOURCE_BRANCH }}
+          path: source
+
+      - name: Resolve the input PDF
+        id: input
+        run: |
+          set -euo pipefail
+          if [ -f "source/$PDF_PATH" ]; then
+            if [ ! -s "source/$PDF_PATH" ]; then
+              echo "The input PDF at $PDF_PATH is empty." >&2
+              exit 1
+            fi
+            if [ "$(head -c 5 "source/$PDF_PATH")" != "%PDF-" ]; then
+              echo "The input file at $PDF_PATH is not a PDF." >&2
+              exit 1
+            fi
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          elif [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            echo "Manual runs require the PDF at $PDF_PATH on $SOURCE_BRANCH." >&2
+            exit 1
+          else
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "No input PDF at $PDF_PATH; the workflow exits successfully without processing."
+          fi
+
+      - name: Check OpenRouter secret
+        if: steps.input.outputs.available == 'true'
+        run: |
+          if [ -z "${OPENROUTER_API_KEY:-}" ]; then
+            echo "Repository secret OPENROUTER_API_KEY is not configured." >&2
+            exit 1
+          fi
+
+      - name: Install PDF tools
+        if: steps.input.outputs.available == 'true'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils
+
+      - name: Run repository tests
+        if: steps.input.outputs.available == 'true'
+        run: python3 -m unittest discover -s tests -v
+
+      - name: Import LinkedIn profile
+        id: import
+        if: steps.input.outputs.available == 'true'
+        run: |
+          set -euo pipefail
+          python3 scripts/linkedin_import.py \
+            --pdf "source/$PDF_PATH" \
+            --report "$REPORT_PATH" \
+            --repo-root .
+
+      - name: Upload import report
+        if: steps.input.outputs.available == 'true' && steps.import.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: linkedin-import-report-${{ github.run_id }}
+          path: ${{ env.REPORT_PATH }}
+          retention-days: 7
+          if-no-files-found: error
+
+      - name: Report no changes
+        if: steps.input.outputs.available == 'true' && steps.import.outputs.changed != 'true'
+        run: echo "The LinkedIn import produced no master-resume changes; no pull request was created."
+
+      - name: Publish output branch and pull request
+        if: steps.input.outputs.available == 'true' && steps.import.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          python3 scripts/publish_linkedin_sync.py \
+            --base-branch "$TARGET_BRANCH" \
+            --output-branch "$OUTPUT_BRANCH" \
+            --report "$REPORT_PATH" \
+            --remove-path "$PDF_PATH"
+
+      - name: Clean up temporary files
+        if: always()
+        run: |
+          rm -rf source
+          rm -f "$REPORT_PATH"

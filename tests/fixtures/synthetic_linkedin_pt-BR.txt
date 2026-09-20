@@ -1,0 +1,25 @@
+Example Candidate
+Engenharia de Qualidade | Automação de Testes
+Remoto | Brasil
+candidate@example.test | linkedin.com/in/example | github.com/example
+
+Sobre
+Engenheiro de qualidade com experiência em automação de testes com Python.
+
+Experiência
+Engenheiro de QA Sênior
+Acme Brasil
+Jan 2024 - Dez 2024 | Remoto
+- Desenvolvimento de automação de API com Python.
+
+Competências
+Python
+Kubernetes
+
+Formação
+Example University
+Tecnólogo em Sistemas
+2018 - 2020
+
+Página 1 de 2
+www.linkedin.com/in/example

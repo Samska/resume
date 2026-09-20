@@ -1,0 +1,25 @@
+Example Candidate
+Quality Engineering | Test Automation
+Remote | Brazil
+candidate@example.test | linkedin.com/in/example | github.com/example
+
+About
+Quality engineer with experience in Python automation.
+
+Experience
+Senior QA Engineer
+Acme Corp
+Jan 2024 - Dec 2024 | Remote
+- Built API automation with Python.
+
+Skills
+Kubernetes
+Python
+
+Education
+Example University
+Systems Degree
+2018 - 2020
+
+Page 1 of 2
+www.linkedin.com/in/example
