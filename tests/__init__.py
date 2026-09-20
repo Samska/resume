@@ -1,1 +1,1 @@
-"""Deterministic tests for tailored-resume grounding."""
+"""Repository test package."""
