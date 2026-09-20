@@ -69,7 +69,7 @@ Mar 2019 - Jul 2021 | Santo André, SP
 ## Formação
 
 ### Pós-graduação Lato Sensu em Cybersecurity (Especialização) | Universidade Cruzeiro do Sul
-Mar 2021 - Mar 2022 | Concluída
+Mar 2021 - Mar 2022
 
 ### Tecnólogo em Análise e Desenvolvimento de Sistemas | Universidade Cruzeiro do Sul
 Fev 2018 - Ago 2020
