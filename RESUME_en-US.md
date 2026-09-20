@@ -89,7 +89,7 @@ Feb 2018 - Aug 2020
 ## Languages
 
 **Portuguese:** Native  
-**English:** EF SET English Certificate 73/100 (C2 Proficient)
+**English:** C2 Proficient (EF SET English Certificate 73/100)
 
 ## Technical Skills
 
