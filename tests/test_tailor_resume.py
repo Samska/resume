@@ -60,6 +60,65 @@ Jan 2020 - Dec 2022 | Completed
 """
 
 
+MANY_SKILLS_SOURCE = SYNTHETIC_SOURCE.replace(
+    "**Tools:** Git, LambdaTest",
+    "\n".join(f"**Category {index:02d}:** Value {index:02d}" for index in range(1, 21)),
+)
+
+
+TOTAL_BULLETS_SOURCE = SYNTHETIC_SOURCE.replace(
+    "- Used LambdaTest during cross-platform delivery.",
+    "- Used LambdaTest during cross-platform delivery.\n\n- Maintained release checks.\n\n- Reviewed test results.\n\n- Documented defects.",
+).replace(
+    "- Planned test strategies for web applications.",
+    "- Planned test strategies for web applications.\n\n- Built regression suites.\n\n- Reviewed release evidence.\n\n- Coordinated defect triage.",
+).replace(
+    "\n## Education",
+    """
+
+### Gamma
+Campinas | Remote
+
+**QA Engineer** | Jan 2022 - Dec 2022
+
+- Built test plans.
+
+- Automated regression checks.
+
+- Reviewed defects.
+
+- Supported releases.
+
+### Delta
+Jundiaí | Remote
+
+**QA Engineer** | Jan 2021 - Dec 2021
+
+- Built test plans.
+
+- Automated regression checks.
+
+- Reviewed defects.
+
+- Supported releases.
+
+### Epsilon
+Remote | Brazil
+
+**QA Engineer** | Jan 2020 - Dec 2020
+
+- Built test plans.
+
+- Automated regression checks.
+
+- Reviewed defects.
+
+- Supported releases.
+
+## Education""",
+)
+
+
 def make_source() -> object:
     return parse_source(SYNTHETIC_SOURCE, "en-US")
 
@@ -174,14 +233,35 @@ class ResponseAndRenderingTests(unittest.TestCase):
         with self.assertRaisesRegex(GroundingError, "selection omits employer"):
             parse_and_validate_response(json.dumps(make_response(source, selected=missing)), source)
 
-    def test_excessive_selection_and_invalid_evidence_fail(self):
+    def test_duplicate_selection_fails_independently(self):
         source = make_source()
-        excessive = make_response(source)
-        excessive["selected_fragment_ids"] = [item for item in source.fragments if source.fragments[item].selectable]
-        excessive["selected_fragment_ids"].append("summary.1")
+        selected = make_response(source)["selected_fragment_ids"]
+        excessive = make_response(source, selected=selected + [selected[0]])
         with self.assertRaisesRegex(GroundingError, "duplicate selected fragment"):
             parse_and_validate_response(json.dumps(excessive), source)
 
+    def test_selection_count_limit_fails_for_unique_fragments(self):
+        source = parse_source(MANY_SKILLS_SOURCE, "en-US")
+        selected = [item.id for item in source.fragments.values() if item.selectable]
+        self.assertGreater(len(selected), 25)
+        response = make_response(source, selected=selected)
+        with self.assertRaisesRegex(GroundingError, "selected fragment count"):
+            parse_and_validate_response(json.dumps(response), source)
+
+    def test_total_bullet_limit_fails_independently(self):
+        source = parse_source(TOTAL_BULLETS_SOURCE, "en-US")
+        selected = [
+            item.id
+            for item in source.fragments.values()
+            if item.selectable and item.id != "experience.acme.bullet.1"
+        ]
+        self.assertEqual(len(selected), 25)
+        response = make_response(source, selected=selected)
+        with self.assertRaisesRegex(GroundingError, "more than 16 bullets"):
+            parse_and_validate_response(json.dumps(response), source)
+
+    def test_known_but_unselected_evidence_fails(self):
+        source = make_source()
         invalid_evidence = make_response(source)
         invalid_evidence["selected_fragment_ids"] = [
             item for item in invalid_evidence["selected_fragment_ids"] if item != "skills.tools"

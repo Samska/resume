@@ -81,6 +81,16 @@ jobs:
             --model "$OPENROUTER_MODEL" \
             --manifest "$RUNNER_TEMP/tailored-resume-manifest.json"
 
+      - name: Validate grounded Markdown and report
+        run: |
+          python3 scripts/validate_tailored_resume.py \
+            --mode content \
+            --markdown "$TAILORED_MARKDOWN" \
+            --source "RESUME_${TARGET_LANGUAGE}.md" \
+            --report "$MATCH_REPORT" \
+            --manifest "$GROUNDING_MANIFEST" \
+            --language "$TARGET_LANGUAGE"
+
       - name: Generate tailored PDF
         run: |
           pandoc "$TAILORED_MARKDOWN" \
@@ -90,9 +100,10 @@ jobs:
             -V header-includes='\usepackage{needspace}\usepackage{etoolbox}\pretocmd{\subsubsection}{\Needspace{10\baselineskip}}{}{}' \
             -o "$TAILORED_PDF"
 
-      - name: Validate tailored resume
+      - name: Validate tailored PDF
         run: |
           python3 scripts/validate_tailored_resume.py \
+            --mode full \
             --pdf "$TAILORED_PDF" \
             --markdown "$TAILORED_MARKDOWN" \
             --source "RESUME_${TARGET_LANGUAGE}.md" \

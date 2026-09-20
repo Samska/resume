@@ -75,9 +75,20 @@ def write_summary(lines: list[str]) -> None:
             handle.write(summary_text)
 
 
+def validate_content(source_path: Path, language: str, markdown_path: Path, report_path: Path, manifest_path: Path):
+    source = parse_source(source_path.read_text(encoding="utf-8"), language)
+    selection = validate_manifest(source, load_manifest(manifest_path))
+    markdown = markdown_path.read_text(encoding="utf-8")
+    report = report_path.read_text(encoding="utf-8")
+    validate_rendered_markdown(source, selection, markdown)
+    validate_rendered_report(source, selection, report)
+    return source, selection
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--pdf", required=True, type=Path)
+    parser.add_argument("--mode", required=True, choices=("content", "full"))
+    parser.add_argument("--pdf", type=Path)
     parser.add_argument("--markdown", required=True, type=Path)
     parser.add_argument("--source", required=True, type=Path)
     parser.add_argument("--report", required=True, type=Path)
@@ -85,12 +96,26 @@ def main() -> int:
     parser.add_argument("--language", required=True, choices=("pt-BR", "en-US"))
     args = parser.parse_args()
 
-    source = parse_source(args.source.read_text(encoding="utf-8"), args.language)
-    selection = validate_manifest(source, load_manifest(args.manifest))
-    markdown = args.markdown.read_text(encoding="utf-8")
-    report = args.report.read_text(encoding="utf-8")
-    validate_rendered_markdown(source, selection, markdown)
-    validate_rendered_report(source, selection, report)
+    if args.mode == "full" and args.pdf is None:
+        parser.error("--pdf is required in full mode")
+    if args.mode == "content" and args.pdf is not None:
+        parser.error("--pdf is only valid in full mode")
+
+    source, selection = validate_content(
+        args.source,
+        args.language,
+        args.markdown,
+        args.report,
+        args.manifest,
+    )
+    if args.mode == "content":
+        print(
+            "Content validation passed "
+            f"(selected={len(selection.selected_fragment_ids)}, employers={len(source.employers)})"
+        )
+        return 0
+
+    assert args.pdf is not None
     pdf_checks = validate_pdf(args.pdf, source, selection)
 
     checks = [
