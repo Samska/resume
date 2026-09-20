@@ -319,6 +319,44 @@ class ResponseAndRenderingTests(unittest.TestCase):
         self.assertEqual({tool["type"] for tool in payload["tools"]}, {"openrouter:web_fetch", "openrouter:web_search"})
         self.assertNotIn("stream", payload)
 
+    def test_response_healing_plugin_applies_only_to_anthropic_model(self):
+        anthropic = build_request_body("~anthropic/claude-sonnet-latest", "prompt", use_web=True)
+        self.assertEqual(anthropic["plugins"], [{"id": "response-healing"}])
+        for model in (
+            "~google/gemini-flash-latest",
+            "~openai/gpt-mini-latest",
+            "deepseek/deepseek-chat",
+            "openrouter/auto",
+        ):
+            with self.subTest(model=model):
+                self.assertNotIn("plugins", build_request_body(model, "prompt", use_web=True))
+
+    def test_anthropic_payload_keeps_strict_guards_and_web_tools(self):
+        payload = build_request_body("~anthropic/claude-sonnet-latest", "prompt", use_web=True)
+        self.assertEqual(payload["max_tokens"], 12000)
+        self.assertEqual(payload["provider"], {"require_parameters": True})
+        self.assertEqual(payload["response_format"]["type"], "json_schema")
+        self.assertTrue(payload["response_format"]["json_schema"]["strict"])
+        schema = payload["response_format"]["json_schema"]["schema"]
+        self.assertFalse(schema["additionalProperties"])
+        self.assertEqual(set(schema["required"]), set(schema["properties"]))
+        self.assertEqual({tool["type"] for tool in payload["tools"]}, {"openrouter:web_fetch", "openrouter:web_search"})
+        self.assertNotIn("stream", payload)
+
+    def test_responses_invalid_after_normalization_are_still_rejected(self):
+        source = make_source()
+        response = json.dumps(make_response(source))
+        with self.assertRaisesRegex(GroundingError, "surrounding prose"):
+            parse_and_validate_response(f"{response}\nAdditional prose", source)
+        healed_but_unknown = make_response(source)
+        healed_but_unknown["resume_markdown"] = "- invented claim"
+        with self.assertRaisesRegex(GroundingError, "unknown:"):
+            parse_and_validate_response(json.dumps(healed_but_unknown), source)
+        healed_but_unknown_id = make_response(source)
+        healed_but_unknown_id["selected_fragment_ids"] = list(healed_but_unknown_id["selected_fragment_ids"]) + ["experience.missing.bullet.1"]
+        with self.assertRaisesRegex(GroundingError, "unknown selected fragment"):
+            parse_and_validate_response(json.dumps(healed_but_unknown_id), source)
+
     def test_abnormal_completion_fails_without_response_content_or_retry(self):
         response_body = {
             "choices": [{

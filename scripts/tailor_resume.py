@@ -38,6 +38,8 @@ except ModuleNotFoundError:
 
 API_URL = "https://openrouter.ai/api/v1/chat/completions"
 MAX_RESPONSE_TOKENS = 12000
+ANTHROPIC_MODEL_PREFIX = "anthropic/"
+RESPONSE_HEALING_PLUGIN = {"id": "response-healing"}
 
 
 MODEL_RESPONSE_SCHEMA: dict[str, object] = {
@@ -159,6 +161,10 @@ def slugify(value: str) -> str:
     return re.sub(r"[^A-Za-z0-9]+", "-", ascii_value).strip("-") or "job"
 
 
+def _is_anthropic_model(model: str) -> bool:
+    return model.lstrip("~").strip().lower().startswith(ANTHROPIC_MODEL_PREFIX)
+
+
 def build_request_body(model: str, prompt: str, use_web: bool) -> dict[str, object]:
     request_body: dict[str, object] = {
         "model": model,
@@ -198,6 +204,8 @@ def build_request_body(model: str, prompt: str, use_web: bool) -> dict[str, obje
                 "parameters": {"max_results": 3, "max_total_results": 3},
             },
         ]
+    if _is_anthropic_model(model):
+        request_body["plugins"] = [RESPONSE_HEALING_PLUGIN]
     return request_body
 
 
