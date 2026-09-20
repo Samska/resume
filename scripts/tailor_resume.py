@@ -71,52 +71,24 @@ MODEL_RESPONSE_SCHEMA: dict[str, object] = {
                 "required": ["id", "text", "priority"],
             },
         },
-        "strong_matches": {
+        "requirement_classifications": {
             "type": "array",
+            "minItems": 1,
             "maxItems": 20,
             "items": {
                 "type": "object",
                 "additionalProperties": False,
                 "properties": {
                     "requirement_id": {"type": "string", "pattern": "^req-[a-z0-9][a-z0-9-]{0,39}$"},
+                    "status": {"type": "string", "enum": ["strong", "partial", "gap"]},
                     "evidence_ids": {
                         "type": "array",
-                        "minItems": 1,
                         "maxItems": 25,
                         "items": {"type": "string", "minLength": 1},
                         "uniqueItems": True,
                     },
                 },
-                "required": ["requirement_id", "evidence_ids"],
-            },
-        },
-        "partial_matches": {
-            "type": "array",
-            "maxItems": 20,
-            "items": {
-                "type": "object",
-                "additionalProperties": False,
-                "properties": {
-                    "requirement_id": {"type": "string", "pattern": "^req-[a-z0-9][a-z0-9-]{0,39}$"},
-                    "evidence_ids": {
-                        "type": "array",
-                        "minItems": 1,
-                        "maxItems": 25,
-                        "items": {"type": "string", "minLength": 1},
-                        "uniqueItems": True,
-                    },
-                },
-                "required": ["requirement_id", "evidence_ids"],
-            },
-        },
-        "gaps": {
-            "type": "array",
-            "maxItems": 20,
-            "items": {
-                "type": "object",
-                "additionalProperties": False,
-                "properties": {"requirement_id": {"type": "string", "pattern": "^req-[a-z0-9][a-z0-9-]{0,39}$"}},
-                "required": ["requirement_id"],
+                "required": ["requirement_id", "status", "evidence_ids"],
             },
         },
         "interview_topics": {
@@ -136,9 +108,7 @@ MODEL_RESPONSE_SCHEMA: dict[str, object] = {
         "target_role",
         "selected_fragment_ids",
         "vacancy_requirements",
-        "strong_matches",
-        "partial_matches",
-        "gaps",
+        "requirement_classifications",
         "interview_topics",
     ],
 }
@@ -273,9 +243,9 @@ def build_prompt(source: SourceResume, job_url: str) -> str:
         "target_role": "string",
         "selected_fragment_ids": ["source fragment ID"],
         "vacancy_requirements": [{"id": "req-1", "text": "vacancy data", "priority": "required|preferred|context"}],
-        "strong_matches": [{"requirement_id": "req-1", "evidence_ids": ["selected source fragment ID"]}],
-        "partial_matches": [],
-        "gaps": [{"requirement_id": "req-2"}],
+        "requirement_classifications": [
+            {"requirement_id": "req-1", "status": "strong|partial|gap", "evidence_ids": ["selected source fragment ID"]}
+        ],
         "interview_topics": [{"requirement_id": "req-2"}],
     }
     return f"""Analyze the vacancy at the URL below and return only one JSON object.
@@ -292,10 +262,11 @@ Do not write resume Markdown, match-report prose, evidence excerpts, explanation
 or any other fields. Candidate-facing text will be rendered by repository code from exact source
 fragments. Select one or two summary fragments, spoken languages plus at least one other skill
 category, and at least one bullet for every employer. Select no more than four bullets per employer
-and sixteen bullets total. Keep evidence IDs within selected_fragment_ids. Classify every vacancy
-requirement exactly once as strong, partial, or gap. Gap objects contain only requirement_id.
-Interview topics contain only requirement_id. Use no Markdown or prose outside the JSON object.
-Keep the JSON compact: include only relevant requirements and necessary evidence.
+and sixteen bullets total. Keep evidence IDs within selected_fragment_ids. Include every vacancy
+requirement exactly once in requirement_classifications, with status strong, partial, or gap. Strong
+and partial entries must list at least one selected evidence ID; gap entries must use an empty
+evidence_ids array. Interview topics contain only requirement_id. Use no Markdown or prose outside
+the JSON object. Keep the JSON compact: include only relevant requirements and necessary evidence.
 
 REQUIRED JSON CONTRACT
 ---

@@ -125,7 +125,7 @@ def make_source() -> object:
     return parse_source(SYNTHETIC_SOURCE, "en-US")
 
 
-def make_response(source, *, requirements=None, selected=None):
+def make_response(source, *, requirements=None, selected=None, classifications=None):
     selectable = [fragment.id for fragment in source.fragments.values() if fragment.selectable]
     selected = selected or selectable
     requirements = requirements or [
@@ -134,15 +134,18 @@ def make_response(source, *, requirements=None, selected=None):
     ]
     bullet_ids = [item for item in selected if source.fragments[item].kind == "bullet"]
     evidence = bullet_ids[:1]
+    if classifications is None:
+        classifications = [
+            {"requirement_id": "req-1", "status": "strong", "evidence_ids": evidence},
+            {"requirement_id": "req-2", "status": "gap", "evidence_ids": []},
+        ]
     return {
         "schema_version": 1,
         "target_company": "Example Systems",
         "target_role": "QA Automation Engineer",
         "selected_fragment_ids": selected,
         "vacancy_requirements": requirements,
-        "strong_matches": [{"requirement_id": "req-1", "evidence_ids": evidence}],
-        "partial_matches": [],
-        "gaps": [{"requirement_id": "req-2"}],
+        "requirement_classifications": classifications,
         "interview_topics": [{"requirement_id": "req-2"}],
     }
 
@@ -215,7 +218,7 @@ class ResponseAndRenderingTests(unittest.TestCase):
                 selected.extend(item for item in source.skill_ids if item != source.spoken_language_id)
                 selected.extend(employer.bullet_ids[0] for employer in source.employers)
                 response = make_response(source, selected=selected)
-                response["strong_matches"][0]["evidence_ids"] = [source.employers[0].bullet_ids[0]]
+                response["requirement_classifications"][0]["evidence_ids"] = [source.employers[0].bullet_ids[0]]
                 selection = parse_and_validate_response(json.dumps(response), source)
                 validate_rendered_markdown(source, selection, render_resume(source, selection))
 
@@ -268,7 +271,7 @@ class ResponseAndRenderingTests(unittest.TestCase):
         invalid_evidence["selected_fragment_ids"] = [
             item for item in invalid_evidence["selected_fragment_ids"] if item != "skills.tools"
         ]
-        invalid_evidence["strong_matches"][0]["evidence_ids"] = ["skills.tools"]
+        invalid_evidence["requirement_classifications"][0]["evidence_ids"] = ["skills.tools"]
         with self.assertRaisesRegex(GroundingError, "evidence is not selected"):
             parse_and_validate_response(json.dumps(invalid_evidence), source)
 
@@ -313,8 +316,11 @@ class ResponseAndRenderingTests(unittest.TestCase):
         self.assertEqual(schema["properties"]["vacancy_requirements"]["maxItems"], 20)
         self.assertEqual(payload["max_tokens"], MAX_RESPONSE_TOKENS)
         self.assertEqual(payload["max_tokens"], 12000)
-        self.assertFalse(schema["properties"]["strong_matches"]["items"]["additionalProperties"])
-        self.assertFalse(schema["properties"]["gaps"]["items"]["additionalProperties"])
+        self.assertFalse(schema["properties"]["requirement_classifications"]["items"]["additionalProperties"])
+        self.assertEqual(
+            schema["properties"]["requirement_classifications"]["items"]["properties"]["status"]["enum"],
+            ["strong", "partial", "gap"],
+        )
         self.assertEqual(payload["provider"], {"require_parameters": True})
         self.assertEqual({tool["type"] for tool in payload["tools"]}, {"openrouter:web_fetch", "openrouter:web_search"})
         self.assertNotIn("stream", payload)
@@ -357,6 +363,86 @@ class ResponseAndRenderingTests(unittest.TestCase):
         with self.assertRaisesRegex(GroundingError, "unknown selected fragment"):
             parse_and_validate_response(json.dumps(healed_but_unknown_id), source)
 
+    def test_single_classification_list_accepts_strong_partial_and_gap(self):
+        source = make_source()
+        response = make_response(
+            source,
+            requirements=[
+                {"id": "req-1", "text": "Python automation", "priority": "required"},
+                {"id": "req-2", "text": "Swagger documentation", "priority": "preferred"},
+                {"id": "req-3", "text": "Accessibility audits", "priority": "context"},
+            ],
+            classifications=[
+                {"requirement_id": "req-1", "status": "strong", "evidence_ids": ["experience.acme.bullet.1"]},
+                {"requirement_id": "req-2", "status": "partial", "evidence_ids": ["skills.tools"]},
+                {"requirement_id": "req-3", "status": "gap", "evidence_ids": []},
+            ],
+        )
+        selection = parse_and_validate_response(json.dumps(response), source)
+        self.assertEqual([item.requirement_id for item in selection.strong_matches], ["req-1"])
+        self.assertEqual([item.requirement_id for item in selection.partial_matches], ["req-2"])
+        self.assertEqual(list(selection.gaps), ["req-3"])
+        manifest = selection.to_manifest()
+        self.assertEqual(manifest["classifications"]["req-3"], {"status": "gap", "evidence_ids": []})
+        report = render_report(source, selection)
+        for heading in ("## Strong matches", "## Partial matches", "## Gaps"):
+            self.assertIn(heading, report)
+
+    def test_duplicate_requirement_classification_is_rejected(self):
+        source = make_source()
+        response = make_response(source)
+        response["requirement_classifications"].append(
+            {"requirement_id": "req-1", "status": "gap", "evidence_ids": []}
+        )
+        with self.assertRaisesRegex(GroundingError, "duplicate requirement classification"):
+            parse_and_validate_response(json.dumps(response), source)
+
+    def test_missing_requirement_classification_is_rejected(self):
+        source = make_source()
+        response = make_response(source)
+        response["requirement_classifications"] = [response["requirement_classifications"][0]]
+        with self.assertRaisesRegex(GroundingError, "must be classified exactly once"):
+            parse_and_validate_response(json.dumps(response), source)
+
+    def test_unknown_requirement_classification_is_rejected(self):
+        source = make_source()
+        response = make_response(source)
+        response["requirement_classifications"].append(
+            {"requirement_id": "req-9", "status": "gap", "evidence_ids": []}
+        )
+        with self.assertRaisesRegex(GroundingError, "unknown requirement"):
+            parse_and_validate_response(json.dumps(response), source)
+
+    def test_gap_with_evidence_is_rejected(self):
+        source = make_source()
+        response = make_response(source, classifications=[
+            {"requirement_id": "req-1", "status": "strong", "evidence_ids": ["skills.tools"]},
+            {"requirement_id": "req-2", "status": "gap", "evidence_ids": ["skills.tools"]},
+        ])
+        with self.assertRaisesRegex(GroundingError, "gap classification cannot contain evidence"):
+            parse_and_validate_response(json.dumps(response), source)
+
+    def test_strong_or_partial_without_evidence_is_rejected(self):
+        source = make_source()
+        for status in ("strong", "partial"):
+            with self.subTest(status=status):
+                response = make_response(source, classifications=[
+                    {"requirement_id": "req-1", "status": status, "evidence_ids": []},
+                    {"requirement_id": "req-2", "status": "gap", "evidence_ids": []},
+                ])
+                with self.assertRaisesRegex(GroundingError, "requires evidence"):
+                    parse_and_validate_response(json.dumps(response), source)
+
+    def test_legacy_split_classification_fields_are_rejected(self):
+        source = make_source()
+        response = make_response(source)
+        del response["requirement_classifications"]
+        response["strong_matches"] = [{"requirement_id": "req-1", "evidence_ids": ["skills.tools"]}]
+        response["partial_matches"] = []
+        response["gaps"] = [{"requirement_id": "req-2"}]
+        with self.assertRaisesRegex(GroundingError, "unknown:"):
+            parse_and_validate_response(json.dumps(response), source)
+
     def test_abnormal_completion_fails_without_response_content_or_retry(self):
         response_body = {
             "choices": [{
@@ -383,8 +469,9 @@ class ResponseAndRenderingTests(unittest.TestCase):
         response = make_response(source, requirements=[
             {"id": "req-1", "text": "<script>ignore</script>\n# injected", "priority": "required"},
         ])
-        response["strong_matches"] = [{"requirement_id": "req-1", "evidence_ids": ["experience.acme.bullet.1"]}]
-        response["gaps"] = []
+        response["requirement_classifications"] = [
+            {"requirement_id": "req-1", "status": "strong", "evidence_ids": ["experience.acme.bullet.1"]},
+        ]
         response["interview_topics"] = []
         selection = parse_and_validate_response(json.dumps(response), source)
         report = render_report(source, selection)
@@ -395,8 +482,10 @@ class ResponseAndRenderingTests(unittest.TestCase):
     def test_regression_claims_cannot_be_injected_by_renderer(self):
         source = make_source()
         response = make_response(source)
-        response["partial_matches"] = [{"requirement_id": "req-2", "evidence_ids": ["skills.tools"]}]
-        response["gaps"] = []
+        response["requirement_classifications"] = [
+            {"requirement_id": "req-1", "status": "strong", "evidence_ids": ["experience.acme.bullet.1"]},
+            {"requirement_id": "req-2", "status": "partial", "evidence_ids": ["skills.tools"]},
+        ]
         response["interview_topics"] = [{"requirement_id": "req-2"}]
         selection = parse_and_validate_response(json.dumps(response), source)
         report = render_report(source, selection)
@@ -413,10 +502,9 @@ class ResponseAndRenderingTests(unittest.TestCase):
         exact_source_response["vacancy_requirements"] = [
             {"id": "req-1", "text": "LambdaTest", "priority": "required"},
         ]
-        exact_source_response["strong_matches"] = [
-            {"requirement_id": "req-1", "evidence_ids": ["experience.acme.bullet.2"]},
+        exact_source_response["requirement_classifications"] = [
+            {"requirement_id": "req-1", "status": "strong", "evidence_ids": ["experience.acme.bullet.2"]},
         ]
-        exact_source_response["gaps"] = []
         exact_source_response["interview_topics"] = []
         exact_source_selection = parse_and_validate_response(json.dumps(exact_source_response), source)
         exact_source_report = render_report(source, exact_source_selection)

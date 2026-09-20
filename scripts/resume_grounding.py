@@ -542,9 +542,7 @@ def validate_response(data: dict[str, Any], source: SourceResume) -> ValidatedSe
             "target_role",
             "selected_fragment_ids",
             "vacancy_requirements",
-            "strong_matches",
-            "partial_matches",
-            "gaps",
+            "requirement_classifications",
             "interview_topics",
         },
         "response",
@@ -607,55 +605,52 @@ def validate_response(data: dict[str, Any], source: SourceResume) -> ValidatedSe
             _fail("MODEL_SCHEMA", f"invalid requirement priority: {priority!r}")
         requirements.append(Requirement(requirement_id, normalize_vacancy_text(item["text"], f"{requirement_id}.text", MAX_VACANCY_TEXT), priority))
 
-    def parse_matches(name: str) -> tuple[Match, ...]:
-        items = _list_field(data, name)
-        result: list[Match] = []
-        seen: set[str] = set()
-        for item in items:
-            if not isinstance(item, dict):
-                _fail("MODEL_SCHEMA", f"{name} entries must be objects")
-            _exact_keys(item, {"requirement_id", "evidence_ids"}, name)
-            requirement_id = item["requirement_id"]
-            if requirement_id not in requirement_ids:
-                _fail("MODEL_SCHEMA", f"{name} references unknown requirement: {requirement_id}")
-            if requirement_id in seen:
-                _fail("MODEL_SCHEMA", f"duplicate requirement classification: {requirement_id}")
-            seen.add(requirement_id)
-            evidence_values = _list_field(item, "evidence_ids")
-            if not evidence_values:
-                _fail("EVIDENCE_MAPPING", f"{name} requires evidence: {requirement_id}")
-            evidence_ids: list[str] = []
-            for evidence_id in evidence_values:
-                if not isinstance(evidence_id, str) or evidence_id in evidence_ids:
-                    _fail("EVIDENCE_MAPPING", f"invalid or duplicate evidence ID: {evidence_id!r}")
-                if evidence_id not in selected_set:
-                    _fail("EVIDENCE_MAPPING", f"evidence is not selected: {evidence_id}")
-                evidence_ids.append(evidence_id)
-            result.append(Match(requirement_id, tuple(evidence_ids)))
-        return tuple(result)
-
-    strong = parse_matches("strong_matches")
-    partial = parse_matches("partial_matches")
-    strong_ids = {item.requirement_id for item in strong}
-    partial_ids = {item.requirement_id for item in partial}
-    gap_items = _list_field(data, "gaps")
+    classification_items = _list_field(data, "requirement_classifications")
+    if not classification_items or len(classification_items) > MAX_REQUIREMENTS:
+        _fail("VACANCY_ANALYSIS", f"requirement classifications must contain 1-{MAX_REQUIREMENTS} items")
+    strong_matches: list[Match] = []
+    partial_matches: list[Match] = []
     gaps: list[str] = []
-    for item in gap_items:
+    classified: set[str] = set()
+    for item in classification_items:
         if not isinstance(item, dict):
-            _fail("MODEL_SCHEMA", "gap entries must be objects")
-        _exact_keys(item, {"requirement_id"}, "gap")
+            _fail("MODEL_SCHEMA", "requirement classifications must be objects")
+        _exact_keys(item, {"requirement_id", "status", "evidence_ids"}, "requirement classification")
         requirement_id = item["requirement_id"]
         if requirement_id not in requirement_ids:
-            _fail("MODEL_SCHEMA", f"gap references unknown requirement: {requirement_id}")
-        if requirement_id in gaps:
-            _fail("MODEL_SCHEMA", f"duplicate gap: {requirement_id}")
-        gaps.append(requirement_id)
-    gap_ids = set(gaps)
-    all_classified = strong_ids | partial_ids | gap_ids
-    if len(all_classified) != len(requirement_ids) or all_classified != requirement_ids:
-        _fail("MODEL_SCHEMA", "every vacancy requirement must be classified exactly once")
-    if strong_ids & partial_ids or strong_ids & gap_ids or partial_ids & gap_ids:
-        _fail("MODEL_SCHEMA", "requirement classifications overlap")
+            _fail("MODEL_SCHEMA", f"classification references unknown requirement: {requirement_id}")
+        if requirement_id in classified:
+            _fail("MODEL_SCHEMA", f"duplicate requirement classification: {requirement_id}")
+        classified.add(requirement_id)
+        status = item["status"]
+        if status not in {"strong", "partial", "gap"}:
+            _fail("MODEL_SCHEMA", f"invalid requirement classification: {status!r}")
+        evidence_values = _list_field(item, "evidence_ids")
+        if status == "gap":
+            if evidence_values:
+                _fail("EVIDENCE_MAPPING", f"gap classification cannot contain evidence: {requirement_id}")
+            gaps.append(requirement_id)
+            continue
+        if not evidence_values:
+            _fail("EVIDENCE_MAPPING", f"{status} classification requires evidence: {requirement_id}")
+        evidence_ids: list[str] = []
+        for evidence_id in evidence_values:
+            if not isinstance(evidence_id, str) or evidence_id in evidence_ids:
+                _fail("EVIDENCE_MAPPING", f"invalid or duplicate evidence ID: {evidence_id!r}")
+            if evidence_id not in selected_set:
+                _fail("EVIDENCE_MAPPING", f"evidence is not selected: {evidence_id}")
+            evidence_ids.append(evidence_id)
+        match = Match(requirement_id, tuple(evidence_ids))
+        if status == "strong":
+            strong_matches.append(match)
+        else:
+            partial_matches.append(match)
+    if classified != requirement_ids:
+        missing = sorted(requirement_ids - classified)
+        _fail("MODEL_SCHEMA", "every vacancy requirement must be classified exactly once (missing: " + ", ".join(missing) + ")")
+
+    strong = tuple(strong_matches)
+    partial = tuple(partial_matches)
 
     topic_items = _list_field(data, "interview_topics")
     topics: list[str] = []
@@ -914,9 +909,7 @@ def validate_manifest(source: SourceResume, manifest: dict[str, Any]) -> Validat
         "target_role": manifest["target_role"],
         "selected_fragment_ids": manifest["selected_fragment_ids"],
         "vacancy_requirements": requirements_data,
-        "strong_matches": [],
-        "partial_matches": [],
-        "gaps": [],
+        "requirement_classifications": [],
         "interview_topics": [{"requirement_id": item} for item in manifest["interview_topics"]],
     }
     for requirement in requirements_data:
@@ -924,22 +917,18 @@ def validate_manifest(source: SourceResume, manifest: dict[str, Any]) -> Validat
         if not isinstance(item, dict):
             _fail("MANIFEST", "missing requirement classification")
         status = item.get("status")
-        if status in {"strong", "partial"}:
-            _exact_keys(item, {"status", "evidence_ids"}, "manifest classification")
-            if not isinstance(item["evidence_ids"], list):
-                _fail("MANIFEST", "manifest evidence IDs must be an array")
-        elif status == "gap":
-            _exact_keys(item, {"status", "evidence_ids"}, "manifest classification")
-            if item["evidence_ids"] != []:
-                _fail("MANIFEST", "gap classification cannot contain evidence")
-        if status == "strong":
-            raw["strong_matches"].append({"requirement_id": requirement["id"], "evidence_ids": item.get("evidence_ids")})
-        elif status == "partial":
-            raw["partial_matches"].append({"requirement_id": requirement["id"], "evidence_ids": item.get("evidence_ids")})
-        elif status == "gap":
-            raw["gaps"].append({"requirement_id": requirement["id"]})
-        else:
+        if status not in {"strong", "partial", "gap"}:
             _fail("MANIFEST", "invalid requirement classification")
+        _exact_keys(item, {"status", "evidence_ids"}, "manifest classification")
+        if not isinstance(item["evidence_ids"], list):
+            _fail("MANIFEST", "manifest evidence IDs must be an array")
+        if status == "gap" and item["evidence_ids"] != []:
+            _fail("MANIFEST", "gap classification cannot contain evidence")
+        raw["requirement_classifications"].append({
+            "requirement_id": requirement["id"],
+            "status": status,
+            "evidence_ids": item["evidence_ids"],
+        })
     selection = validate_response(raw, source)
     if selection.target_company != manifest["target_company"] or selection.target_role != manifest["target_role"]:
         _fail("MANIFEST", "manifest target metadata is inconsistent")
