@@ -12,6 +12,7 @@ from scripts.resume_grounding import (
     GroundingError,
     parse_and_validate_response,
     parse_source,
+    plain_markdown,
     render_report,
     render_resume,
     validate_rendered_markdown,
@@ -445,6 +446,24 @@ class ResponseAndRenderingTests(unittest.TestCase):
         self.assertIn("selectable evidence ID used in a strong or partial classification", prompt)
         self.assertIn("contract violation", prompt)
 
+    def test_prompt_is_coverage_first_and_states_configured_budgets(self):
+        from scripts.tailor_resume import build_prompt
+
+        prompt = build_prompt(make_source(), "https://example.test/job")
+        self.assertIn("Optimize for evidence coverage instead of the smallest valid selection", prompt)
+        self.assertIn("selectable fragment that materially supports at least one vacancy requirement", prompt)
+        self.assertIn("target approximately twelve", prompt)
+        self.assertIn("to sixteen relevant experience bullets", prompt)
+        self.assertIn("Never pad the resume with weak or unrelated fragments", prompt)
+        self.assertIn("Select the one or two summary fragments most relevant to the vacancy", prompt)
+        self.assertIn("other skill category that materially matches the vacancy", prompt)
+        self.assertIn("four bullets per employer", prompt)
+        self.assertIn("sixteen bullets", prompt)
+        self.assertIn("twenty-five selectable fragments total", prompt)
+        self.assertIn("include every selected", prompt)
+        self.assertIn("not only its strongest evidence", prompt)
+        self.assertNotIn("necessary evidence", prompt)
+
     def test_mixed_json_and_unknown_free_form_fields_fail(self):
         source = make_source()
         response = make_response(source)
@@ -703,6 +722,88 @@ class ResponseAndRenderingTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, "valid HTTPS URL"):
                     main()
                 request.assert_not_called()
+
+
+class StartaLikeCoverageTests(unittest.TestCase):
+    def _skill_id(self, source, label):
+        for fragment in source.fragments.values():
+            if fragment.kind == "skill" and fragment.text.startswith(f"**{label}:**"):
+                return fragment.id
+        raise AssertionError(f"missing skill category: {label}")
+
+    def _starta_like_response(self, source):
+        employers = {employer.name: employer for employer in source.employers}
+        trustly = employers["Trustly"]
+        ab_inbev = employers["AB InBev"]
+        ci_t = employers["CI&T"]
+        e_mix = employers["e.Mix"]
+        dngx = employers["DNGX"]
+        selected = [
+            trustly.bullet_ids[0],
+            trustly.bullet_ids[1],
+            ab_inbev.bullet_ids[1],
+            ab_inbev.bullet_ids[2],
+            ci_t.bullet_ids[1],
+            ci_t.bullet_ids[3],
+            ci_t.bullet_ids[4],
+            e_mix.bullet_ids[0],
+            e_mix.bullet_ids[1],
+            e_mix.bullet_ids[2],
+            dngx.bullet_ids[0],
+            dngx.bullet_ids[1],
+            dngx.bullet_ids[2],
+            self._skill_id(source, "Linguagens de Programação"),
+            self._skill_id(source, "Automação de Testes"),
+            self._skill_id(source, "Testes"),
+            self._skill_id(source, "Entrega e Observabilidade"),
+            self._skill_id(source, "Ferramentas"),
+            source.spoken_language_id,
+            source.summary_ids[1],
+        ]
+        requirements = [
+            {"id": "req-java-automation", "text": "Automação de testes com Java", "priority": "required"},
+            {"id": "req-selenium", "text": "Selenium", "priority": "required"},
+            {"id": "req-functional-nonfunctional", "text": "Testes funcionais e não funcionais", "priority": "required"},
+            {"id": "req-performance", "text": "Testes de performance, carga e estresse", "priority": "required"},
+            {"id": "req-jenkins-ci", "text": "Jenkins e integração contínua", "priority": "required"},
+            {"id": "req-databases-development", "text": "Bancos de dados e desenvolvimento de software", "priority": "preferred"},
+            {"id": "req-api-integration", "text": "Testes de API e integração", "priority": "required"},
+        ]
+        classifications = [
+            {"requirement_id": "req-java-automation", "status": "strong", "evidence_ids": [trustly.bullet_ids[1], ci_t.bullet_ids[1]]},
+            {"requirement_id": "req-selenium", "status": "strong", "evidence_ids": [ab_inbev.bullet_ids[1], ci_t.bullet_ids[1]]},
+            {"requirement_id": "req-functional-nonfunctional", "status": "strong", "evidence_ids": [e_mix.bullet_ids[0], trustly.bullet_ids[0]]},
+            {"requirement_id": "req-performance", "status": "strong", "evidence_ids": [e_mix.bullet_ids[2]]},
+            {"requirement_id": "req-jenkins-ci", "status": "strong", "evidence_ids": [ci_t.bullet_ids[4], dngx.bullet_ids[2], e_mix.bullet_ids[2]]},
+            {"requirement_id": "req-databases-development", "status": "strong", "evidence_ids": [dngx.bullet_ids[0], dngx.bullet_ids[1], ci_t.bullet_ids[3]]},
+            {"requirement_id": "req-api-integration", "status": "strong", "evidence_ids": [ab_inbev.bullet_ids[2], e_mix.bullet_ids[1], ci_t.bullet_ids[1]]},
+        ]
+        return {
+            "schema_version": 1,
+            "target_company": "Starta",
+            "target_role": "Analista de Qualidade Sênior",
+            "selected_fragment_ids": selected,
+            "vacancy_requirements": requirements,
+            "requirement_classifications": classifications,
+            "interview_topics": [{"requirement_id": "req-performance"}],
+        }
+
+    def test_starta_like_selection_keeps_twelve_to_sixteen_bullets(self):
+        source = parse_source(Path("RESUME_pt-BR.md").read_text(encoding="utf-8"), "pt-BR")
+        response = self._starta_like_response(source)
+        selection = parse_and_validate_response(json.dumps(response), source)
+        bullets = [item for item in selection.selected_fragment_ids if source.fragments[item].kind == "bullet"]
+        self.assertGreaterEqual(len(bullets), 12)
+        self.assertLessEqual(len(bullets), 16)
+        self.assertLessEqual(len(selection.selected_fragment_ids), 25)
+        for employer in source.employers:
+            self.assertTrue(any(item in employer.bullet_ids for item in bullets), employer.name)
+        resume = render_resume(source, selection)
+        validate_rendered_markdown(source, selection, resume)
+        for fragment_id in selection.selected_fragment_ids:
+            self.assertIn(plain_markdown(source.fragments[fragment_id].text), plain_markdown(resume))
+        for keyword in ("Selenium", "JMeter", "Jenkins", "SQL Server", "GeneXus", "REST"):
+            self.assertIn(keyword, resume)
 
 
 if __name__ == "__main__":
