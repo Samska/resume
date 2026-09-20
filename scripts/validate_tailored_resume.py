@@ -12,6 +12,7 @@ from pathlib import Path
 try:
     from scripts.resume_grounding import (
         GroundingError,
+        extracted_text_variants,
         load_manifest,
         normalize_extracted,
         parse_source,
@@ -23,6 +24,7 @@ try:
 except ModuleNotFoundError:
     from resume_grounding import (  # type: ignore[no-redef]
         GroundingError,
+        extracted_text_variants,
         load_manifest,
         normalize_extracted,
         parse_source,
@@ -37,6 +39,11 @@ def command(*args: str) -> str:
     return subprocess.run(args, check=True, capture_output=True, text=True).stdout
 
 
+def _fragment_is_extracted(variants: tuple[str, ...], fragment_text: str) -> bool:
+    expected = normalize_extracted(plain_markdown(fragment_text))
+    return any(expected in variant for variant in variants)
+
+
 def validate_pdf(pdf: Path, source, selection) -> list[tuple[bool, str]]:
     if not pdf.exists() or pdf.stat().st_size <= 10_000:
         return [(False, "PDF exists and is not empty")]
@@ -48,18 +55,19 @@ def validate_pdf(pdf: Path, source, selection) -> list[tuple[bool, str]]:
     page_match = re.search(r"^Pages:\s+(\d+)$", info, re.MULTILINE)
     pages = int(page_match.group(1)) if page_match else 0
     normalized_pdf = normalize_extracted(text)
+    variants = extracted_text_variants(text)
     required_fragments = [fragment for fragment in source.fragments.values() if fragment.mandatory]
     selected_fragments = [source.fragments[item] for item in selection.selected_fragment_ids]
     missing = [
         fragment.id
         for fragment in (*required_fragments, *selected_fragments)
-        if normalize_extracted(plain_markdown(fragment.text)) not in normalized_pdf
+        if not _fragment_is_extracted(variants, fragment.text)
     ]
     employer_positions = [normalized_pdf.find(normalize_extracted(employer.name)) for employer in source.employers]
     return [
         (1 <= pages <= 2, f"Page count is within the two-page limit ({pages})"),
         (len(text.strip()) >= 1500, "PDF contains enough extractable text"),
-        (all(normalize_extracted(plain_markdown(fragment.text)) in normalized_pdf for fragment in required_fragments), "Mandatory source facts are preserved"),
+        (all(_fragment_is_extracted(variants, fragment.text) for fragment in required_fragments), "Mandatory source facts are preserved"),
         (not missing, "Selected source evidence is present in the PDF" if not missing else "Missing source fragments: " + ", ".join(missing)),
         (all(position >= 0 for position in employer_positions), "All employers are preserved"),
         (employer_positions == sorted(employer_positions), "Experience remains in reverse chronological order"),

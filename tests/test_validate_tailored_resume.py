@@ -7,9 +7,11 @@ from unittest.mock import patch
 
 from scripts.resume_grounding import (
     GroundingError,
+    extracted_text_variants,
     normalize_extracted,
     parse_and_validate_response,
     parse_source,
+    plain_markdown,
     render_report,
     render_resume,
 )
@@ -180,6 +182,110 @@ class ManifestValidationTests(unittest.TestCase):
         self.assertIn("RUNNER_TEMP/tailored-resume-manifest.json", workflow)
         upload_block = workflow[positions[5] :]
         self.assertEqual(upload_block.count("${{ env."), 3)
+
+
+class PdfTextNormalizationTests(unittest.TestCase):
+    def test_line_wrapping_whitespace_and_nbsp_are_normalized(self):
+        self.assertEqual(normalize_extracted("Python\n  automation"), "Python automation")
+        self.assertEqual(normalize_extracted("Python\u00a0automation"), "Python automation")
+        self.assertEqual(normalize_extracted("Python\fautomation"), "Python automation")
+
+    def test_soft_hyphens_and_zero_width_characters_are_removed(self):
+        self.assertEqual(normalize_extracted("soft\u00adhyphen"), "softhyphen")
+        self.assertEqual(normalize_extracted("zero\u200bwidth\u200cjoin\ufeffed"), "zerowidthjoined")
+
+    def test_compatibility_ligatures_and_unicode_hyphens_are_folded(self):
+        self.assertEqual(normalize_extracted("of\ufb01ce \ufb02ow"), "office flow")
+        self.assertEqual(normalize_extracted("non\u2011breaking"), "non-breaking")
+
+    def test_harmless_punctuation_spacing_is_collapsed(self):
+        self.assertEqual(normalize_extracted("Testing (WCAG) , Visual"), "Testing (WCAG), Visual")
+        self.assertEqual(normalize_extracted("Integration ( WCAG )"), "Integration (WCAG)")
+
+    def test_extracted_variants_cover_both_line_break_hyphen_forms(self):
+        self.assertEqual(
+            extracted_text_variants("accessibil-\nity testing"),
+            ("accessibil-ity testing", "accessibility testing"),
+        )
+        self.assertEqual(
+            extracted_text_variants("cross-\nplatform checks"),
+            ("cross-platform checks", "crossplatform checks"),
+        )
+
+    def test_variants_collapse_wrapped_lines_without_hyphenation(self):
+        self.assertEqual(extracted_text_variants("Python\n  automation"), ("Python automation",))
+
+
+class PdfProvenanceMatchingTests(unittest.TestCase):
+    def _real_selection(self):
+        source = parse_source(Path("RESUME_en-US.md").read_text(encoding="utf-8"), "en-US")
+        selected = [source.summary_ids[0], *source.skill_ids]
+        selected.extend(employer.bullet_ids[0] for employer in source.employers)
+        response = make_response(source, selected=selected)
+        selection = parse_and_validate_response(json.dumps(response), source)
+        return source, selection
+
+    def _validate_pdf_text(self, pdf_text, source, selection):
+        from scripts import validate_tailored_resume
+
+        def fake_command(*args):
+            if args[0] == "pdftotext":
+                return pdf_text
+            if args[0] == "pdfinfo":
+                return "Pages: 1\n"
+            raise AssertionError(f"unexpected command: {args}")
+
+        with tempfile.TemporaryDirectory() as directory:
+            pdf = Path(directory) / "resume.pdf"
+            pdf.write_bytes(b"%PDF-1.4\n" + b"0" * 10_100)
+            with patch.object(validate_tailored_resume, "command", side_effect=fake_command):
+                return validate_tailored_resume.validate_pdf(pdf, source, selection)
+
+    def _extracted_resume_text(self, source, selection):
+        return plain_markdown(render_resume(source, selection))
+
+    def test_summary_and_skills_fragments_match_with_hyphenation_artifacts(self):
+        source, selection = self._real_selection()
+        self.assertIn("summary.1", selection.selected_fragment_ids)
+        self.assertIn("skills.testing", selection.selected_fragment_ids)
+        pdf_text = self._extracted_resume_text(source, selection)
+        for word, artifact in (
+            ("accessibility", "accessibil-\nity"),
+            ("Accessibility", "Accessibil-\nity"),
+            ("Performance", "Perfor-\nmance"),
+            ("strategies", "strate-\ngies"),
+        ):
+            pdf_text = pdf_text.replace(word, artifact)
+        results = self._validate_pdf_text(pdf_text, source, selection)
+        self.assertTrue(all(passed for passed, _ in results), [message for passed, message in results if not passed])
+
+    def test_absent_selected_fragment_is_still_reported(self):
+        source, selection = self._real_selection()
+        pdf_text = self._extracted_resume_text(source, selection)
+        bullet_id = source.employers[0].bullet_ids[0]
+        pdf_text = pdf_text.replace(plain_markdown(source.fragments[bullet_id].text), "")
+        results = self._validate_pdf_text(pdf_text, source, selection)
+        failures = [message for passed, message in results if not passed]
+        self.assertTrue(any(bullet_id in message for message in failures), failures)
+
+    def test_materially_changed_fragment_is_still_reported(self):
+        source, selection = self._real_selection()
+        pdf_text = self._extracted_resume_text(source, selection)
+        bullet_id = source.employers[0].bullet_ids[0]
+        bullet_text = plain_markdown(source.fragments[bullet_id].text)
+        altered = bullet_text.replace("payment", "banking")
+        self.assertNotEqual(altered, bullet_text)
+        pdf_text = pdf_text.replace(bullet_text, altered)
+        results = self._validate_pdf_text(pdf_text, source, selection)
+        failures = [message for passed, message in results if not passed]
+        self.assertTrue(any(bullet_id in message for message in failures), failures)
+
+    def test_missing_mandatory_fragment_still_fails(self):
+        source, selection = self._real_selection()
+        pdf_text = self._extracted_resume_text(source, selection).replace("Samuel Andrade", "")
+        results = self._validate_pdf_text(pdf_text, source, selection)
+        mandatory = next(passed for passed, message in results if message == "Mandatory source facts are preserved")
+        self.assertFalse(mandatory)
 
 
 if __name__ == "__main__":

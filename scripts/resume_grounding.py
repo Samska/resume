@@ -34,6 +34,12 @@ BULLET_RE = re.compile(r"^-\s+\S.*$")
 SKILL_RE = re.compile(r"^\*\*([^*]+):\*\*\s+(.+?)\s*$")
 ROLE_DATE_RE = re.compile(r"^\*\*([^*]+)\*\*\s+\|\s+(.+?)\s*$")
 REQUIREMENT_ID_RE = re.compile(r"^req-[a-z0-9][a-z0-9-]{0,39}$")
+PDF_FORMAT_CHARS = ("\u00ad", "\u200b", "\u200c", "\u200d", "\ufeff")
+UNICODE_HYPHENS = ("\u2010", "\u2011")
+SPACE_BEFORE_PUNCTUATION_RE = re.compile(r"\s+([,.;:!?%)\]])")
+SPACE_AFTER_OPENING_RE = re.compile(r"([(\[])\s+")
+LINE_BREAK_HYPHEN_KEEP_RE = re.compile(r"-\s*\n\s*")
+LINE_BREAK_HYPHEN_DROP_RE = re.compile(r"(?<=\w)-\s*\n\s*(?=\w)")
 
 
 class GroundingError(ValueError):
@@ -848,8 +854,51 @@ def plain_markdown(text: str) -> str:
     return value
 
 
+def _collapse_extracted_whitespace(text: str) -> str:
+    value = re.sub(r"\s+", " ", text)
+    value = SPACE_BEFORE_PUNCTUATION_RE.sub(r"\1", value)
+    value = SPACE_AFTER_OPENING_RE.sub(r"\1", value)
+    return value.strip()
+
+
+def _canonical_extracted(text: str) -> str:
+    value = unicodedata.normalize("NFKC", text)
+    value = "\n".join(value.splitlines())
+    for char in PDF_FORMAT_CHARS:
+        value = value.replace(char, "")
+    for char in UNICODE_HYPHENS:
+        value = value.replace(char, "-")
+    return value
+
+
 def normalize_extracted(text: str) -> str:
-    return re.sub(r"\s+", " ", unicodedata.normalize("NFKC", text)).strip()
+    """Normalize extracted text for exact fragment matching.
+
+    NFKC folds ligatures and compatibility forms, invisible extraction
+    characters such as soft hyphens and zero-width spaces are removed, and
+    line wrapping plus harmless punctuation spacing are collapsed. Source
+    wording and token order are preserved.
+    """
+
+    return _collapse_extracted_whitespace(_canonical_extracted(text))
+
+
+def extracted_text_variants(text: str) -> tuple[str, ...]:
+    """Return deterministic normalized variants of PDF-extracted text.
+
+    Line-break hyphenation may be extracted with the hyphen preserved or with
+    the split word joined. Both canonical forms are returned so exact source
+    fragments can match either representation without fuzzy similarity or
+    substring heuristics.
+    """
+
+    canonical = _canonical_extracted(text)
+    preserved = _collapse_extracted_whitespace(LINE_BREAK_HYPHEN_KEEP_RE.sub("-", canonical))
+    joined = _collapse_extracted_whitespace(LINE_BREAK_HYPHEN_DROP_RE.sub("", canonical))
+    variants = [preserved]
+    if joined != preserved:
+        variants.append(joined)
+    return tuple(variants)
 
 
 def validate_rendered_markdown(source: SourceResume, selection: ValidatedSelection, markdown: str) -> None:
