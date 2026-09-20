@@ -7,7 +7,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from scripts.tailor_resume import build_request_body, request_openrouter
+from scripts.tailor_resume import MAX_RESPONSE_TOKENS, build_request_body, request_openrouter
 from scripts.resume_grounding import (
     GroundingError,
     parse_and_validate_response,
@@ -311,6 +311,8 @@ class ResponseAndRenderingTests(unittest.TestCase):
         self.assertEqual(set(schema["required"]), set(schema["properties"]))
         self.assertEqual(schema["properties"]["selected_fragment_ids"]["maxItems"], 25)
         self.assertEqual(schema["properties"]["vacancy_requirements"]["maxItems"], 20)
+        self.assertEqual(payload["max_tokens"], MAX_RESPONSE_TOKENS)
+        self.assertEqual(payload["max_tokens"], 12000)
         self.assertFalse(schema["properties"]["strong_matches"]["items"]["additionalProperties"])
         self.assertFalse(schema["properties"]["gaps"]["items"]["additionalProperties"])
         self.assertEqual(payload["provider"], {"require_parameters": True})

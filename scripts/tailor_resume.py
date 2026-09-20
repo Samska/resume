@@ -37,6 +37,7 @@ except ModuleNotFoundError:
 
 
 API_URL = "https://openrouter.ai/api/v1/chat/completions"
+MAX_RESPONSE_TOKENS = 12000
 
 
 MODEL_RESPONSE_SCHEMA: dict[str, object] = {
@@ -162,7 +163,7 @@ def build_request_body(model: str, prompt: str, use_web: bool) -> dict[str, obje
     request_body: dict[str, object] = {
         "model": model,
         "temperature": 0.2,
-        "max_tokens": 5000,
+        "max_tokens": MAX_RESPONSE_TOKENS,
         "provider": {"require_parameters": True},
         "response_format": {
             "type": "json_schema",
@@ -286,6 +287,7 @@ category, and at least one bullet for every employer. Select no more than four b
 and sixteen bullets total. Keep evidence IDs within selected_fragment_ids. Classify every vacancy
 requirement exactly once as strong, partial, or gap. Gap objects contain only requirement_id.
 Interview topics contain only requirement_id. Use no Markdown or prose outside the JSON object.
+Keep the JSON compact: include only relevant requirements and necessary evidence.
 
 REQUIRED JSON CONTRACT
 ---
