@@ -3,24 +3,23 @@
 Software Engineering | Quality Engineering | Test Automation
 
 Location: Jundiaí, SP, Brazil  
-Availability: Open to remote opportunities  
+Phone: +55 11 983168056  
 Email: [samuel.andradetp@live.com](mailto:samuel.andradetp@live.com)  
 LinkedIn: [linkedin.com/in/Samska](https://linkedin.com/in/Samska)  
 GitHub: [github.com/Samska](https://github.com/Samska)
 
 ## Core Competencies
 
-**Quality Engineering & Risk-Based Test Strategy:** Test planning, risk analysis, shift-left quality, and quality advocacy  
-**Web, Mobile & API Test Automation:** Playwright, Selenium/Selenide, Cypress, Appium, Pytest, Postman, and REST Assured  
-**End-to-End, Integration & Regression Testing:** Functional, integration, exploratory, regression, and distributed integration testing  
-**Accessibility Testing:** WCAG validation with VoiceOver, TalkBack, NVDA, and JAWS  
-**Visual, Cross-Browser & Device Testing:** BackstopJS, Applitools Eyes, Sauce Labs, and LambdaTest  
-**CI/CD & Continuous Testing:** GitHub Actions, Jenkins, and Azure DevOps  
-**Performance & Non-Functional Testing:** JMeter, load, stress, and performance testing  
-**Observability & Incident Analysis:** New Relic, ELK Stack, SQL, logs, metrics, and operational evidence  
-**Mobile Quality Engineering:** iOS, Android, Xcode, Android Studio, and cross-platform delivery  
-**AI-Assisted Engineering & Test Workflows:** GitHub Copilot, Claude Code, Cursor, and MCP workflows  
-**Agile Collaboration & Quality Advocacy:** Cross-functional collaboration across product, engineering, and delivery teams
+**Quality Engineering & Shift-Left:** Risk-based strategy, test planning, early risk identification, and quality advocacy  
+**Test Automation Architecture:** Designing maintainable automation across web, mobile, API, E2E, integration, and regression layers  
+**Quality Across the SDLC:** Functional, non-functional, exploratory, acceptance, accessibility, visual, and performance testing  
+**API & Distributed Systems Quality:** API validation, integration flows, microservices, test data, and risk analysis  
+**Accessibility & Inclusive Quality:** WCAG-oriented validation across desktop and mobile experiences  
+**Continuous Testing & Delivery:** Embedding automated quality checks into CI/CD pipelines and release workflows  
+**Cross-Platform Quality Engineering:** Managing browser, device, iOS, Android, and compatibility risks  
+**Observability & Incident Investigation:** Using logs, metrics, monitoring, and operational evidence to analyze application behavior  
+**AI-Assisted Engineering & Test Workflows:** Applying AI tools and agent-based workflows to improve repeatable engineering and testing activities  
+**Agile Collaboration & Quality Advocacy:** Working across product, engineering, and delivery teams to improve quality decisions
 
 ## Professional Summary
 
@@ -31,7 +30,7 @@ Works across the software development lifecycle with Java, Python, TypeScript, C
 ## Professional Experience
 
 ### Senior QA Engineer | Trustly
-Jan 2026 - Sep 2026 | Brazil
+Jan 2026 - Sep 2026 | São Paulo, São Paulo, Brazil | Remote
 
 - Defined and executed risk-based test strategies for critical payment journeys across integration and acceptance environments.
 - Developed and maintained E2E automation with Java, Selenide, and Cucumber for critical frontend flows.
@@ -40,7 +39,7 @@ Jan 2026 - Sep 2026 | Brazil
 - Applied GitHub Copilot, Claude Code, and MCP-based workflows to accelerate recurring engineering and testing activities.
 
 ### Senior QA Engineer | AB InBev
-Sep 2024 - Jan 2026 | Campinas, Brazil
+Sep 2024 - Jan 2026 | Campinas, São Paulo, Brazil | Hybrid
 
 - Planned and executed quality strategies for BEES Customer web and mobile commerce journeys on iOS and Android.
 - Developed E2E automation with Python, Pytest, Selenium, and Appium.
@@ -73,7 +72,7 @@ Jul 2021 - Jan 2022 | São Paulo, Brazil | Remote
 - Executed performance, load, and stress tests with JMeter and integrated test execution into Azure DevOps pipelines.
 
 ### Software Engineer | DNGX
-Mar 2019 - Jul 2021 | Santo Andre, Brazil
+Mar 2019 - Jul 2021 | Santo André, São Paulo, Brazil | Hybrid
 
 - Developed web and mobile applications with GeneXus and customized interfaces with WorkWithPlus and Smart Devices Plus.
 - Designed and implemented solutions using SQL Server, PostgreSQL, and MySQL.
@@ -82,7 +81,7 @@ Mar 2019 - Jul 2021 | Santo Andre, Brazil
 ## Education
 
 ### Postgraduate Specialization in Cybersecurity (Lato Sensu) | Universidade Cruzeiro do Sul
-Mar 2021 - Mar 2022 | Completed
+Mar 2021 - Mar 2022
 
 ### Technologist Degree in Systems Analysis and Development | Universidade Cruzeiro do Sul
 Feb 2018 - Aug 2020
@@ -90,7 +89,7 @@ Feb 2018 - Aug 2020
 ## Languages
 
 **Portuguese:** Native  
-**English:** Professional working proficiency
+**English:** EF SET English Certificate 73/100 (C2 Proficient)
 
 ## Technical Skills
 
