@@ -14,10 +14,17 @@ from scripts.resume_grounding import (
     plain_markdown,
     render_report,
     render_resume,
+    write_manifest,
 )
 
 
-from tests.test_tailor_resume import SYNTHETIC_SOURCE, make_response
+from tests.test_tailor_resume import (
+    SYNTHETIC_SOURCE,
+    generated_response,
+    make_pt_source,
+    make_response,
+    starta_generated_response,
+)
 
 
 class ManifestValidationTests(unittest.TestCase):
@@ -250,6 +257,119 @@ class PdfTextNormalizationTests(unittest.TestCase):
 
     def test_variants_collapse_wrapped_lines_without_hyphenation(self):
         self.assertEqual(extracted_text_variants("Python\n  automation"), ("Python automation",))
+
+
+class GeneratedV2ManifestAndPdfTests(unittest.TestCase):
+    def _write_v2_case(self, directory, source_text, language, response):
+        source_path = Path(directory) / "source.md"
+        markdown_path = Path(directory) / "resume.md"
+        report_path = Path(directory) / "report.md"
+        manifest_path = Path(directory) / "manifest.json"
+        source_path.write_text(source_text, encoding="utf-8")
+        source = parse_source(source_text, language)
+        generation = parse_and_validate_response(json.dumps(response), source)
+        markdown = render_resume(source, generation)
+        report = render_report(source, generation)
+        markdown_path.write_text(markdown, encoding="utf-8")
+        report_path.write_text(report, encoding="utf-8")
+        write_manifest(manifest_path, generation)
+        return source, generation, source_path, markdown_path, report_path, manifest_path
+
+    def _validate_pdf_text(self, pdf_text, source, selection, pages=2):
+        from scripts import validate_tailored_resume
+
+        padded_text = pdf_text + "\n" + ("extracted filler text " * 100)
+
+        def fake_command(*args):
+            if args[0] == "pdftotext":
+                return padded_text
+            if args[0] == "pdfinfo":
+                return f"Pages: {pages}\n"
+            raise AssertionError(f"unexpected command: {args}")
+
+        with tempfile.TemporaryDirectory() as directory:
+            pdf = Path(directory) / "resume.pdf"
+            pdf.write_bytes(b"%PDF-1.4\n" + b"0" * 10_100)
+            with patch.object(validate_tailored_resume, "command", side_effect=fake_command):
+                return validate_tailored_resume.validate_pdf(pdf, source, selection)
+
+    def test_v2_content_mode_round_trip_and_tampered_generated_text_rejected(self):
+        from scripts import validate_tailored_resume
+
+        with tempfile.TemporaryDirectory() as directory:
+            source, generation, source_path, markdown_path, report_path, manifest_path = self._write_v2_case(
+                directory, SYNTHETIC_SOURCE, "en-US", generated_response()
+            )
+            markdown = markdown_path.read_text(encoding="utf-8")
+            self.assertIn("- Automated API tests with Python.", markdown)
+            report = report_path.read_text(encoding="utf-8")
+            self.assertIn("experience.acme.bullet.1", report)
+            argv = [
+                "validate_tailored_resume.py",
+                "--mode", "content",
+                "--markdown", str(markdown_path),
+                "--source", str(source_path),
+                "--report", str(report_path),
+                "--manifest", str(manifest_path),
+                "--language", "en-US",
+            ]
+            with patch.object(sys, "argv", argv), patch.object(validate_tailored_resume, "validate_pdf") as validate_pdf:
+                self.assertEqual(validate_tailored_resume.main(), 0)
+                validate_pdf.assert_not_called()
+
+            markdown_path.write_text(markdown + "\n- invented claim\n", encoding="utf-8")
+            with patch.object(sys, "argv", argv), patch.object(validate_tailored_resume, "validate_pdf") as validate_pdf:
+                with self.assertRaisesRegex(GroundingError, "differs from deterministic"):
+                    validate_tailored_resume.main()
+                validate_pdf.assert_not_called()
+            markdown_path.write_text(markdown, encoding="utf-8")
+
+            report_path.write_text(report + "\nCandidate probably knows Swagger.\n", encoding="utf-8")
+            with patch.object(sys, "argv", argv), patch.object(validate_tailored_resume, "validate_pdf"):
+                with self.assertRaisesRegex(GroundingError, "differs from deterministic"):
+                    validate_tailored_resume.main()
+            report_path.write_text(report, encoding="utf-8")
+            self.assertEqual(generation.schema_version, 2)
+
+    def test_v2_pdf_checks_generated_blocks_and_fixed_facts(self):
+        source = parse_source(SYNTHETIC_SOURCE, "en-US")
+        generation = parse_and_validate_response(json.dumps(generated_response()), source)
+        pdf_text = plain_markdown(render_resume(source, generation))
+        results = self._validate_pdf_text(pdf_text, source, generation)
+        self.assertTrue(all(passed for passed, _ in results), [message for passed, message in results if not passed])
+
+        bullet_text = generation.all_bullets()[0].text
+        pdf_text = plain_markdown(render_resume(source, generation)).replace(bullet_text, "")
+        results = self._validate_pdf_text(pdf_text, source, generation)
+        failures = [message for passed, message in results if not passed]
+        self.assertTrue(any("experience.acme.bullet.1" in message for message in failures), failures)
+
+        pdf_text = plain_markdown(render_resume(source, generation)).replace("Example Candidate", "")
+        results = self._validate_pdf_text(pdf_text, source, generation)
+        failures = [message for passed, message in results if not passed]
+        self.assertTrue(any("identity.name" in message for message in failures), failures)
+
+        results = self._validate_pdf_text(plain_markdown(render_resume(source, generation)), source, generation, pages=3)
+        self.assertFalse(results[0][0])
+
+    def test_v2_starta_like_fixture_mocked_pdf_and_manifest(self):
+        source = make_pt_source()
+        generation = parse_and_validate_response(json.dumps(starta_generated_response()), source)
+        resume = render_resume(source, generation)
+        report = render_report(source, generation)
+        pdf_text = plain_markdown(resume)
+        results = self._validate_pdf_text(pdf_text, source, generation)
+        self.assertTrue(all(passed for passed, _ in results), [message for passed, message in results if not passed])
+        self.assertIn("## Experiência Profissional", resume)
+        self.assertIn("### Senior QA Engineer | Trustly", resume)
+        self.assertIn("Universidade Cruzeiro do Sul", resume)
+        self.assertIn("Selenium, Python e Pytest", report)
+        self.assertIn("## Advisory warnings", report)
+
+        removed = generation.all_bullets()[0].text
+        results = self._validate_pdf_text(pdf_text.replace(removed, ""), source, generation)
+        failures = [message for passed, message in results if not passed]
+        self.assertTrue(any("experience.trustly.bullet.1" in message for message in failures), failures)
 
 
 class PdfProvenanceMatchingTests(unittest.TestCase):
