@@ -1293,6 +1293,18 @@ def _check_generated_text(
     return tuple(warnings)
 
 
+def _adapted_bullet_keys(text: str) -> tuple[tuple[str, ...], tuple[str, ...]]:
+    """Safe normalized keys for unadapted-bullet detection.
+
+    Uses Regime A token normalization (case, accents, punctuation, and
+    whitespace) without plural folding, and also returns a sorted bag so a
+    bullet changed only through word order still counts as an unadapted copy.
+    """
+
+    tokens = _normalize_tokens(text)
+    return tokens, tuple(sorted(tokens))
+
+
 def _near_duplicate(first: GeneratedBlock, second: GeneratedBlock) -> bool:
     left = frozenset(
         token for token in _normalize_tokens(first.text) if len(token) >= 3 and token not in STOPWORDS
@@ -1704,6 +1716,15 @@ def validate_generated_response(data: dict[str, Any], source: SourceResume) -> V
                     "EVIDENCE_PROVENANCE",
                     f"{block_id} must cite at least one source bullet for {employer.name}",
                 )
+            generated_sequence, generated_bag = _adapted_bullet_keys(bullet.text)
+            for source_bullet_id in employer.bullet_ids:
+                source_bullet = source.fragments[source_bullet_id]
+                source_sequence, source_bag = _adapted_bullet_keys(source_bullet.text)
+                if generated_sequence == source_sequence or generated_bag == source_bag:
+                    _fail(
+                        "UNADAPTED_BULLET",
+                        f"{block_id} copies source bullet {source_bullet_id} without vacancy adaptation",
+                    )
             if len(bullet.text) > LENGTH_REVIEW_BULLET_CHARS:
                 warnings.append(AdvisoryWarning(
                     "LENGTH_REVIEW",

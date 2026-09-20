@@ -793,7 +793,7 @@ def generated_response():
                 "employer": "Beta",
                 "bullets": [
                     {
-                        "text": "Planned test strategies for web applications.",
+                        "text": "Planned and tracked test strategies for web applications.",
                         "source_fragment_ids": ["experience.beta.bullet.1"],
                     }
                 ],
@@ -997,13 +997,13 @@ def starta_generated_response():
                 "employer": "e.Mix",
                 "bullets": [
                     bullet(
-                        "Planejamento e execução de testes funcionais e não funcionais para aplicações web e APIs REST.",
+                        "Execução de testes funcionais e não funcionais em aplicações web com APIs REST.",
                         ["experience.e-mix.bullet.1"],
                         ["req-functional-nonfunctional"],
                     ),
                     bullet(
-                        "Automação de cenários de API e E2E com Postman, Newman e Robot Framework.",
-                        ["experience.e-mix.bullet.2"],
+                        "Automação de cenários E2E e validação de APIs com Robot Framework, Newman e Postman.",
+                        ["experience.e-mix.bullet.2", "experience.e-mix.bullet.1"],
                         ["req-api-integration"],
                     ),
                     bullet(
@@ -1051,7 +1051,9 @@ class GeneratedV2Tests(unittest.TestCase):
         self.assertIn("QA engineer with experience in Python automation and reliable software delivery.", resume)
         self.assertIn("**Programming Languages:** Python, Java", resume)
         self.assertIn("- Automated API tests with Python.", resume)
+        self.assertIn("- Planned and tracked test strategies for web applications.", resume)
         self.assertNotIn("Built API automation with Python.", resume)
+        self.assertNotIn("- Planned test strategies for web applications.", resume)
         self.assertIn("# Example Candidate", resume)
         self.assertIn("[candidate@example.test](mailto:candidate@example.test)", resume)
         self.assertIn("### QA Engineer | Acme", resume)
@@ -1377,25 +1379,28 @@ class GeneratedV2Tests(unittest.TestCase):
 
         response = generated_response()
         response["experience"][1]["bullets"].append(
-            {"text": "Planned test strategies for web applications.", "source_fragment_ids": ["experience.beta.bullet.1"]}
+            {
+                "text": "Planned and tracked test strategies for web applications.",
+                "source_fragment_ids": ["experience.beta.bullet.1"],
+            }
         )
         with self.assertRaisesRegex(GroundingError, "duplicate experience bullet text"):
             self._parse(response)
 
         source = make_pt_source()
-        verbatim = starta_generated_response()
-        verbatim["experience"] = []
+        expanded = starta_generated_response()
+        expanded["experience"] = []
         for employer in source.employers:
             blocks = [
                 {
-                    "text": source.fragments[bullet_id].text[2:].strip(),
+                    "text": "Execução de rotinas: " + source.fragments[bullet_id].text[2:].strip(),
                     "source_fragment_ids": [bullet_id],
                 }
                 for bullet_id in employer.bullet_ids[:4]
             ]
-            verbatim["experience"].append({"employer": employer.name, "bullets": blocks})
+            expanded["experience"].append({"employer": employer.name, "bullets": blocks})
         with self.assertRaisesRegex(GroundingError, "more than 16 bullets"):
-            self._parse(verbatim, source)
+            self._parse(expanded, source)
 
     def test_v2_limits_are_jointly_satisfiable(self):
         for path, language in (("RESUME_pt-BR.md", "pt-BR"), ("RESUME_en-US.md", "en-US")):
@@ -1543,12 +1548,12 @@ class GeneratedV2Tests(unittest.TestCase):
             "en-US",
         )
         response = generated_response()
-        response["experience"][1]["bullets"][0]["text"] = "Planned 2 defects for web applications."
+        response["experience"][1]["bullets"][0]["text"] = "Planned and tracked 2 defects for web applications."
         response["experience"][1]["bullets"][0]["source_fragment_ids"] = ["experience.beta.bullet.1"]
         self._parse(response, defects_source)
 
         response = generated_response()
-        response["experience"][1]["bullets"][0]["text"] = "Planned 2 tests for web applications."
+        response["experience"][1]["bullets"][0]["text"] = "Planned and tracked 2 tests for web applications."
         response["experience"][1]["bullets"][0]["source_fragment_ids"] = ["experience.beta.bullet.1"]
         with self.assertRaisesRegex(GroundingError, "metric or date '2 tests'"):
             self._parse(response, defects_source)
@@ -1708,9 +1713,17 @@ class GeneratedV2Tests(unittest.TestCase):
         report = render_report(source, generation)
         validate_rendered_markdown(source, generation, resume)
         validate_rendered_report(source, generation, report)
-        for keyword in ("Selenium", "JMeter", "Jenkins", "SQL Server", "GeneXus", "REST"):
+        for keyword in ("Java", "Selenium", "Selenide", "JMeter", "Jenkins", "SQL Server", "API", "Postman", "GeneXus", "REST"):
             self.assertIn(keyword, resume)
         self.assertIn("Automação de testes E2E com Selenium, Python e Pytest para aplicações mobile.", resume)
+        employers = {employer.name: employer for employer in source.employers}
+        for entry in generation.experience:
+            source_texts = {
+                " ".join(source.fragments[fragment_id].text[2:].strip().lower().split())
+                for fragment_id in employers[entry.employer].bullet_ids
+            }
+            for bullet in entry.bullets:
+                self.assertNotIn(" ".join(bullet.text.lower().split()), source_texts)
         self.assertIn("## Experiência Profissional", resume)
         self.assertIn("### Pós-graduação Lato Sensu em Cybersecurity", resume)
         self.assertIn("TDD", report)
@@ -1735,6 +1748,58 @@ class GeneratedV2Tests(unittest.TestCase):
         response["experience"][1]["employer"] = "Gamma"
         with self.assertRaisesRegex(GroundingError, "not an exact master employer name"):
             self._parse(response)
+
+    def test_v2_prompt_requires_real_adaptation(self):
+        prompt = build_prompt(make_source(), "https://example.test/job", schema_version=2)
+        for fragment in (
+            "ADAPTATION CONTRACT",
+            "This is a tailored resume, not a fragment selection",
+            "write the headline, summary, and every",
+            "experience bullet for this vacancy instead of reusing master-resume sentences",
+            "You must rewrite, not copy.",
+            "Do not copy a source bullet verbatim",
+            "punctuation, capitalization, word order, or line wrapping",
+            "You may combine facts from multiple source bullets",
+            "Emphasize relevant vacancy terminology whenever the cited evidence supports it",
+            "include grounded requirement_ids",
+            "Keep all source employers present; the renderer preserves source chronology.",
+        ):
+            self.assertIn(fragment, prompt)
+        self.assertNotIn("may paraphrase", prompt)
+        self.assertNotIn("paraphrase and reorder", prompt)
+
+    def test_v2_unadapted_bullet_is_rejected(self):
+        for text in (
+            "Planned test strategies for web applications.",
+            "Planned, test strategies for web applications!",
+            "Web applications test strategies planned for.",
+        ):
+            with self.subTest(text=text):
+                response = generated_response()
+                response["experience"][1]["bullets"][0]["text"] = text
+                with self.assertRaisesRegex(GroundingError, "UNADAPTED_BULLET"):
+                    self._parse(response)
+
+        response = generated_response()
+        response["experience"][1]["bullets"][0]["text"] = (
+            "Web releases, and not web applications, planned test strategies."
+        )
+        source, generation = self._parse(response)
+        self.assertEqual(
+            generation.experience[1].bullets[0].text,
+            "Web releases, and not web applications, planned test strategies.",
+        )
+        self.assertEqual(generation.experience[0].bullets[0].requirement_ids, ("req-python",))
+
+    def test_v2_selector_style_verbatim_bullets_are_rejected(self):
+        source = make_pt_source()
+        response = starta_generated_response()
+        for entry in response["experience"]:
+            for bullet in entry["bullets"]:
+                cited_id = bullet["source_fragment_ids"][0]
+                bullet["text"] = source.fragments[cited_id].text[2:].strip()
+        with self.assertRaisesRegex(GroundingError, "UNADAPTED_BULLET"):
+            parse_and_validate_response(json.dumps(response), source)
 
     def test_v2_prompt_and_request_schema(self):
         prompt = build_prompt(make_source(), "https://example.test/job", schema_version=2)

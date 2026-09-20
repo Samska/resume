@@ -469,9 +469,16 @@ LANGUAGE CONTRACT
 
 PROVENANCE CONTRACT
 - Every generated block must cite one or more existing source fragment IDs that support it.
-- The generated text may paraphrase and reorder cited evidence, but it must not add tools,
-  technologies, certifications, metrics, dates, titles, employers, responsibilities, or
-  achievements that are not present in the cited fragments.
+- You must rewrite, not copy. Every experience bullet must be a vacancy-adapted rewriting of its
+  cited evidence. Do not copy a source bullet verbatim, and do not change it only through
+  punctuation, capitalization, word order, or line wrapping; repository validation rejects an
+  unadapted bullet.
+- You may combine facts from multiple source bullets belonging to the same employer and from skill
+  fragments, provided you cite every supporting fragment and every stated fact is supported.
+- Do not add tools, technologies, certifications, metrics, dates, titles, employers,
+  responsibilities, or achievements that are not present in the cited fragments.
+- Emphasize relevant vacancy terminology whenever the cited evidence supports it, using the exact
+  source spelling for technology and proper-noun strings.
 - The headline must cite the master headline fragment.
 - Each summary block must cite at least one master summary fragment.
 - Each experience bullet must cite at least one source bullet owned by the same employer; it may
@@ -479,6 +486,19 @@ PROVENANCE CONTRACT
 - Skill groups reference one source skill category each. Return only exact item strings copied from
   that category, preserving case, accents, and plural forms. Do not return a label or kind field.
 - Every generated text must be plain single-line text without Markdown or control characters.
+
+ADAPTATION CONTRACT
+- This is a tailored resume, not a fragment selection: write the headline, summary, and every
+  experience bullet for this vacancy instead of reusing master-resume sentences.
+- Each adapted experience bullet should include grounded requirement_ids for every strong or
+  partial vacancy requirement it addresses, and you may combine evidence from multiple
+  same-employer bullets and skill fragments to cover them.
+- Tailor the headline and summary to the most relevant grounded requirements whenever safe
+  evidence exists.
+- Skills only change selection and ordering; category labels and item strings stay source-exact.
+- Keep all source employers present; the renderer preserves source chronology.
+- For a strongly aligned vacancy, target 12-16 useful experience bullets when the cited evidence
+  supports them, without padding.
 
 GAP CONTRACT
 - Requirements classified as gap must never be claimed as candidate experience. Generic words that
