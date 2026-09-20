@@ -1,4 +1,5 @@
 import json
+import io
 import os
 import sys
 import tempfile
@@ -6,6 +7,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
+from scripts.tailor_resume import build_request_body, request_openrouter
 from scripts.resume_grounding import (
     GroundingError,
     parse_and_validate_response,
@@ -278,6 +280,63 @@ class ResponseAndRenderingTests(unittest.TestCase):
         response["resume_markdown"] = "- unsupported candidate claim"
         with self.assertRaisesRegex(GroundingError, "unknown:"):
             parse_and_validate_response(json.dumps(response), source)
+
+    def test_one_pure_json_object_and_one_fenced_json_object_pass(self):
+        source = make_source()
+        response = json.dumps(make_response(source))
+        parse_and_validate_response(response, source)
+        parse_and_validate_response(f"```json\n{response}\n```", source)
+
+    def test_trailing_prose_multiple_fences_malformed_json_and_array_fail(self):
+        source = make_source()
+        response = json.dumps(make_response(source))
+        invalid_responses = (
+            f"```json\n{response}\n```\nTrailing prose",
+            f"```json\n{response}\n```\n```json\n{response}\n```",
+            response[:-1],
+            "[]",
+        )
+        for invalid in invalid_responses:
+            with self.subTest(invalid=invalid[:20]):
+                with self.assertRaises(GroundingError):
+                    parse_and_validate_response(invalid, source)
+
+    def test_structured_request_payload_is_closed_and_keeps_web_tools(self):
+        payload = build_request_body("example/model", "prompt", use_web=True)
+        self.assertEqual(payload["response_format"]["type"], "json_schema")
+        json_schema = payload["response_format"]["json_schema"]
+        self.assertTrue(json_schema["strict"])
+        schema = json_schema["schema"]
+        self.assertFalse(schema["additionalProperties"])
+        self.assertEqual(set(schema["required"]), set(schema["properties"]))
+        self.assertEqual(schema["properties"]["selected_fragment_ids"]["maxItems"], 25)
+        self.assertEqual(schema["properties"]["vacancy_requirements"]["maxItems"], 20)
+        self.assertFalse(schema["properties"]["strong_matches"]["items"]["additionalProperties"])
+        self.assertFalse(schema["properties"]["gaps"]["items"]["additionalProperties"])
+        self.assertEqual(payload["provider"], {"require_parameters": True})
+        self.assertEqual({tool["type"] for tool in payload["tools"]}, {"openrouter:web_fetch", "openrouter:web_search"})
+        self.assertNotIn("stream", payload)
+
+    def test_abnormal_completion_fails_without_response_content_or_retry(self):
+        response_body = {
+            "choices": [{
+                "finish_reason": "length",
+                "message": {"content": '{"secret":"must not leak"}'},
+            }],
+        }
+
+        class FakeResponse(io.BytesIO):
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *args):
+                self.close()
+
+        with patch("scripts.tailor_resume.urllib.request.urlopen", return_value=FakeResponse(json.dumps(response_body).encode())) as urlopen:
+            with self.assertRaisesRegex(RuntimeError, "completion failed: length") as raised:
+                request_openrouter("not-used", "example/model", "prompt", use_web=False)
+        self.assertNotIn("must not leak", str(raised.exception))
+        urlopen.assert_called_once()
 
     def test_vacancy_text_is_sanitized_and_not_candidate_evidence(self):
         source = make_source()

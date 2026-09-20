@@ -39,6 +39,108 @@ except ModuleNotFoundError:
 API_URL = "https://openrouter.ai/api/v1/chat/completions"
 
 
+MODEL_RESPONSE_SCHEMA: dict[str, object] = {
+    "type": "object",
+    "additionalProperties": False,
+    "properties": {
+        "schema_version": {"type": "integer", "const": 1},
+        "target_company": {"type": "string", "minLength": 1, "maxLength": 120},
+        "target_role": {"type": "string", "minLength": 1, "maxLength": 120},
+        "selected_fragment_ids": {
+            "type": "array",
+            "items": {"type": "string", "minLength": 1},
+            "minItems": 1,
+            "maxItems": 25,
+            "uniqueItems": True,
+        },
+        "vacancy_requirements": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 20,
+            "items": {
+                "type": "object",
+                "additionalProperties": False,
+                "properties": {
+                    "id": {"type": "string", "pattern": "^req-[a-z0-9][a-z0-9-]{0,39}$"},
+                    "text": {"type": "string", "minLength": 1, "maxLength": 300},
+                    "priority": {"type": "string", "enum": ["required", "preferred", "context"]},
+                },
+                "required": ["id", "text", "priority"],
+            },
+        },
+        "strong_matches": {
+            "type": "array",
+            "maxItems": 20,
+            "items": {
+                "type": "object",
+                "additionalProperties": False,
+                "properties": {
+                    "requirement_id": {"type": "string", "pattern": "^req-[a-z0-9][a-z0-9-]{0,39}$"},
+                    "evidence_ids": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 25,
+                        "items": {"type": "string", "minLength": 1},
+                        "uniqueItems": True,
+                    },
+                },
+                "required": ["requirement_id", "evidence_ids"],
+            },
+        },
+        "partial_matches": {
+            "type": "array",
+            "maxItems": 20,
+            "items": {
+                "type": "object",
+                "additionalProperties": False,
+                "properties": {
+                    "requirement_id": {"type": "string", "pattern": "^req-[a-z0-9][a-z0-9-]{0,39}$"},
+                    "evidence_ids": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 25,
+                        "items": {"type": "string", "minLength": 1},
+                        "uniqueItems": True,
+                    },
+                },
+                "required": ["requirement_id", "evidence_ids"],
+            },
+        },
+        "gaps": {
+            "type": "array",
+            "maxItems": 20,
+            "items": {
+                "type": "object",
+                "additionalProperties": False,
+                "properties": {"requirement_id": {"type": "string", "pattern": "^req-[a-z0-9][a-z0-9-]{0,39}$"}},
+                "required": ["requirement_id"],
+            },
+        },
+        "interview_topics": {
+            "type": "array",
+            "maxItems": 20,
+            "items": {
+                "type": "object",
+                "additionalProperties": False,
+                "properties": {"requirement_id": {"type": "string", "pattern": "^req-[a-z0-9][a-z0-9-]{0,39}$"}},
+                "required": ["requirement_id"],
+            },
+        },
+    },
+    "required": [
+        "schema_version",
+        "target_company",
+        "target_role",
+        "selected_fragment_ids",
+        "vacancy_requirements",
+        "strong_matches",
+        "partial_matches",
+        "gaps",
+        "interview_topics",
+    ],
+}
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--source", required=True, type=Path)
@@ -56,11 +158,20 @@ def slugify(value: str) -> str:
     return re.sub(r"[^A-Za-z0-9]+", "-", ascii_value).strip("-") or "job"
 
 
-def request_openrouter(api_key: str, model: str, prompt: str, use_web: bool) -> str:
+def build_request_body(model: str, prompt: str, use_web: bool) -> dict[str, object]:
     request_body: dict[str, object] = {
         "model": model,
         "temperature": 0.2,
         "max_tokens": 5000,
+        "provider": {"require_parameters": True},
+        "response_format": {
+            "type": "json_schema",
+            "json_schema": {
+                "name": "tailored_resume_selection",
+                "strict": True,
+                "schema": MODEL_RESPONSE_SCHEMA,
+            },
+        },
         "messages": [
             {
                 "role": "system",
@@ -86,7 +197,11 @@ def request_openrouter(api_key: str, model: str, prompt: str, use_web: bool) -> 
                 "parameters": {"max_results": 3, "max_total_results": 3},
             },
         ]
-    payload = json.dumps(request_body).encode("utf-8")
+    return request_body
+
+
+def request_openrouter(api_key: str, model: str, prompt: str, use_web: bool) -> str:
+    payload = json.dumps(build_request_body(model, prompt, use_web)).encode("utf-8")
     request = urllib.request.Request(
         API_URL,
         data=payload,
@@ -104,7 +219,14 @@ def request_openrouter(api_key: str, model: str, prompt: str, use_web: bool) -> 
     except urllib.error.HTTPError as exc:
         raise RuntimeError(f"OpenRouter returned HTTP {exc.code}.") from exc
     try:
-        content = body["choices"][0]["message"]["content"]
+        choice = body["choices"][0]
+        completion_reason = choice["finish_reason"]
+    except (KeyError, IndexError, TypeError) as exc:
+        raise RuntimeError("OpenRouter returned an unsupported response shape.") from exc
+    if completion_reason != "stop":
+        raise RuntimeError(f"OpenRouter completion failed: {completion_reason}")
+    try:
+        content = choice["message"]["content"]
     except (KeyError, IndexError, TypeError) as exc:
         raise RuntimeError("OpenRouter returned an unsupported response shape.") from exc
     if not isinstance(content, str):
