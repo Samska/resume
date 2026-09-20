@@ -1209,7 +1209,7 @@ class GeneratedV2Tests(unittest.TestCase):
 
         response = generated_response()
         response["experience"][1]["bullets"][0]["text"] = "Planned test strategies for web applications with 40% fewer defects."
-        with self.assertRaisesRegex(GroundingError, "metric or date '40'"):
+        with self.assertRaisesRegex(GroundingError, "metric or date '40"):
             self._parse(response)
 
         response = generated_response()
@@ -1413,6 +1413,129 @@ class GeneratedV2Tests(unittest.TestCase):
         response["summary"][0]["text"] = "QA engineer " + "automation " * 80
         with self.assertRaisesRegex(GroundingError, f"exceeds {MAX_SUMMARY_CHARS} characters"):
             self._parse(response)
+
+    def test_v2_numeric_facts_are_boundary_aware(self):
+        response = generated_response()
+        response["summary"][0]["text"] = "QA engineer with 2 years of Python automation and reliable delivery."
+        response["summary"][0]["source_fragment_ids"] = [
+            "summary.1",
+            "summary.2",
+            "skills.programming-languages",
+            "experience.acme.date.1",
+        ]
+        with self.assertRaisesRegex(GroundingError, "metric or date '2"):
+            self._parse(response)
+
+        custom_source = parse_source(
+            SYNTHETIC_SOURCE.replace(
+                "- Planned test strategies for web applications.",
+                "- Planned 400 test strategies for web applications.",
+            ),
+            "en-US",
+        )
+        supported = generated_response()
+        supported["summary"][0]["text"] = "QA engineer with 400 targeted strategies and reliable delivery."
+        supported["summary"][0]["source_fragment_ids"] = [
+            "summary.1",
+            "summary.2",
+            "skills.programming-languages",
+            "experience.beta.bullet.1",
+        ]
+        self._parse(supported, custom_source)
+
+        fabricated = generated_response()
+        fabricated["summary"][0]["text"] = "QA engineer with 40% faster delivery."
+        fabricated["summary"][0]["source_fragment_ids"] = [
+            "summary.1",
+            "summary.2",
+            "skills.programming-languages",
+            "experience.beta.bullet.1",
+        ]
+        with self.assertRaisesRegex(GroundingError, "metric or date '40"):
+            self._parse(fabricated, custom_source)
+
+        pt_source = make_pt_source()
+        e2e = starta_generated_response()
+        e2e["summary"][1]["text"] = "Atuação com 2 anos de experiência em automação E2E."
+        e2e["summary"][1]["source_fragment_ids"] = [
+            "summary.2",
+            "skills.automacao-de-testes",
+            "experience.trustly.bullet.2",
+        ]
+        with self.assertRaisesRegex(GroundingError, "metric or date '2"):
+            self._parse(e2e, pt_source)
+
+        valid = generated_response()
+        valid["summary"][0]["text"] = "QA engineer with 2024 delivery experience and reliable software delivery."
+        valid["summary"][0]["source_fragment_ids"] = [
+            "summary.1",
+            "summary.2",
+            "skills.programming-languages",
+            "experience.acme.date.1",
+        ]
+        self._parse(valid)
+
+        plus_source = parse_source(
+            SYNTHETIC_SOURCE.replace(
+                "Experienced in reliable software delivery.",
+                "Experienced in 7 years of reliable software delivery.",
+            ),
+            "en-US",
+        )
+        plus = generated_response()
+        plus["summary"][0]["text"] = "QA engineer with 7+ years of Python automation and reliable delivery."
+        plus["summary"][0]["source_fragment_ids"] = [
+            "summary.1",
+            "summary.2",
+            "skills.programming-languages",
+        ]
+        self._parse(plus, plus_source)
+
+    def test_v2_gap_generic_words_stay_usable_and_full_claim_fails(self):
+        source = make_pt_source()
+        base = starta_generated_response()
+        base["vacancy_requirements"].append(
+            {"id": "req-unit", "text": "testes unitários", "priority": "required"}
+        )
+        base["requirement_classifications"].append(
+            {"requirement_id": "req-unit", "status": "gap", "evidence_ids": []}
+        )
+        base["interview_topics"].append({"requirement_id": "req-unit"})
+        generation = parse_and_validate_response(json.dumps(base), source)
+        self.assertTrue(any("testes" in bullet.text for bullet in generation.all_bullets()))
+
+        claimed = json.loads(json.dumps(base))
+        claimed["experience"][0]["bullets"][0]["text"] = (
+            "Execução de testes unitários para jornadas críticas de pagamentos."
+        )
+        with self.assertRaisesRegex(GroundingError, "UNSUPPORTED_REQUIREMENT"):
+            parse_and_validate_response(json.dumps(claimed), source)
+
+        grounded = json.loads(json.dumps(base))
+        grounded["vacancy_requirements"][-1] = {"id": "req-unit", "text": "Git", "priority": "required"}
+        grounded["experience"][0]["bullets"][0]["text"] = (
+            "Execução de testes com Git para jornadas críticas de pagamentos."
+        )
+        grounded["experience"][0]["bullets"][0]["source_fragment_ids"] = [
+            "experience.trustly.bullet.1",
+            "skills.ferramentas",
+        ]
+        with self.assertRaisesRegex(GroundingError, "CLASSIFICATION_CONFLICT"):
+            parse_and_validate_response(json.dumps(grounded), source)
+
+    def test_v2_strict_skill_echo_rejects_compatibility_forms(self):
+        response = generated_response()
+        response["skill_groups"][0]["items"] = ["Ｐｙｔｈｏｎ", "Java"]
+        with self.assertRaisesRegex(GroundingError, "not an exact source item"):
+            self._parse(response)
+
+        response = generated_response()
+        response["skill_groups"][0]["items"] = ["Python\u00a0", "Java"]
+        source, generation = self._parse(response)
+        self.assertIn(
+            "**Programming Languages:** Python, Java",
+            render_resume(source, generation),
+        )
 
     def test_v2_classification_evidence_is_report_only(self):
         response = generated_response()

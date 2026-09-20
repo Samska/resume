@@ -741,8 +741,20 @@ FOLD_TRANSLATION = str.maketrans({
     "\\": "/",
 })
 RAW_TOKEN_RE = re.compile(r"[^\W_]+(?:[+#./][^\W_]+)*", re.UNICODE)
-NUMERIC_RE = re.compile(r"\d+(?:[.,]\d+)?")
 NUMERIC_TOKEN_RE = re.compile(r"\d+(?:[.,]\d+)?[%+]?")
+NUMERIC_FACT_RE = re.compile(
+    r"(?<![0-9A-Za-zÀ-ÖØ-öø-ÿ])"
+    r"(\d+(?:[.,]\d+)?)\+?"
+    r"(?:\s*(%|[xXkKmMhH]|[A-Za-zÀ-ÖØ-öø-ÿ]{2,12}))?"
+    r"(?![0-9A-Za-zÀ-ÖØ-öø-ÿ])"
+)
+NUMERIC_UNITS = frozenset({
+    "ano", "anos", "mes", "meses", "dia", "dias", "hora", "horas", "minuto", "minutos",
+    "semana", "semanas",
+    "year", "years", "month", "months", "day", "days", "hour", "hours", "minute", "minutes",
+    "week", "weeks",
+    "x", "k", "m", "mil", "h", "%", "pct",
+})
 GENERATED_FORBIDDEN_RE = re.compile(r"[#`<>*_]")
 SENTENCE_SPLIT_RE = re.compile(r"(?<=[.!?:;|…—])\s+")
 CERT_KEYWORDS = frozenset({
@@ -939,7 +951,13 @@ def _normalize_tokens(text: str) -> tuple[str, ...]:
 
 
 def _whitespace_key(value: str) -> str:
-    normalized = _strip_invisibles(unicodedata.normalize("NFKC", value))
+    """Regime B key: invisible removal and whitespace collapse only.
+
+    No NFKC compatibility folding, case folding, accent folding, or plural
+    normalization, so skill items must echo the source exactly.
+    """
+
+    normalized = _strip_invisibles(value)
     normalized = "".join(char for char in normalized if unicodedata.category(char)[0] != "C" or char in "\t\n\r")
     return re.sub(r"\s+", " ", normalized).strip()
 
@@ -947,6 +965,45 @@ def _whitespace_key(value: str) -> str:
 def _normalize_numeric_text(text: str) -> str:
     normalized = _strip_invisibles(unicodedata.normalize("NFKC", text))
     return "".join(char for char in normalized if unicodedata.category(char)[0] != "C" or char in "\t\n\r")
+
+
+def _numeric_facts(text: str) -> tuple[tuple[str, str | None], ...]:
+    """Extract boundary-delimited numeric facts as (value, unit) pairs.
+
+    Digits embedded in alphanumeric tokens such as ``E2E`` are not numbers, so
+    they can never support an unrelated claim like ``2 years``. A numeric fact
+    only matches an identical value; when the generated text attaches a unit,
+    the cited evidence must attach the same (plural-normalized) unit.
+    """
+
+    facts: list[tuple[str, str | None]] = []
+    seen: set[tuple[str, str | None]] = set()
+    for match in NUMERIC_FACT_RE.finditer(_normalize_numeric_text(text)):
+        value = match.group(1).replace(",", ".")
+        unit: str | None = None
+        if match.group(2):
+            candidate = _normalize_token(match.group(2))
+            if candidate in NUMERIC_UNITS or _token_variants(candidate) & NUMERIC_UNITS:
+                unit = candidate
+        fact = (value, unit)
+        if fact not in seen:
+            seen.add(fact)
+            facts.append(fact)
+    return tuple(facts)
+
+
+def _numeric_fact_supported(
+    value: str,
+    unit: str | None,
+    cited_facts: tuple[tuple[str, str | None], ...],
+) -> bool:
+    candidates = [cited_unit for cited_value, cited_unit in cited_facts if cited_value == value]
+    if not candidates:
+        return False
+    if unit is None:
+        return True
+    variants = _token_variants(unit)
+    return any(cited_unit is not None and variants & _token_variants(cited_unit) for cited_unit in candidates)
 
 
 def _token_variants(token: str) -> frozenset[str]:
@@ -1038,7 +1095,8 @@ def build_source_vocabulary(source: SourceResume) -> SourceVocabulary:
 def _check_generated_text(
     source: SourceResume,
     vocabulary: SourceVocabulary,
-    gap_terms: frozenset[str],
+    gap_phrases: tuple[tuple[str, ...], ...],
+    gap_atoms: frozenset[str],
     block_id: str,
     text: str,
     cited_fragments: tuple[Fragment, ...],
@@ -1051,18 +1109,32 @@ def _check_generated_text(
     token_set = set(text_tokens)
     warnings: list[AdvisoryWarning] = []
 
-    for term in sorted(gap_terms):
-        if term not in token_set:
+    for phrase in gap_phrases:
+        if not _covers(phrase, text_tokens):
             continue
-        if _covers((term,), corpus_tokens):
+        rendered = " ".join(phrase)
+        if _covers(phrase, corpus_tokens):
             _fail(
                 "CLASSIFICATION_CONFLICT",
-                f"{block_id} uses gap requirement term '{term}' with supporting evidence; "
+                f"{block_id} claims gap requirement '{rendered}' with supporting evidence; "
                 "reclassify the requirement or remove the claim",
             )
         _fail(
             "UNSUPPORTED_REQUIREMENT",
-            f"{block_id} uses gap requirement term '{term}' without supporting evidence",
+            f"{block_id} claims gap requirement '{rendered}' without supporting evidence",
+        )
+    for atom in sorted(gap_atoms):
+        if atom not in token_set:
+            continue
+        if _covers((atom,), corpus_tokens):
+            _fail(
+                "CLASSIFICATION_CONFLICT",
+                f"{block_id} uses gap requirement term '{atom}' with supporting evidence; "
+                "reclassify the requirement or remove the claim",
+            )
+        _fail(
+            "UNSUPPORTED_REQUIREMENT",
+            f"{block_id} uses unsupported gap term '{atom}'",
         )
 
     other_language = "en-US" if source.language == "pt-BR" else "pt-BR"
@@ -1084,10 +1156,12 @@ def _check_generated_text(
                 f"{block_id} mentions employer '{term.label}' without citing an entry owned by that employer",
             )
 
-    corpus_numeric = _normalize_numeric_text(" ".join(fragment.text for fragment in cited_fragments))
-    for number in NUMERIC_RE.findall(_normalize_numeric_text(text)):
-        if number not in corpus_numeric:
-            _fail("UNSUPPORTED_CLAIM", f"{block_id} contains unsupported metric or date '{number}'")
+    cited_facts = _numeric_facts(" ".join(fragment.text for fragment in cited_fragments))
+    for value, unit in _numeric_facts(text):
+        if _numeric_fact_supported(value, unit, cited_facts):
+            continue
+        claim = value if unit is None else f"{value} {unit}"
+        _fail("UNSUPPORTED_CLAIM", f"{block_id} contains unsupported metric or date '{claim}'")
 
     for raw, _sentence_start in raw_tokens:
         if NUMERIC_TOKEN_RE.fullmatch(raw) or not _is_pattern_token(raw):
@@ -1456,15 +1530,23 @@ def validate_generated_response(data: dict[str, Any], source: SourceResume) -> V
     gap_set = set(gaps)
 
     vocabulary = build_source_vocabulary(source)
-    gap_terms: set[str] = set()
+    gap_phrases: list[tuple[str, ...]] = []
+    gap_atoms: set[str] = set()
     for requirement in requirements:
-        if requirement.id in gap_set:
-            gap_terms.update(
-                token
-                for token in _normalize_tokens(requirement.text)
-                if len(token) >= 3 and token not in STOPWORDS
-            )
-    gap_term_set = frozenset(gap_terms)
+        if requirement.id not in gap_set:
+            continue
+        tokens = _normalize_tokens(requirement.text)
+        if tokens:
+            gap_phrases.append(tokens)
+        for token in tokens:
+            if (
+                len(token) >= 3
+                and token not in STOPWORDS
+                and not _covers((token,), vocabulary.source_tokens)
+            ):
+                gap_atoms.add(token)
+    gap_phrase_set = tuple(gap_phrases)
+    gap_atom_set = frozenset(gap_atoms)
 
     warnings: list[AdvisoryWarning] = []
     rendered_ids: list[str] = []
@@ -1654,11 +1736,19 @@ def validate_generated_response(data: dict[str, Any], source: SourceResume) -> V
         for requirement_id in block.requirement_ids:
             if requirement_id in gap_set:
                 _fail(
-                    "UNSUPPORTED_REQUIREMENT",
+                    "CLASSIFICATION_CONFLICT",
                     f"{block.block_id} links a requirement that is still classified as a gap: {requirement_id}",
                 )
         warnings.extend(
-            _check_generated_text(source, vocabulary, gap_term_set, block.block_id, block.text, fragments)
+            _check_generated_text(
+                source,
+                vocabulary,
+                gap_phrase_set,
+                gap_atom_set,
+                block.block_id,
+                block.text,
+                fragments,
+            )
         )
 
     evidence_by_requirement = {

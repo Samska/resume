@@ -481,9 +481,12 @@ PROVENANCE CONTRACT
 - Every generated text must be plain single-line text without Markdown or control characters.
 
 GAP CONTRACT
-- Requirements classified as gap must never appear in generated candidate-facing text. Gap terms
-  may appear only in vacancy_requirements and interview_topics. Cite a requirement in a block only
-  when it is classified strong or partial and the cited fragments support it.
+- Requirements classified as gap must never be claimed as candidate experience. Generic words that
+  already appear in the master resume stay usable, but the full gap requirement and its distinctive
+  missing terms (such as TDD, Sonar, or Cypress) must not appear in generated text unless the
+  requirement is reclassified strong or partial with cited evidence in the same response. Cite a
+  requirement in a block only when it is classified strong or partial and the cited fragments
+  support it.
 
 BUDGETS
 - 1-2 summary blocks; 2 to {effective_group_max} skill groups and always include the spoken-language
