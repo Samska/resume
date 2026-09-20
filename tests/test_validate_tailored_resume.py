@@ -132,6 +132,42 @@ class ManifestValidationTests(unittest.TestCase):
             restored = validate_manifest(source, load_manifest(path))
         self.assertEqual(restored.strong_matches[0].evidence_ids, ("contact.location",))
 
+    def test_reconciled_evidence_is_rendered_and_persisted(self):
+        from scripts.resume_grounding import (
+            load_manifest,
+            validate_manifest,
+            validate_rendered_markdown,
+            validate_rendered_report,
+        )
+
+        source = parse_source(SYNTHETIC_SOURCE, "en-US")
+        selected = [item for item in make_response(source)["selected_fragment_ids"] if item != "skills.tools"]
+        response = make_response(
+            source,
+            selected=selected,
+            classifications=[
+                {"requirement_id": "req-1", "status": "strong", "evidence_ids": ["skills.tools"]},
+                {"requirement_id": "req-2", "status": "gap", "evidence_ids": []},
+            ],
+        )
+        self.assertNotIn("skills.tools", response["selected_fragment_ids"])
+        selection = parse_and_validate_response(json.dumps(response), source)
+        self.assertIn("skills.tools", selection.selected_fragment_ids)
+        resume = render_resume(source, selection)
+        report = render_report(source, selection)
+        self.assertIn("**Tools:** Git, LambdaTest", resume)
+        self.assertIn("**Tools:** Git, LambdaTest", report)
+        validate_rendered_markdown(source, selection, resume)
+        validate_rendered_report(source, selection, report)
+        manifest = selection.to_manifest()
+        self.assertIn("skills.tools", manifest["selected_fragment_ids"])
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "manifest.json"
+            path.write_text(json.dumps(manifest), encoding="utf-8")
+            restored = validate_manifest(source, load_manifest(path))
+        self.assertEqual(restored.selected_fragment_ids, selection.selected_fragment_ids)
+        self.assertEqual(render_resume(source, restored), resume)
+
     def test_report_and_resume_are_rejected_when_tampered(self):
         source = parse_source(SYNTHETIC_SOURCE, "en-US")
         selection = parse_and_validate_response(json.dumps(make_response(source)), source)

@@ -265,15 +265,105 @@ class ResponseAndRenderingTests(unittest.TestCase):
         with self.assertRaisesRegex(GroundingError, "more than 16 bullets"):
             parse_and_validate_response(json.dumps(response), source)
 
-    def test_known_but_unselected_evidence_fails(self):
+    def test_omitted_selectable_evidence_is_reconciled(self):
         source = make_source()
-        invalid_evidence = make_response(source)
-        invalid_evidence["selected_fragment_ids"] = [
-            item for item in invalid_evidence["selected_fragment_ids"] if item != "skills.tools"
+        selected = [item for item in make_response(source)["selected_fragment_ids"] if item != "skills.tools"]
+        response = make_response(
+            source,
+            selected=selected,
+            classifications=[
+                {"requirement_id": "req-1", "status": "strong", "evidence_ids": ["skills.tools"]},
+                {"requirement_id": "req-2", "status": "partial", "evidence_ids": ["skills.tools"]},
+            ],
+        )
+        self.assertNotIn("skills.tools", response["selected_fragment_ids"])
+        selection = parse_and_validate_response(json.dumps(response), source)
+        self.assertEqual(selection.selected_fragment_ids, tuple(selected) + ("skills.tools",))
+        self.assertEqual(selection.strong_matches[0].evidence_ids, ("skills.tools",))
+        self.assertEqual(selection.partial_matches[0].evidence_ids, ("skills.tools",))
+
+    def test_reconciled_evidence_exceeding_bullet_limits_fails(self):
+        source = parse_source(TOTAL_BULLETS_SOURCE, "en-US")
+        base_skills = ["skills.programming-languages", "skills.tools", "skills.spoken-languages"]
+        per_employer = [
+            "summary.1", "summary.2", *base_skills,
+            "experience.acme.bullet.1", "experience.acme.bullet.2", "experience.acme.bullet.3", "experience.acme.bullet.4",
+            "experience.beta.bullet.1", "experience.beta.bullet.2", "experience.beta.bullet.3", "experience.beta.bullet.4",
+            "experience.gamma.bullet.1", "experience.delta.bullet.1", "experience.epsilon.bullet.1",
         ]
-        invalid_evidence["requirement_classifications"][0]["evidence_ids"] = ["skills.tools"]
-        with self.assertRaisesRegex(GroundingError, "evidence is not selected"):
-            parse_and_validate_response(json.dumps(invalid_evidence), source)
+        with self.assertRaisesRegex(GroundingError, "more than 4 bullets"):
+            parse_and_validate_response(
+                json.dumps(make_response(source, selected=per_employer, classifications=[
+                    {"requirement_id": "req-1", "status": "strong", "evidence_ids": ["experience.acme.bullet.5"]},
+                    {"requirement_id": "req-2", "status": "gap", "evidence_ids": []},
+                ])),
+                source,
+            )
+
+        total = [
+            "summary.1", "summary.2", *base_skills,
+            "experience.acme.bullet.1", "experience.acme.bullet.2", "experience.acme.bullet.3", "experience.acme.bullet.4",
+            "experience.beta.bullet.1", "experience.beta.bullet.2", "experience.beta.bullet.3", "experience.beta.bullet.4",
+            "experience.gamma.bullet.1", "experience.gamma.bullet.2", "experience.gamma.bullet.3", "experience.gamma.bullet.4",
+            "experience.delta.bullet.1", "experience.delta.bullet.2", "experience.delta.bullet.3",
+            "experience.epsilon.bullet.1",
+        ]
+        with self.assertRaisesRegex(GroundingError, "more than 16 bullets"):
+            parse_and_validate_response(
+                json.dumps(make_response(source, selected=total, classifications=[
+                    {"requirement_id": "req-1", "status": "strong", "evidence_ids": ["experience.delta.bullet.4"]},
+                    {"requirement_id": "req-2", "status": "gap", "evidence_ids": []},
+                ])),
+                source,
+            )
+
+    def test_reconciled_evidence_exceeding_fragment_count_fails(self):
+        source = parse_source(MANY_SKILLS_SOURCE, "en-US")
+        selected = [
+            "summary.1", "summary.2",
+            "skills.programming-languages", "skills.spoken-languages",
+            *(f"skills.category-{index:02d}" for index in range(1, 19)),
+            "experience.acme.bullet.1", "experience.acme.bullet.2", "experience.beta.bullet.1",
+        ]
+        self.assertEqual(len(selected), 25)
+        response = make_response(
+            source,
+            selected=selected,
+            classifications=[
+                {"requirement_id": "req-1", "status": "strong", "evidence_ids": ["skills.category-19"]},
+                {"requirement_id": "req-2", "status": "gap", "evidence_ids": []},
+            ],
+        )
+        with self.assertRaisesRegex(GroundingError, "selected fragment count"):
+            parse_and_validate_response(json.dumps(response), source)
+
+    def test_reconciled_summary_limit_is_rejected(self):
+        expanded = SYNTHETIC_SOURCE.replace(
+            "Experienced in reliable software delivery.",
+            "Experienced in reliable software delivery.\n\nThird summary paragraph.",
+        )
+        source = parse_source(expanded, "en-US")
+        self.assertEqual(len(source.summary_ids), 3)
+        selected = [item for item in make_response(source)["selected_fragment_ids"] if item != "summary.3"]
+        response = make_response(
+            source,
+            selected=selected,
+            classifications=[
+                {"requirement_id": "req-1", "status": "strong", "evidence_ids": ["summary.3"]},
+                {"requirement_id": "req-2", "status": "gap", "evidence_ids": []},
+            ],
+        )
+        with self.assertRaisesRegex(GroundingError, "one or two summary paragraphs"):
+            parse_and_validate_response(json.dumps(response), source)
+
+    def test_skill_selection_limits_are_enforced(self):
+        source = make_source()
+        without_spoken = [item for item in make_response(source)["selected_fragment_ids"] if item != "skills.spoken-languages"]
+        with self.assertRaisesRegex(GroundingError, "spoken languages and another skill category"):
+            parse_and_validate_response(json.dumps(make_response(source, selected=without_spoken)), source)
+        single_skill = ["summary.1", "skills.programming-languages", "experience.acme.bullet.1", "experience.beta.bullet.1"]
+        with self.assertRaisesRegex(GroundingError, "spoken languages and another skill category"):
+            parse_and_validate_response(json.dumps(make_response(source, selected=single_skill)), source)
 
     def test_mandatory_structural_fragment_is_valid_evidence(self):
         source = make_source()
@@ -322,6 +412,18 @@ class ResponseAndRenderingTests(unittest.TestCase):
         with self.assertRaisesRegex(GroundingError, "unknown evidence ID"):
             parse_and_validate_response(json.dumps(response), source)
 
+    def test_duplicate_evidence_ids_are_rejected(self):
+        source = make_source()
+        response = make_response(
+            source,
+            classifications=[
+                {"requirement_id": "req-1", "status": "strong", "evidence_ids": ["skills.tools", "skills.tools"]},
+                {"requirement_id": "req-2", "status": "gap", "evidence_ids": []},
+            ],
+        )
+        with self.assertRaisesRegex(GroundingError, "invalid or duplicate evidence ID"):
+            parse_and_validate_response(json.dumps(response), source)
+
     def test_gap_with_mandatory_structural_evidence_is_rejected(self):
         source = make_source()
         response = make_response(source, classifications=[
@@ -339,6 +441,9 @@ class ResponseAndRenderingTests(unittest.TestCase):
         self.assertIn("MANDATORY STRUCTURAL SOURCE FRAGMENTS", prompt)
         self.assertIn("must\nnever be added to selected_fragment_ids", prompt)
         self.assertIn("known mandatory structural fragment ID", prompt)
+        self.assertIn("Before finalizing the response, verify that every", prompt)
+        self.assertIn("selectable evidence ID used in a strong or partial classification", prompt)
+        self.assertIn("contract violation", prompt)
 
     def test_mixed_json_and_unknown_free_form_fields_fail(self):
         source = make_source()

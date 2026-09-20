@@ -538,7 +538,13 @@ def _exact_keys(value: dict[str, Any], expected: set[str], context: str) -> None
 
 
 def validate_response(data: dict[str, Any], source: SourceResume) -> ValidatedSelection:
-    """Validate the closed model response and return a manifest-ready selection."""
+    """Validate the closed model response and return a manifest-ready selection.
+
+    Selectable evidence omitted from selected_fragment_ids is deterministically
+    reconciled into the effective selection, which must then satisfy every
+    selection limit. Mandatory structural evidence is already rendered and is
+    never added to selected_fragment_ids.
+    """
 
     _exact_keys(
         data,
@@ -559,37 +565,20 @@ def validate_response(data: dict[str, Any], source: SourceResume) -> ValidatedSe
     role = normalize_vacancy_text(data["target_role"], "target_role", MAX_TARGET_TEXT)
 
     selected_raw = _list_field(data, "selected_fragment_ids")
-    if not 1 <= len(selected_raw) <= MAX_SELECTED_FRAGMENTS:
-        _fail("MODEL_SELECTION", f"selected fragment count must be 1-{MAX_SELECTED_FRAGMENTS}")
     selected: list[str] = []
+    selected_set: set[str] = set()
     for value in selected_raw:
         if not isinstance(value, str) or not value:
             _fail("MODEL_SCHEMA", "selected fragment IDs must be non-empty strings")
-        if value in selected:
+        if value in selected_set:
             _fail("MODEL_SCHEMA", f"duplicate selected fragment ID: {value}")
         fragment = source.fragments.get(value)
         if fragment is None:
             _fail("MODEL_SCHEMA", f"unknown selected fragment ID: {value}")
         if not fragment.selectable:
             _fail("MODEL_SELECTION", f"fragment is not selectable: {value}")
+        selected_set.add(value)
         selected.append(value)
-
-    selected_set = set(selected)
-    summaries = [item for item in selected if source.fragments[item].kind == "summary"]
-    skills = [item for item in selected if source.fragments[item].kind == "skill"]
-    bullets = [item for item in selected if source.fragments[item].kind == "bullet"]
-    if not 1 <= len(summaries) <= MAX_SUMMARY_FRAGMENTS:
-        _fail("MODEL_SELECTION", "selection must contain one or two summary paragraphs")
-    if len(skills) < 2 or source.spoken_language_id not in selected_set:
-        _fail("MODEL_SELECTION", "selection must contain spoken languages and another skill category")
-    if len(bullets) > MAX_TOTAL_BULLETS:
-        _fail("MODEL_SELECTION", f"selection contains more than {MAX_TOTAL_BULLETS} bullets")
-    for employer in source.employers:
-        employer_bullets = [item for item in bullets if item in employer.bullet_ids]
-        if not employer_bullets:
-            _fail("MODEL_SELECTION", f"selection omits employer: {employer.name}")
-        if len(employer_bullets) > MAX_BULLETS_PER_EMPLOYER:
-            _fail("MODEL_SELECTION", f"selection contains more than {MAX_BULLETS_PER_EMPLOYER} bullets for {employer.name}")
 
     requirement_items = _list_field(data, "vacancy_requirements")
     if not requirement_items or len(requirement_items) > MAX_REQUIREMENTS:
@@ -618,6 +607,8 @@ def validate_response(data: dict[str, Any], source: SourceResume) -> ValidatedSe
     partial_matches: list[Match] = []
     gaps: list[str] = []
     classified: set[str] = set()
+    reconciled: list[str] = []
+    reconciled_set: set[str] = set()
     for item in classification_items:
         if not isinstance(item, dict):
             _fail("MODEL_SCHEMA", "requirement classifications must be objects")
@@ -646,8 +637,9 @@ def validate_response(data: dict[str, Any], source: SourceResume) -> ValidatedSe
             fragment = source.fragments.get(evidence_id)
             if fragment is None:
                 _fail("EVIDENCE_MAPPING", f"unknown evidence ID: {evidence_id}")
-            if evidence_id not in selected_set and not fragment.mandatory:
-                _fail("EVIDENCE_MAPPING", f"evidence is not selected: {evidence_id}")
+            if fragment.selectable and evidence_id not in selected_set and evidence_id not in reconciled_set:
+                reconciled.append(evidence_id)
+                reconciled_set.add(evidence_id)
             evidence_ids.append(evidence_id)
         match = Match(requirement_id, tuple(evidence_ids))
         if status == "strong":
@@ -657,6 +649,26 @@ def validate_response(data: dict[str, Any], source: SourceResume) -> ValidatedSe
     if classified != requirement_ids:
         missing = sorted(requirement_ids - classified)
         _fail("MODEL_SCHEMA", "every vacancy requirement must be classified exactly once (missing: " + ", ".join(missing) + ")")
+
+    effective = selected + reconciled
+    effective_set = set(effective)
+    summaries = [item for item in effective if source.fragments[item].kind == "summary"]
+    skills = [item for item in effective if source.fragments[item].kind == "skill"]
+    bullets = [item for item in effective if source.fragments[item].kind == "bullet"]
+    if not 1 <= len(effective) <= MAX_SELECTED_FRAGMENTS:
+        _fail("MODEL_SELECTION", f"selected fragment count must be 1-{MAX_SELECTED_FRAGMENTS} after evidence reconciliation")
+    if not 1 <= len(summaries) <= MAX_SUMMARY_FRAGMENTS:
+        _fail("MODEL_SELECTION", "selection must contain one or two summary paragraphs")
+    if len(skills) < 2 or source.spoken_language_id not in effective_set:
+        _fail("MODEL_SELECTION", "selection must contain spoken languages and another skill category")
+    if len(bullets) > MAX_TOTAL_BULLETS:
+        _fail("MODEL_SELECTION", f"selection contains more than {MAX_TOTAL_BULLETS} bullets")
+    for employer in source.employers:
+        employer_bullets = [item for item in bullets if item in employer.bullet_ids]
+        if not employer_bullets:
+            _fail("MODEL_SELECTION", f"selection omits employer: {employer.name}")
+        if len(employer_bullets) > MAX_BULLETS_PER_EMPLOYER:
+            _fail("MODEL_SELECTION", f"selection contains more than {MAX_BULLETS_PER_EMPLOYER} bullets for {employer.name}")
 
     strong = tuple(strong_matches)
     partial = tuple(partial_matches)
@@ -680,7 +692,7 @@ def validate_response(data: dict[str, Any], source: SourceResume) -> ValidatedSe
         source.digest,
         company,
         role,
-        tuple(selected),
+        tuple(effective),
         tuple(requirements),
         strong,
         partial,
