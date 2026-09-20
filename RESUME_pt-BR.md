@@ -3,24 +3,23 @@
 Engenharia de Software | Engenharia de Qualidade | Automação de Testes
 
 Localização: Jundiaí, SP, Brasil  
-Disponibilidade: Disponível para oportunidades remotas  
+Telefone: +55 11 983168056  
 E-mail: [samuel.andradetp@live.com](mailto:samuel.andradetp@live.com)  
 LinkedIn: [linkedin.com/in/Samska](https://linkedin.com/in/Samska)  
 GitHub: [github.com/Samska](https://github.com/Samska)
 
 ## Competências Principais
 
-**Engenharia de Qualidade e Estratégia de Testes Baseada em Risco:** Planejamento de testes, análise de riscos, qualidade shift-left e atuação como referência de qualidade  
-**Automação de Testes Web, Mobile e APIs:** Playwright, Selenium/Selenide, Cypress, Appium, Pytest, Postman e REST Assured  
-**Testes End-to-End, de Integração e de Regressão:** Testes funcionais, de integração, exploratórios, de regressão e de integrações distribuídas  
-**Testes de Acessibilidade:** Validação de WCAG com VoiceOver, TalkBack, NVDA e JAWS  
-**Testes Visuais, Cross-Browser e de Dispositivos:** BackstopJS, Applitools Eyes, Sauce Labs e LambdaTest  
-**CI/CD e Testes Contínuos:** GitHub Actions, Jenkins e Azure DevOps  
-**Testes de Performance e Não Funcionais:** JMeter, testes de carga, estresse e performance  
-**Observabilidade e Análise de Incidentes:** New Relic, ELK Stack, SQL, logs, métricas e evidências operacionais  
-**Engenharia de Qualidade Mobile:** iOS, Android, Xcode, Android Studio e entregas multiplataforma  
-**Engenharia Assistida por IA e Workflows de Testes:** GitHub Copilot, Claude Code, Cursor e workflows com MCP  
-**Colaboração Ágil e Atuação em Qualidade:** Colaboração multifuncional entre produto, engenharia e equipes de entrega
+**Engenharia de Qualidade e Shift-Left:** Estratégia baseada em risco, planejamento de testes, identificação antecipada de riscos e atuação em qualidade  
+**Arquitetura de Automação de Testes:** Construção de automações sustentáveis para camadas web, mobile, API, E2E, integração e regressão  
+**Qualidade ao Longo do SDLC:** Testes funcionais, não funcionais, exploratórios, de aceitação, acessibilidade, visuais e de performance  
+**Qualidade de APIs e Sistemas Distribuídos:** Validação de APIs, fluxos de integração, microsserviços, dados de teste e análise de riscos  
+**Acessibilidade e Qualidade Inclusiva:** Validação orientada a WCAG em experiências desktop e mobile  
+**Testes Contínuos e Entrega:** Integração de verificações automatizadas de qualidade a pipelines CI/CD e fluxos de release  
+**Engenharia de Qualidade Multiplataforma:** Gestão de riscos de compatibilidade entre navegadores, dispositivos, iOS e Android  
+**Observabilidade e Investigação de Incidentes:** Uso de logs, métricas, monitoramento e evidências operacionais para analisar o comportamento das aplicações  
+**Engenharia Assistida por IA e Workflows de Testes:** Uso de ferramentas de IA e workflows baseados em agentes para melhorar atividades recorrentes de engenharia e testes  
+**Colaboração Ágil e Atuação em Qualidade:** Colaboração entre produto, engenharia e equipes de entrega para melhorar decisões de qualidade
 
 ## Resumo Profissional
 
@@ -31,7 +30,7 @@ Atuação ao longo de todo o ciclo de desenvolvimento com Java, Python, TypeScri
 ## Experiência Profissional
 
 ### Senior QA Engineer | Trustly
-Jan 2026 - Set 2026 | Brasil
+Jan 2026 - Set 2026 | São Paulo, São Paulo, Brasil | Remoto
 
 - Definição e execução de estratégias de testes baseadas em risco para jornadas críticas de pagamentos em ambientes de integração e aceitação.
 - Desenvolvimento e manutenção de automações E2E com Java, Selenide e Cucumber para fluxos críticos de frontend.
@@ -40,7 +39,7 @@ Jan 2026 - Set 2026 | Brasil
 - Aplicação de GitHub Copilot, Claude Code e workflows baseados em MCP para acelerar atividades recorrentes de engenharia e testes.
 
 ### Senior QA Engineer | AB InBev
-Set 2024 - Jan 2026 | Campinas, SP
+Set 2024 - Jan 2026 | Campinas, São Paulo, Brasil | Híbrido
 
 - Planejamento e execução de estratégias de qualidade para jornadas de comércio web e mobile do BEES Customer em iOS e Android.
 - Desenvolvimento de automações E2E com Python, Pytest, Selenium e Appium.
@@ -73,7 +72,7 @@ Jul 2021 - Jan 2022 | São Paulo, SP | Remoto
 - Execução de testes de performance, carga e estresse com JMeter e integração dos testes em pipelines Azure DevOps.
 
 ### Software Engineer | DNGX
-Mar 2019 - Jul 2021 | Santo André, SP
+Mar 2019 - Jul 2021 | Santo André, São Paulo, Brasil | Híbrido
 
 - Desenvolvimento de aplicações web e mobile com GeneXus e customização de interfaces com WorkWithPlus e Smart Devices Plus.
 - Modelagem e implementação de soluções com SQL Server, PostgreSQL e MySQL.
@@ -82,7 +81,7 @@ Mar 2019 - Jul 2021 | Santo André, SP
 ## Formação
 
 ### Pós-graduação Lato Sensu em Cybersecurity (Especialização) | Universidade Cruzeiro do Sul
-Mar 2021 - Mar 2022 | Concluída
+Mar 2021 - Mar 2022
 
 ### Tecnólogo em Análise e Desenvolvimento de Sistemas | Universidade Cruzeiro do Sul
 Fev 2018 - Ago 2020
@@ -90,7 +89,7 @@ Fev 2018 - Ago 2020
 ## Idiomas
 
 **Português:** Nativo  
-**Inglês:** Proficiência profissional
+**Inglês:** EF SET English Certificate 73/100 (C2 Proficient)
 
 ## Habilidades Técnicas
 
