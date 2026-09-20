@@ -265,11 +265,14 @@ category, and at least one bullet for every employer. Select no more than four b
 and sixteen bullets total. Add only selectable fragment IDs to selected_fragment_ids. Mandatory
 structural fragments are always rendered in the resume, so they are valid evidence, but they must
 never be added to selected_fragment_ids. Every evidence ID must be either a selected fragment ID or
-a known mandatory structural fragment ID. Include every vacancy requirement exactly once in
-requirement_classifications, with status strong, partial, or gap. Strong and partial entries must
-list at least one valid evidence ID; gap entries must use an empty evidence_ids array. Interview
-topics contain only requirement_id. Use no Markdown or prose outside the JSON object. Keep the JSON
-compact: include only relevant requirements and necessary evidence.
+a known mandatory structural fragment ID. Before finalizing the response, verify that every
+selectable evidence ID used in a strong or partial classification also appears in
+selected_fragment_ids; a missing selectable evidence ID is a contract violation. Include every
+vacancy requirement exactly once in requirement_classifications, with status strong, partial, or
+gap. Strong and partial entries must list at least one valid evidence ID; gap entries must use an
+empty evidence_ids array. Interview topics contain only requirement_id. Use no Markdown or prose
+outside the JSON object. Keep the JSON compact: include only relevant requirements and necessary
+evidence.
 
 REQUIRED JSON CONTRACT
 ---
