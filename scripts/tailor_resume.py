@@ -244,7 +244,7 @@ def build_prompt(source: SourceResume, job_url: str) -> str:
         "selected_fragment_ids": ["source fragment ID"],
         "vacancy_requirements": [{"id": "req-1", "text": "vacancy data", "priority": "required|preferred|context"}],
         "requirement_classifications": [
-            {"requirement_id": "req-1", "status": "strong|partial|gap", "evidence_ids": ["selected source fragment ID"]}
+            {"requirement_id": "req-1", "status": "strong|partial|gap", "evidence_ids": ["selected or mandatory structural source fragment ID"]}
         ],
         "interview_topics": [{"requirement_id": "req-2"}],
     }
@@ -262,11 +262,14 @@ Do not write resume Markdown, match-report prose, evidence excerpts, explanation
 or any other fields. Candidate-facing text will be rendered by repository code from exact source
 fragments. Select one or two summary fragments, spoken languages plus at least one other skill
 category, and at least one bullet for every employer. Select no more than four bullets per employer
-and sixteen bullets total. Keep evidence IDs within selected_fragment_ids. Include every vacancy
-requirement exactly once in requirement_classifications, with status strong, partial, or gap. Strong
-and partial entries must list at least one selected evidence ID; gap entries must use an empty
-evidence_ids array. Interview topics contain only requirement_id. Use no Markdown or prose outside
-the JSON object. Keep the JSON compact: include only relevant requirements and necessary evidence.
+and sixteen bullets total. Add only selectable fragment IDs to selected_fragment_ids. Mandatory
+structural fragments are always rendered in the resume, so they are valid evidence, but they must
+never be added to selected_fragment_ids. Every evidence ID must be either a selected fragment ID or
+a known mandatory structural fragment ID. Include every vacancy requirement exactly once in
+requirement_classifications, with status strong, partial, or gap. Strong and partial entries must
+list at least one valid evidence ID; gap entries must use an empty evidence_ids array. Interview
+topics contain only requirement_id. Use no Markdown or prose outside the JSON object. Keep the JSON
+compact: include only relevant requirements and necessary evidence.
 
 REQUIRED JSON CONTRACT
 ---
@@ -278,7 +281,7 @@ SELECTABLE SOURCE FRAGMENTS
 {json.dumps(selectable, ensure_ascii=False, indent=2)}
 ---
 
-MANDATORY STRUCTURAL SOURCE FRAGMENTS
+MANDATORY STRUCTURAL SOURCE FRAGMENTS (always rendered; valid as evidence, never selectable)
 ---
 {json.dumps(structural, ensure_ascii=False, indent=2)}
 ---

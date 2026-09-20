@@ -637,7 +637,10 @@ def validate_response(data: dict[str, Any], source: SourceResume) -> ValidatedSe
         for evidence_id in evidence_values:
             if not isinstance(evidence_id, str) or evidence_id in evidence_ids:
                 _fail("EVIDENCE_MAPPING", f"invalid or duplicate evidence ID: {evidence_id!r}")
-            if evidence_id not in selected_set:
+            fragment = source.fragments.get(evidence_id)
+            if fragment is None:
+                _fail("EVIDENCE_MAPPING", f"unknown evidence ID: {evidence_id}")
+            if evidence_id not in selected_set and not fragment.mandatory:
                 _fail("EVIDENCE_MAPPING", f"evidence is not selected: {evidence_id}")
             evidence_ids.append(evidence_id)
         match = Match(requirement_id, tuple(evidence_ids))

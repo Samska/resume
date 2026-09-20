@@ -275,6 +275,71 @@ class ResponseAndRenderingTests(unittest.TestCase):
         with self.assertRaisesRegex(GroundingError, "evidence is not selected"):
             parse_and_validate_response(json.dumps(invalid_evidence), source)
 
+    def test_mandatory_structural_fragment_is_valid_evidence(self):
+        source = make_source()
+        response = make_response(
+            source,
+            requirements=[{"id": "req-1", "text": "Based in Brazil", "priority": "required"}],
+            classifications=[
+                {"requirement_id": "req-1", "status": "strong", "evidence_ids": ["contact.location"]},
+            ],
+        )
+        response["interview_topics"] = []
+        self.assertNotIn("contact.location", response["selected_fragment_ids"])
+        selection = parse_and_validate_response(json.dumps(response), source)
+        self.assertEqual(selection.strong_matches[0].evidence_ids, ("contact.location",))
+        report = render_report(source, selection)
+        self.assertIn("Remote | Brazil", report)
+
+    def test_any_known_mandatory_structural_fragment_is_valid_evidence(self):
+        source = make_source()
+        mandatory = [fragment.id for fragment in source.fragments.values() if fragment.mandatory]
+        self.assertIn("identity.name", mandatory)
+        self.assertIn("contact.links", mandatory)
+        for evidence_id in mandatory:
+            with self.subTest(evidence_id=evidence_id):
+                self.assertNotIn(evidence_id, [fragment.id for fragment in source.fragments.values() if fragment.selectable])
+                response = make_response(
+                    source,
+                    requirements=[{"id": "req-1", "text": "Vacancy requirement", "priority": "required"}],
+                    classifications=[
+                        {"requirement_id": "req-1", "status": "partial", "evidence_ids": [evidence_id]},
+                    ],
+                )
+                response["interview_topics"] = []
+                selection = parse_and_validate_response(json.dumps(response), source)
+                self.assertEqual(selection.partial_matches[0].evidence_ids, (evidence_id,))
+
+    def test_unknown_evidence_id_is_rejected(self):
+        source = make_source()
+        response = make_response(
+            source,
+            classifications=[
+                {"requirement_id": "req-1", "status": "strong", "evidence_ids": ["experience.missing.bullet.1"]},
+                {"requirement_id": "req-2", "status": "gap", "evidence_ids": []},
+            ],
+        )
+        with self.assertRaisesRegex(GroundingError, "unknown evidence ID"):
+            parse_and_validate_response(json.dumps(response), source)
+
+    def test_gap_with_mandatory_structural_evidence_is_rejected(self):
+        source = make_source()
+        response = make_response(source, classifications=[
+            {"requirement_id": "req-1", "status": "strong", "evidence_ids": ["experience.acme.bullet.1"]},
+            {"requirement_id": "req-2", "status": "gap", "evidence_ids": ["contact.location"]},
+        ])
+        with self.assertRaisesRegex(GroundingError, "gap classification cannot contain evidence"):
+            parse_and_validate_response(json.dumps(response), source)
+
+    def test_prompt_distinguishes_selectable_and_mandatory_fragments(self):
+        from scripts.tailor_resume import build_prompt
+
+        prompt = build_prompt(make_source(), "https://example.test/job")
+        self.assertIn("SELECTABLE SOURCE FRAGMENTS", prompt)
+        self.assertIn("MANDATORY STRUCTURAL SOURCE FRAGMENTS", prompt)
+        self.assertIn("must\nnever be added to selected_fragment_ids", prompt)
+        self.assertIn("known mandatory structural fragment ID", prompt)
+
     def test_mixed_json_and_unknown_free_form_fields_fail(self):
         source = make_source()
         response = make_response(source)

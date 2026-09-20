@@ -109,6 +109,27 @@ class ManifestValidationTests(unittest.TestCase):
             with self.assertRaisesRegex(GroundingError, "string IDs"):
                 validate_manifest(source, malformed)
 
+    def test_manifest_accepts_mandatory_structural_evidence(self):
+        source = parse_source(SYNTHETIC_SOURCE, "en-US")
+        response = make_response(
+            source,
+            requirements=[{"id": "req-1", "text": "Location context", "priority": "required"}],
+            classifications=[
+                {"requirement_id": "req-1", "status": "strong", "evidence_ids": ["contact.location"]},
+            ],
+        )
+        response["interview_topics"] = []
+        selection = parse_and_validate_response(json.dumps(response), source)
+        manifest = selection.to_manifest()
+        self.assertEqual(manifest["classifications"]["req-1"]["evidence_ids"], ["contact.location"])
+        from scripts.resume_grounding import load_manifest, validate_manifest
+
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "manifest.json"
+            path.write_text(json.dumps(manifest), encoding="utf-8")
+            restored = validate_manifest(source, load_manifest(path))
+        self.assertEqual(restored.strong_matches[0].evidence_ids, ("contact.location",))
+
     def test_report_and_resume_are_rejected_when_tampered(self):
         source = parse_source(SYNTHETIC_SOURCE, "en-US")
         selection = parse_and_validate_response(json.dumps(make_response(source)), source)
