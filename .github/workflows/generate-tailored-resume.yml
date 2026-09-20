@@ -41,6 +41,13 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      - name: Validate master resume source
+        run: |
+          python3 scripts/tailor_resume.py \
+            --source "RESUME_${TARGET_LANGUAGE}.md" \
+            --language "$TARGET_LANGUAGE" \
+            --validate-source
+
       - name: Check OpenRouter secret
         run: |
           if [ -z "$OPENROUTER_API_KEY" ]; then
@@ -71,7 +78,8 @@ jobs:
           python3 scripts/tailor_resume.py \
             --source "RESUME_${TARGET_LANGUAGE}.md" \
             --language "$TARGET_LANGUAGE" \
-            --model "$OPENROUTER_MODEL"
+            --model "$OPENROUTER_MODEL" \
+            --manifest "$RUNNER_TEMP/tailored-resume-manifest.json"
 
       - name: Generate tailored PDF
         run: |
@@ -86,8 +94,22 @@ jobs:
         run: |
           python3 scripts/validate_tailored_resume.py \
             --pdf "$TAILORED_PDF" \
+            --markdown "$TAILORED_MARKDOWN" \
             --source "RESUME_${TARGET_LANGUAGE}.md" \
-            --report "$MATCH_REPORT"
+            --report "$MATCH_REPORT" \
+            --manifest "$GROUNDING_MANIFEST" \
+            --language "$TARGET_LANGUAGE"
+
+      - name: Verify tailored artifact contents
+        run: |
+          test -f "$TAILORED_MARKDOWN"
+          test -f "$TAILORED_PDF"
+          test -f "$MATCH_REPORT"
+          artifact_count="$(find "$(dirname "$TAILORED_MARKDOWN")" -maxdepth 1 -type f | wc -l)"
+          test "$artifact_count" -eq 3
+          case "$GROUNDING_MANIFEST" in
+            "$(dirname "$TAILORED_MARKDOWN")"/*) echo "Manifest must remain outside tailored output."; exit 1 ;;
+          esac
 
       - name: Upload tailored resume
         uses: actions/upload-artifact@v4
@@ -98,3 +120,4 @@ jobs:
             ${{ env.TAILORED_PDF }}
             ${{ env.MATCH_REPORT }}
           retention-days: 30
+          if-no-files-found: error
