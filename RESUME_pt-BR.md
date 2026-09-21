@@ -66,14 +66,16 @@ Jan 2022 - Dez 2022 | São Paulo, SP | Remoto
 ### Software QA Engineer | e.Mix
 Jul 2021 - Jan 2022 | São Paulo, São Paulo, Brasil | Remoto
 
-- Planejei e executei testes funcionais, não funcionais, de API e web; automatizei cenários de API e E2E com Postman, Newman e Robot Framework.
-- Executei testes de performance, carga e estresse com JMeter e integrei a execução automatizada em pipelines Azure DevOps.
+- Planejei e executei testes funcionais e não funcionais para aplicações web e APIs REST.
+- Automatizei cenários de API e E2E com Postman, Newman e Robot Framework.
+- Executei testes de performance, carga e estresse com JMeter e integrei a execução dos testes em pipelines Azure DevOps.
 
 ### Software Engineer | DNGX
 Mar 2019 - Jul 2021 | Santo André, São Paulo, Brasil | Híbrido
 
 - Desenvolvi aplicações web e mobile com GeneXus e customizei interfaces com WorkWithPlus e Smart Devices Plus.
-- Modelei e implementei soluções com SQL Server, PostgreSQL e MySQL, mantendo pipelines Jenkins e automações de testes funcionais com GXTest.
+- Modelei e implementei soluções com SQL Server, PostgreSQL e MySQL.
+- Mantive pipelines de entrega Jenkins e implementei automações de testes funcionais com GXTest.
 
 ## Formação
 

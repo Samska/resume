@@ -66,14 +66,16 @@ Jan 2022 - Dec 2022 | São Paulo, Brazil | Remote
 ### Software QA Engineer | e.Mix
 Jul 2021 - Jan 2022 | São Paulo, Brazil | Remote
 
-- Planned and executed functional, non-functional, API, and web testing; automated API and E2E scenarios with Postman, Newman, and Robot Framework.
-- Executed performance, load, and stress tests with JMeter and integrated automated execution into Azure DevOps pipelines.
+- Planned and executed functional and non-functional testing for web applications and REST APIs.
+- Automated API and E2E scenarios with Postman, Newman, and Robot Framework.
+- Executed performance, load, and stress tests with JMeter and integrated test execution into Azure DevOps pipelines.
 
 ### Software Engineer | DNGX
 Mar 2019 - Jul 2021 | Santo André, São Paulo, Brazil | Hybrid
 
 - Developed web and mobile applications with GeneXus and customized interfaces with WorkWithPlus and Smart Devices Plus.
-- Designed solutions using SQL Server, PostgreSQL, and MySQL, while maintaining Jenkins delivery pipelines and functional test automation with GXTest.
+- Designed and implemented solutions using SQL Server, PostgreSQL, and MySQL.
+- Maintained Jenkins delivery pipelines and implemented functional test automation with GXTest.
 
 ## Education
 
