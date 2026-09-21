@@ -50,14 +50,14 @@ Dez 2022 - Ago 2024 | São Paulo, SP | Remoto
 - Apoiei a definição da arquitetura do Robot Framework durante a migração do Vividus, mentorando QAs juniores e plenos e revisando código Robot Framework.
 - Integrei Robot Framework com Applitools Eyes, Sauce Labs e Jenkins, permitindo a execução de mais de 100 testes visuais em batches paralelos e em três viewports.
 - Otimizei a execução da regressão no Robot Framework por meio do paralelismo, remoção de waits desnecessários e melhoria das pipelines Jenkins com parâmetros customizáveis e artefatos melhores, aumentando também a cobertura de jornadas críticas.
-- Estruturei estratégias e planos de testes em três programas globais de clientes dos setores de bebidas, dispositivos médicos e alimentos, alinhando a cobertura às releases quinzenais e à entrega entre diferentes áreas.
+- Estruturei estratégias e planos de testes em um time full-stack com 8 desenvolvedores e 2 QAs, atuando em três programas globais de clientes dos setores de bebidas, dispositivos médicos e alimentos e alinhando a cobertura às releases quinzenais e à entrega entre diferentes áreas.
 - Monitorei o comportamento das aplicações com New Relic e investiguei incidentes usando logs, métricas e evidências operacionais no ELK Stack.
 - Recebi o reconhecimento "Mission Accomplished" da CI&T por entregas consistentes, compartilhamento proativo de conhecimento, melhorias no framework de testes e apoio a outros QAs.
 
 ### Mid-Level QA Engineer | CI&T
 Jan 2022 - Dez 2022 | São Paulo, SP | Remoto
 
-- Planejei e executei testes funcionais e não funcionais em um time de aproximadamente 7 desenvolvedores e 2 QAs, com foco na mitigação de riscos.
+- Planejei e executei testes funcionais e não funcionais em um time backend com 8 desenvolvedores e 2 QAs, com foco na mitigação de riscos.
 - Automatizei cenários E2E com Pytest e Selenium.
 - Validei APIs e microsserviços com Postman e REST Assured.
 - Integrei a execução de testes em pipelines Azure DevOps e monitorei o comportamento das aplicações com New Relic.
