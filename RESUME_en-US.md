@@ -2,7 +2,7 @@
 
 Senior QA Engineer | QA Automation | Quality Engineering
 
-Location: Jundiaí, SP, Brazil  
+Location: Jundiaí, São Paulo, Brazil  
 Phone: +55 11 983168056  
 Email: [samuel.andradetp@live.com](mailto:samuel.andradetp@live.com)  
 LinkedIn: [linkedin.com/in/Samska](https://linkedin.com/in/Samska)  
@@ -45,7 +45,7 @@ Sep 2024 - Jan 2026 | Campinas, São Paulo, Brazil | Hybrid
 - Verified analytics implementations and event data with Segment, supporting reliable product insights.
 
 ### Senior QA Engineer | CI&T
-Dec 2022 - Aug 2024 | São Paulo, Brazil | Remote
+Dec 2022 - Aug 2024 | São Paulo, São Paulo, Brazil | Remote
 
 - Co-defined the Robot Framework architecture with the QA Lead during the migration from Vividus, mentoring junior and mid-level QAs and reviewing Robot Framework code.
 - Integrated Robot Framework with Applitools Eyes, Sauce Labs, and Jenkins, enabling more than 100 visual tests to run in parallel batches across three viewports.
@@ -55,7 +55,7 @@ Dec 2022 - Aug 2024 | São Paulo, Brazil | Remote
 - Received CI&T's "Mission Accomplished" recognition for consistent delivery, proactive knowledge sharing, test framework improvements, and support for other QAs.
 
 ### Mid-Level QA Engineer | CI&T
-Jan 2022 - Dec 2022 | São Paulo, Brazil | Remote
+Jan 2022 - Dec 2022 | São Paulo, São Paulo, Brazil | Remote
 
 - Planned and executed functional and non-functional testing within a backend team of 8 developers and 2 QAs, focusing on risk mitigation.
 - Automated E2E scenarios with Pytest and Selenium.
@@ -64,7 +64,7 @@ Jan 2022 - Dec 2022 | São Paulo, Brazil | Remote
 - Received CI&T's "Client Satisfaction" recognition for rapid adaptation, professional communication, problem solving, and becoming a trusted member of the client team.
 
 ### Software QA Engineer | e.Mix
-Jul 2021 - Jan 2022 | São Paulo, Brazil | Remote
+Jul 2021 - Jan 2022 | São Paulo, São Paulo, Brazil | Remote
 
 - Planned and executed functional and non-functional testing for web applications and REST APIs.
 - Automated API and E2E scenarios with Postman, Newman, and Robot Framework.
