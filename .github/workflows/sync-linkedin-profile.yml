@@ -54,7 +54,9 @@ jobs:
       OUTPUT_BRANCH: sync/linkedin-profile-${{ github.run_id }}
       OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
       OPENROUTER_MODEL: ${{ vars.OPENROUTER_MODEL || 'openrouter/auto' }}
-      REPORT_PATH: ${{ runner.temp }}/linkedin-import-report.md
+      # The runner context is only available inside steps, so use a static
+      # runner-only temporary path outside the checkout.
+      REPORT_PATH: /tmp/linkedin-import-report.md
     steps:
       - name: Validate workflow inputs
         run: |

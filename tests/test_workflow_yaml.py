@@ -55,6 +55,14 @@ class WorkflowYamlTests(unittest.TestCase):
         self.assertIn("publish_linkedin_sync.py", publish["run"])
         self.assertIn("set -euo pipefail", publish["run"])
 
+    def test_job_env_does_not_use_step_only_contexts(self):
+        document = load_workflow("sync-linkedin-profile.yml")
+        for name, value in document["jobs"]["import"]["env"].items():
+            with self.subTest(variable=name):
+                self.assertNotIn("runner.", str(value))
+        report_path = document["jobs"]["import"]["env"]["REPORT_PATH"]
+        self.assertTrue(str(report_path).startswith("/tmp/"))
+
     def test_build_pdf_workflow_is_unchanged_in_shape(self):
         document = load_workflow("build-pdf.yml")
         events = document["on"]
