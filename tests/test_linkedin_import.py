@@ -21,6 +21,7 @@ from scripts.linkedin_import import (
     Profile,
     ProjectItemProfile,
     SkillItemProfile,
+    _contact_value,
     _validate_translation,
     build_profile_prompt,
     build_request_body,
@@ -199,10 +200,10 @@ def make_profile(source_language="en-US", **overrides):
     data = {
         "identity": direct_atom(english.name_line[2:].strip()),
         "headline": direct_atom(
-            english.preamble_lines[0].strip(), portuguese.preamble_lines[0].strip()
+            english.headline_line.strip(), portuguese.headline_line.strip()
         ),
         "location": direct_atom(
-            english.preamble_lines[1].strip(), portuguese.preamble_lines[1].strip()
+            _contact_value(english, "location"), _contact_value(portuguese, "location")
         ),
         "contact": {key: direct_atom(None) for key in ("email", "linkedin", "github", "phone")},
         "summary": (),
@@ -450,8 +451,10 @@ class MasterModelTests(unittest.TestCase):
                 text = (REPO_ROOT / f"RESUME_{language}.md").read_text(encoding="utf-8")
                 model = parse_master_model(text, language)
                 self.assertEqual(render_master_model(model), text)
-                self.assertEqual(len(model.experience), 5)
+                self.assertEqual(len(model.experience), 6)
                 self.assertEqual(len(model.education), 2)
+                heading = "Core Competencies" if language == "en-US" else "Competências Principais"
+                self.assertIn(heading, model.text)
 
     def test_validate_master_structure_accepts_real_masters(self):
         for language in LANGUAGES:
@@ -478,6 +481,10 @@ class MasterModelTests(unittest.TestCase):
             validate_master_structure(
                 text.replace("## Education", "```\ninjected\n```\n\n## Education"), "en-US"
             )
+        with self.assertRaisesRegex(ResumeImportError, "language line is malformed"):
+            validate_master_structure(text.replace("**Portuguese:** Native", "Portuguese: Native"), "en-US")
+        with self.assertRaisesRegex(ResumeImportError, "heading is malformed"):
+            validate_master_structure(text.replace("### Senior QA Engineer | Trustly", "### Trustly"), "en-US")
         with self.assertRaisesRegex(ResumeImportError, "unsupported language"):
             validate_master_structure(text, "fr-FR")
 
@@ -591,7 +598,7 @@ class ReconciliationTests(unittest.TestCase):
         self.assertIn("### Engenheiro de QA | NewCo\nFev 2024 - Jun 2024 | Remoto", portuguese)
         self.assertTrue(any("added employer `NewCo`" in item for item in result.applied))
 
-    def test_new_role_is_added_to_a_multi_role_employer(self):
+    def test_new_role_is_added_as_a_separate_dated_entry(self):
         profile = make_profile(
             experience=(
                 ExperienceItemProfile(
@@ -606,15 +613,21 @@ class ReconciliationTests(unittest.TestCase):
         result = reconcile_masters(real_masters(), profile, REFERENCE)
         english = render_master_model(result.models["en-US"])
         validate_master_structure(english, "en-US")
-        self.assertIn("**QA Lead** | Jan 2021 - Dec 2021", english)
-        self.assertLess(
-            english.index("**Mid-Level QA Engineer** | Jan 2022 - Dec 2022"),
-            english.index("**QA Lead** | Jan 2021 - Dec 2021"),
+        self.assertIn("### QA Lead | CI&T\nJan 2021 - Dec 2021", english)
+        self.assertIn("### Senior QA Engineer | CI&T", english)
+        self.assertIn("### Mid-Level QA Engineer | CI&T", english)
+        ordered = (
+            "### Senior QA Engineer | CI&T",
+            "### Mid-Level QA Engineer | CI&T",
+            "### Software QA Engineer | e.Mix",
+            "### QA Lead | CI&T",
+            "### Software Engineer | DNGX",
         )
-        self.assertIn("### CI&T", english)
+        positions = [english.index(marker) for marker in ordered]
+        self.assertEqual(positions, sorted(positions))
         self.assertTrue(any("added role `QA Lead`" in item for item in result.applied))
 
-    def test_new_role_converts_a_single_role_employer_safely(self):
+    def test_new_role_at_existing_employer_preserves_existing_entry(self):
         profile = make_profile(
             experience=(
                 ExperienceItemProfile(
@@ -627,21 +640,24 @@ class ReconciliationTests(unittest.TestCase):
             )
         )
         result = reconcile_masters(real_masters(), profile, REFERENCE)
-        expected = {
-            "en-US": ("Brazil", "Defined and executed risk-based test strategies"),
-            "pt-BR": ("Brasil", "Definição e execução de estratégias"),
-        }
-        for language in LANGUAGES:
-            text = render_master_model(result.models[language])
-            validate_master_structure(text, language)
-            location, bullet = expected[language]
-            self.assertIn(f"### Trustly\n{location}", text)
-            self.assertIn("**Senior QA Engineer**", text)
-            self.assertIn(bullet, text)
         english = render_master_model(result.models["en-US"])
-        self.assertIn("**QA Tech Lead** | Mar 2023 - Dec 2023", english)
         portuguese = render_master_model(result.models["pt-BR"])
-        self.assertIn("**QA Tech Lead** | Mar 2023 - Dez 2023", portuguese)
+        validate_master_structure(english, "en-US")
+        validate_master_structure(portuguese, "pt-BR")
+        self.assertIn("### QA Tech Lead | Trustly\nMar 2023 - Dec 2023", english)
+        self.assertIn("### QA Tech Lead | Trustly\nMar 2023 - Dez 2023", portuguese)
+        self.assertIn("### Senior QA Engineer | Trustly", english)
+        self.assertIn("Jan 2026 - Sep 2026", english)
+        self.assertIn("Defined and executed risk-based test strategies", english)
+        ordered = (
+            "### Senior QA Engineer | Trustly",
+            "### Senior QA Engineer | AB InBev",
+            "### QA Tech Lead | Trustly",
+            "### Senior QA Engineer | CI&T",
+        )
+        positions = [english.index(marker) for marker in ordered]
+        self.assertEqual(positions, sorted(positions))
+        self.assertTrue(any("added role `QA Tech Lead`" in item for item in result.applied))
 
     def test_education_skill_and_language_additions(self):
         profile = make_profile(
@@ -669,8 +685,10 @@ class ReconciliationTests(unittest.TestCase):
         self.assertIn("**Tools:**", english)
         self.assertIn("Kubernetes", portuguese)
         self.assertIn("**Ferramentas:**", portuguese)
-        self.assertIn("German (limited working proficiency)", english)
-        self.assertIn("Alemão (proficiência limitada)", portuguese)
+        self.assertIn("**German:** limited working proficiency", english)
+        self.assertIn("**Alemão:** proficiência limitada", portuguese)
+        self.assertIn("**Portuguese:**", english)
+        self.assertIn("**Português:**", portuguese)
         self.assertIn("### Master of Testing | Example University", english)
         self.assertLess(
             english.index("### Master of Testing | Example University"),

@@ -17,8 +17,22 @@ from typing import Any
 SUPPORTED_LANGUAGES = ("en-US", "pt-BR")
 
 EXPECTED_SECTIONS = {
-    "pt-BR": ("Resumo Profissional", "Habilidades Técnicas", "Experiência Profissional", "Formação"),
-    "en-US": ("Professional Summary", "Technical Skills", "Professional Experience", "Education"),
+    "pt-BR": (
+        "Competências Principais",
+        "Resumo Profissional",
+        "Experiência Profissional",
+        "Formação",
+        "Idiomas",
+        "Habilidades Técnicas",
+    ),
+    "en-US": (
+        "Core Competencies",
+        "Professional Summary",
+        "Professional Experience",
+        "Education",
+        "Languages",
+        "Technical Skills",
+    ),
 }
 
 MONTHS = (
@@ -33,7 +47,6 @@ YEAR_RANGE_RE = re.compile(r"\b(?:19|20)\d{2}\b.*\b(?:19|20)\d{2}\b")
 HEADING_RE = re.compile(r"^(#{1,6})\s+(.+?)\s*$")
 BULLET_RE = re.compile(r"^-\s+\S.*$")
 SKILL_RE = re.compile(r"^\*\*([^*]+):\*\*\s+(.+?)\s*$")
-ROLE_DATE_RE = re.compile(r"^\*\*([^*]+)\*\*\s+\|\s+(.+?)\s*$")
 HTML_TAG_RE = re.compile(r"<[A-Za-z/][^>]*>")
 FENCED_BLOCK_RE = re.compile(r"(?m)^\s*(?:```|~~~)")
 
@@ -324,6 +337,23 @@ def detect_source_language(text: str) -> str | None:
 # ---------------------------------------------------------------------------
 
 
+def _section_entries(lines: list[str], section: str) -> list[list[str]]:
+    entries: list[list[str]] = []
+    current: list[str] | None = None
+    for line in lines:
+        if line.startswith("### "):
+            if current is not None:
+                entries.append(current)
+            current = [line]
+        elif line.strip():
+            if current is None:
+                _fail("SOURCE_PARSE", f"master resume {section} has content before its first entry")
+            current.append(line)
+    if current is not None:
+        entries.append(current)
+    return entries
+
+
 def validate_master_structure(text: str, language: str) -> None:
     """Validate one master resume without modifying it.
 
@@ -362,37 +392,50 @@ def validate_master_structure(text: str, language: str) -> None:
         )
 
     bounds = [index for index, _title in sections] + [len(lines)]
-    summary_lines = [line for line in lines[bounds[0] + 1 : bounds[1]] if line.strip()]
-    if not summary_lines:
+
+    def section_lines(position: int) -> list[str]:
+        return lines[bounds[position] + 1 : bounds[position + 1]]
+
+    preamble = [line for line in lines[1 : bounds[0]] if line.strip()]
+    if len(preamble) < 2:
+        _fail("SOURCE_PARSE", "master resume headline and contact block are required")
+
+    if not [line for line in section_lines(0) if line.strip()]:
+        _fail("SOURCE_PARSE", "master resume core competencies are empty")
+    if not [line for line in section_lines(1) if line.strip()]:
         _fail("SOURCE_PARSE", "master resume summary is empty")
 
-    skill_lines = [line for line in lines[bounds[1] + 1 : bounds[2]] if line.strip()]
+    experience_entries = _section_entries(section_lines(2), "experience")
+    if not experience_entries:
+        _fail("SOURCE_PARSE", "master resume experience is empty")
+    for entry in experience_entries:
+        if "|" not in entry[0]:
+            _fail("SOURCE_PARSE", "master resume experience entry heading is malformed")
+        if len(entry) < 2 or DATE_RE.search(entry[1]) is None:
+            _fail("SOURCE_PARSE", "master resume experience entry has no dated role line")
+        for line in entry[2:]:
+            if BULLET_RE.match(line) is None:
+                _fail("SOURCE_PARSE", "master resume bullet is malformed")
+
+    education_entries = _section_entries(section_lines(3), "education")
+    if not education_entries:
+        _fail("SOURCE_PARSE", "master resume education is empty")
+    for entry in education_entries:
+        if len(entry) != 2:
+            _fail("SOURCE_PARSE", "master resume education entry is malformed")
+        if not DATE_RE.search(entry[1]) and not YEAR_RANGE_RE.search(entry[1]):
+            _fail("SOURCE_PARSE", "master resume education entry has no dates")
+
+    language_lines = [line for line in section_lines(4) if line.strip()]
+    if not language_lines:
+        _fail("SOURCE_PARSE", "master resume languages are empty")
+    for line in language_lines:
+        if SKILL_RE.match(line) is None:
+            _fail("SOURCE_PARSE", "master resume language line is malformed")
+
+    skill_lines = [line for line in section_lines(5) if line.strip()]
     if not skill_lines:
         _fail("SOURCE_PARSE", "master resume technical skills are empty")
     for line in skill_lines:
         if SKILL_RE.match(line) is None:
             _fail("SOURCE_PARSE", "master resume skill line is malformed")
-
-    experience_lines = [line for line in lines[bounds[2] + 1 : bounds[3]] if line.strip()]
-    if not any(line.startswith("### ") for line in experience_lines):
-        _fail("SOURCE_PARSE", "master resume experience is empty")
-    if not any(DATE_RE.search(line) for line in experience_lines):
-        _fail("SOURCE_PARSE", "master resume experience has no dated entries")
-    for line in experience_lines:
-        if line.startswith("- ") and BULLET_RE.match(line) is None:
-            _fail("SOURCE_PARSE", "master resume bullet is malformed")
-        if line.startswith("**") and ROLE_DATE_RE.match(line) is None:
-            _fail("SOURCE_PARSE", "master resume role line is malformed")
-
-    education_blocks = re.split(r"\n[ \t]*\n", "\n".join(lines[bounds[3] + 1 :]))
-    education_blocks = [block for block in education_blocks if block.strip()]
-    if not education_blocks:
-        _fail("SOURCE_PARSE", "master resume education is empty")
-    for block in education_blocks:
-        block_lines = [line for line in block.split("\n") if line.strip()]
-        if not block_lines[0].startswith("### "):
-            _fail("SOURCE_PARSE", "master resume education entry is malformed")
-        if len(block_lines) != 2:
-            _fail("SOURCE_PARSE", "master resume education entry is malformed")
-        if not DATE_RE.search(block_lines[1]) and not YEAR_RANGE_RE.search(block_lines[1]):
-            _fail("SOURCE_PARSE", "master resume education entry has no dates")

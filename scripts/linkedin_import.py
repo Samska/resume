@@ -41,7 +41,6 @@ try:
         EXPECTED_SECTIONS,
         STOPWORDS,
         ResumeImportError,
-        ROLE_DATE_RE,
         SKILL_RE,
         _exact_keys,
         _is_pattern_token,
@@ -60,7 +59,6 @@ except ModuleNotFoundError:
         EXPECTED_SECTIONS,
         STOPWORDS,
         ResumeImportError,
-        ROLE_DATE_RE,
         SKILL_RE,
         _exact_keys,
         _is_pattern_token,
@@ -186,7 +184,28 @@ CATEGORY_LABEL_HINTS = {
     "ai_assisted_engineering": ("assistida", "assisted"),
     "spoken_languages": ("idiomas", "spoken"),
 }
-SPOKEN_GROUP_LABELS = {"idiomas", "spoken languages"}
+CONTACT_LABELS = {
+    "en-US": {
+        "location": "Location:",
+        "phone": "Phone:",
+        "email": "Email:",
+        "linkedin": "LinkedIn:",
+        "github": "GitHub:",
+    },
+    "pt-BR": {
+        "location": "Localização:",
+        "phone": "Telefone:",
+        "email": "E-mail:",
+        "linkedin": "LinkedIn:",
+        "github": "GitHub:",
+    },
+}
+SECTION_COMPETENCIES = 0
+SECTION_SUMMARY = 1
+SECTION_EXPERIENCE = 2
+SECTION_EDUCATION = 3
+SECTION_LANGUAGES = 4
+SECTION_SKILLS = 5
 
 SYSTEM_PROMPT = (
     "You extract exactly one LinkedIn profile from plain text into a strict JSON contract. "
@@ -960,15 +979,14 @@ class RoleModel:
     title: str
     dates: str
     span: DateSpan | None
-    location: str | None
+    trailing: str | None
     raw_line: str
 
 
 @dataclass(frozen=True)
 class ExperienceModel:
     employer: str
-    style: str
-    location: str | None
+    trailing: str | None
     roles: tuple[RoleModel, ...]
     bullets: tuple[str, ...]
     block_indices: tuple[int, ...]
@@ -990,7 +1008,8 @@ class MasterModel:
     text: str
     blocks: tuple[str, ...]
     name_line: str
-    preamble_lines: tuple[str, ...]
+    headline_line: str
+    contact_lines: tuple[str, ...]
     summary_blocks: tuple[str, ...]
     skill_groups: tuple[SkillGroupModel, ...]
     experience: tuple[ExperienceModel, ...]
@@ -1061,11 +1080,11 @@ def _overlap_months(first: DateSpan, second: DateSpan) -> int:
     return (end[0] - start[0]) * 12 + (end[1] - start[1]) + 1
 
 
-def _split_dates_location(value: str) -> tuple[str, str | None]:
-    parts = [part.strip() for part in value.split("|")]
-    dates = parts[0]
-    location = parts[1] if len(parts) > 1 and parts[1] else None
-    return dates, location
+def _split_dates_trailing(value: str) -> tuple[str, str | None]:
+    parts = value.split("|", 1)
+    dates = parts[0].strip()
+    trailing = parts[1].strip() if len(parts) > 1 and parts[1].strip() else None
+    return dates, trailing
 
 
 def _parse_master_experience_entry(
@@ -1073,40 +1092,17 @@ def _parse_master_experience_entry(
     block_indices: tuple[int, ...],
     reference: dt.date,
 ) -> ExperienceModel:
-    heading = lines[0]
-    heading_text = heading[4:].strip()
-    if "|" in heading_text:
-        title, employer = [part.strip() for part in heading_text.split("|", 1)]
-        date_line = lines[1]
-        dates, location = _split_dates_location(date_line)
-        role = RoleModel(title, dates, parse_date_span(dates, reference), location, date_line)
-        bullets = tuple(lines[2:])
-        return ExperienceModel(employer, "single", location, (role,), bullets, block_indices)
-
-    employer = heading_text
-    location: str | None = None
-    roles: list[RoleModel] = []
-    bullets: list[str] = []
-    for line in lines[1:]:
-        match = ROLE_DATE_RE.fullmatch(line)
-        if match:
-            dates, role_location = _split_dates_location(match.group(2))
-            roles.append(
-                RoleModel(
-                    match.group(1).strip(),
-                    dates,
-                    parse_date_span(dates, reference),
-                    role_location,
-                    line,
-                )
-            )
-        elif line.startswith("- "):
-            bullets.append(line)
-        elif location is None and not roles:
-            location = line.strip()
-        else:
-            _fail("SOURCE_PARSE", "unrecognized line inside a master experience entry")
-    return ExperienceModel(employer, "multi", location, tuple(roles), tuple(bullets), block_indices)
+    heading_text = lines[0][4:].strip()
+    if "|" not in heading_text:
+        _fail("SOURCE_PARSE", "master resume experience heading must be 'Title | Employer'")
+    title, employer = [part.strip() for part in heading_text.split("|", 1)]
+    if not title or not employer:
+        _fail("SOURCE_PARSE", "master resume experience heading must be 'Title | Employer'")
+    date_line = lines[1]
+    dates, trailing = _split_dates_trailing(date_line)
+    role = RoleModel(title, dates, parse_date_span(dates, reference), trailing, date_line)
+    bullets = tuple(lines[2:])
+    return ExperienceModel(employer, trailing, (role,), bullets, block_indices)
 
 
 def parse_master_model(text: str, language: str) -> MasterModel:
@@ -1137,19 +1133,31 @@ def parse_master_model(text: str, language: str) -> MasterModel:
         if heading not in blocks:
             _fail("SOURCE_PARSE", f"master resume section heading is missing: {title}")
         positions.append(blocks.index(heading))
-    summary_heading, skills_heading, experience_heading, education_heading = positions
     if positions != sorted(positions):
         _fail("SOURCE_PARSE", "master resume sections are out of order")
+    (
+        competencies_heading,
+        summary_heading,
+        experience_heading,
+        education_heading,
+        languages_heading,
+        skills_heading,
+    ) = positions
 
     reference = dt.date.today()
     name_line = blocks[0]
-    preamble_lines = tuple(blocks[1].split("\n"))
-    summary_blocks = tuple(blocks[summary_heading + 1 : skills_heading])
+    headline_line = blocks[1]
+    contact_lines = tuple(
+        line
+        for block in blocks[2:competencies_heading]
+        for line in block.split("\n")
+    )
+    summary_blocks = tuple(blocks[summary_heading + 1 : experience_heading])
     if not summary_blocks:
         _fail("SOURCE_PARSE", "master resume summary is empty")
 
     skill_groups: list[SkillGroupModel] = []
-    for block_index in range(skills_heading + 1, experience_heading):
+    for block_index in range(skills_heading + 1, len(blocks)):
         for line_index, line in enumerate(blocks[block_index].split("\n")):
             match = SKILL_RE.fullmatch(line)
             if match is None:
@@ -1182,7 +1190,7 @@ def parse_master_model(text: str, language: str) -> MasterModel:
         experience.append(_parse_master_experience_entry(lines, block_indices, reference))
 
     education: list[EducationModel] = []
-    for block_index in range(education_heading + 1, len(blocks)):
+    for block_index in range(education_heading + 1, languages_heading):
         block = blocks[block_index]
         lines = block.split("\n")
         if len(lines) != 2 or not lines[0].startswith("### "):
@@ -1204,7 +1212,8 @@ def parse_master_model(text: str, language: str) -> MasterModel:
         normalized,
         tuple(blocks),
         name_line,
-        preamble_lines,
+        headline_line,
+        contact_lines,
         summary_blocks,
         tuple(skill_groups),
         tuple(experience),
@@ -1220,27 +1229,77 @@ def _rebuild_master(model: MasterModel, blocks: list[str]) -> MasterModel:
     return parse_master_model("\n\n".join(blocks) + "\n", model.language)
 
 
-def _spoken_group_index(model: MasterModel) -> int | None:
-    for index, group in enumerate(model.skill_groups):
-        if group.label.casefold() in SPOKEN_GROUP_LABELS:
-            return index
-    return None
+def _section_heading_index(model: MasterModel, position: int) -> int:
+    title = EXPECTED_SECTIONS[model.language][position]
+    heading = f"## {title}"
+    if heading not in model.blocks:
+        _fail("SOURCE_PARSE", f"master resume section heading is missing: {title}")
+    return model.blocks.index(heading)
+
+
+def _section_bounds(model: MasterModel, position: int) -> tuple[int, int]:
+    expected = EXPECTED_SECTIONS[model.language]
+    start = _section_heading_index(model, position)
+    if position + 1 < len(expected):
+        end = _section_heading_index(model, position + 1)
+    else:
+        end = len(model.blocks)
+    return start, end
 
 
 def _resolve_group_index(model: MasterModel, category: str) -> int | None:
     if category == "spoken_languages":
-        return _spoken_group_index(model)
+        return None
     hints = CATEGORY_LABEL_HINTS.get(category)
     if not hints:
         return None
-    spoken = _spoken_group_index(model)
+    hint_keys = {_name_key(hint) for hint in hints}
     for index, group in enumerate(model.skill_groups):
-        if index == spoken:
-            continue
+        if _name_key(group.label) in hint_keys:
+            return index
+    for index, group in enumerate(model.skill_groups):
         label = _name_key(group.label)
         if any(hint in label for hint in hints):
             return index
     return None
+
+
+def _contact_value(model: MasterModel, kind: str) -> str | None:
+    label = CONTACT_LABELS[model.language][kind]
+    for line in model.contact_lines:
+        stripped = line.strip()
+        if stripped.startswith(label):
+            return stripped[len(label):].strip()
+    return None
+
+
+def _language_lines(model: MasterModel) -> tuple[tuple[int, int, str], ...]:
+    start, end = _section_bounds(model, SECTION_LANGUAGES)
+    lines: list[tuple[int, int, str]] = []
+    for block_index in range(start + 1, end):
+        for line_index, line in enumerate(model.blocks[block_index].split("\n")):
+            if line.strip():
+                lines.append((block_index, line_index, line))
+    return tuple(lines)
+
+
+def _add_language(model: MasterModel, value: str) -> MasterModel:
+    start, end = _section_bounds(model, SECTION_LANGUAGES)
+    if end - start < 2:
+        _fail("SOURCE_PARSE", "master resume languages section is empty")
+    name = _language_name(value)
+    level = value[len(name):].strip()
+    if level.startswith("(") and level.endswith(")"):
+        level = level[1:-1].strip()
+    line = f"**{name}:** {level}" if level else f"**{name}:**"
+    block_index = end - 1
+    block_lines = model.blocks[block_index].split("\n")
+    if block_lines and block_lines[-1].strip():
+        block_lines[-1] = block_lines[-1].rstrip() + "  "
+    block_lines.append(line)
+    blocks = list(model.blocks)
+    blocks[block_index] = "\n".join(block_lines)
+    return _rebuild_master(model, blocks)
 
 
 def _add_skill_item(model: MasterModel, group_index: int, item: str) -> MasterModel:
@@ -1258,16 +1317,10 @@ def _add_skill_item(model: MasterModel, group_index: int, item: str) -> MasterMo
     return _rebuild_master(model, blocks)
 
 
-def _role_sort_key(role: RoleModel) -> tuple[int, int]:
-    if role.span is None:
-        return (0, 0)
-    return role.span.start
-
-
-def _match_employer(
+def _match_employer_entries(
     entries: tuple[ExperienceModel, ...], employer: str
-) -> tuple[int | None, str | None]:
-    """Match an exact or near-identical employer name.
+) -> tuple[list[int], str | None]:
+    """Match every exact or near-identical employer entry.
 
     Near-identical names (for example ``Trustly`` vs ``Trustly Inc.``) are
     treated as the same employer and reported as a conflict instead of being
@@ -1275,16 +1328,16 @@ def _match_employer(
     """
 
     key = _name_key(employer)
-    for index, entry in enumerate(entries):
-        if _name_key(entry.employer) == key:
-            return index, None
+    exact = [index for index, entry in enumerate(entries) if _name_key(entry.employer) == key]
+    if exact:
+        return exact, None
     if len(key) < 4:
-        return None, None
+        return [], None
     for index, entry in enumerate(entries):
         existing = _name_key(entry.employer)
         if len(existing) >= 4 and (existing in key or key in existing):
-            return index, entry.employer
-    return None, None
+            return [index], entry.employer
+    return [], None
 
 
 def _match_role(roles: tuple[RoleModel, ...], span: DateSpan) -> RoleModel | None:
@@ -1297,74 +1350,12 @@ def _match_role(roles: tuple[RoleModel, ...], span: DateSpan) -> RoleModel | Non
     return max(overlapping, key=lambda role: _overlap_months(role.span, span))
 
 
-def _add_role(
-    model: MasterModel,
-    entry_index: int,
-    title: str,
-    span: DateSpan,
-    language: str,
-) -> MasterModel | None:
-    entry = model.experience[entry_index]
-    dates = format_date_span(span, language)
-    if entry.style == "single":
-        if not entry.location:
-            return None
-        roles = [*entry.roles, RoleModel(title, dates, span, None, "")]
-        roles.sort(key=_role_sort_key, reverse=True)
-        heading_block = f"### {entry.employer}\n{entry.location}"
-        role_lines = [f"**{role.title}** | {role.dates}" for role in roles]
-        role_block = "\n".join(
-            line + ("  " if index < len(role_lines) - 1 else "")
-            for index, line in enumerate(role_lines)
-        )
-        bullet_blocks = [model.blocks[index] for index in entry.block_indices[1:]]
-        blocks = list(model.blocks)
-        blocks[entry.block_indices[0] : entry.block_indices[-1] + 1] = [
-            heading_block,
-            role_block,
-            *bullet_blocks,
-        ]
-        return _rebuild_master(model, blocks)
-
-    role_blocks: dict[int, list[str]] = {}
-    for block_index in entry.block_indices:
-        for line in model.blocks[block_index].split("\n"):
-            if ROLE_DATE_RE.fullmatch(line):
-                role_blocks.setdefault(block_index, []).append(line)
-    if len(role_blocks) != 1:
-        return None
-    block_index, role_lines = next(iter(role_blocks.items()))
-    roles: list[RoleModel] = []
-    for raw_line in role_lines:
-        match = ROLE_DATE_RE.fullmatch(raw_line)
-        raw_dates, role_location = _split_dates_location(match.group(2))
-        roles.append(
-            RoleModel(
-                match.group(1).strip(),
-                raw_dates,
-                parse_date_span(raw_dates, dt.date.today()),
-                role_location,
-                raw_line,
-            )
-        )
-    roles.append(RoleModel(title, dates, span, None, ""))
-    roles.sort(key=_role_sort_key, reverse=True)
-    rebuilt_lines = [f"**{role.title}** | {role.dates}" for role in roles]
-    rebuilt_block = "\n".join(
-        line + ("  " if index < len(rebuilt_lines) - 1 else "")
-        for index, line in enumerate(rebuilt_lines)
-    )
-    blocks = list(model.blocks)
-    blocks[block_index] = rebuilt_block
-    return _rebuild_master(model, blocks)
-
-
 def _entry_start(entry: ExperienceModel) -> tuple[int, int] | None:
     starts = [role.span.start for role in entry.roles if role.span is not None]
     return max(starts) if starts else None
 
 
-def _add_employer(
+def _add_experience_entry(
     model: MasterModel,
     title: str,
     employer: str,
@@ -1373,6 +1364,8 @@ def _add_employer(
     bullets: tuple[str, ...],
     language: str,
 ) -> MasterModel:
+    """Add one dated entry, preserving the template's reverse chronology."""
+
     dates = format_date_span(span, language)
     heading = f"### {title} | {employer}\n{dates}"
     if location:
@@ -1483,7 +1476,7 @@ def _reconcile_language(
                     f"the open range was recorded as {format_date_span(span, language)} for review"
                 )
             )
-        entry_index, employer_variant = _match_employer(model.experience, employer)
+        entry_indices, employer_variant = _match_employer_entries(model.experience, employer)
         if employer_variant is not None:
             conflicts.append(
                 prefix(
@@ -1491,7 +1484,7 @@ def _reconcile_language(
                     f"vs LinkedIn `{employer}`; the existing entry was preserved"
                 )
             )
-        if entry_index is None:
+        if not entry_indices:
             if span is None:
                 warnings.append(
                     prefix(
@@ -1505,11 +1498,11 @@ def _reconcile_language(
             if not bullets:
                 warnings.append(
                     prefix(
-                        f"experience entry for `{employer}` was skipped because it has no description"
+                        f"experience entry for `{employer}` was added without a description "
+                        f"because the PDF did not provide one"
                     )
                 )
-                continue
-            model = _add_employer(model, title, employer, span, location, bullets, language)
+            model = _add_experience_entry(model, title, employer, span, location, bullets, language)
             applied.append(
                 prefix(
                     f"added employer `{employer}` with role `{title}` "
@@ -1518,6 +1511,12 @@ def _reconcile_language(
             )
             continue
 
+        entry_index = entry_indices[0]
+        if span is not None:
+            for candidate in entry_indices:
+                if _match_role(model.experience[candidate].roles, span) is not None:
+                    entry_index = candidate
+                    break
         entry = model.experience[entry_index]
         if span is None:
             warnings.append(
@@ -1528,22 +1527,22 @@ def _reconcile_language(
         else:
             match = _match_role(entry.roles, span)
             if match is None:
-                updated = _add_role(model, entry_index, title, span, language)
-                if updated is None:
+                location = atom_value(item.location)
+                bullets = tuple(f"- {value}" for atom in item.description if (value := atom_value(atom)))
+                if not bullets:
                     warnings.append(
                         prefix(
-                            f"role `{title}` for `{employer}` was not added because the entry "
-                            f"cannot be converted safely"
+                            f"role `{title}` for `{employer}` was added without a description "
+                            f"because the PDF did not provide one"
                         )
                     )
-                else:
-                    model = updated
-                    applied.append(
-                        prefix(
-                            f"added role `{title}` for `{employer}` "
-                            f"({format_date_span(span, language)})"
-                        )
+                model = _add_experience_entry(model, title, employer, span, location, bullets, language)
+                applied.append(
+                    prefix(
+                        f"added role `{title}` for `{employer}` "
+                        f"({format_date_span(span, language)})"
                     )
+                )
             elif _text_key(match.title) != _text_key(title):
                 conflicts.append(
                     prefix(
@@ -1558,10 +1557,14 @@ def _reconcile_language(
                         f"vs LinkedIn `{item.dates.text}`"
                     )
                 )
+        current_indices, _variant = _match_employer_entries(model.experience, employer)
+        employer_bullets = tuple(
+            bullet for index in current_indices for bullet in model.experience[index].bullets
+        )
         unrepresented = [
             atom.text
             for atom in item.description
-            if atom.text and not _covered_by_bullets(atom.text, entry.bullets)
+            if atom.text and not _covered_by_bullets(atom.text, employer_bullets)
         ]
         if unrepresented:
             previews = "; ".join(_truncate(text) for text in unrepresented[:2])
@@ -1640,29 +1643,28 @@ def _reconcile_language(
         model = _add_skill_item(model, group_index, value)
         applied.append(prefix(f"added skill `{value}` to `{model.skill_groups[group_index].label}`"))
 
-    spoken_index = _spoken_group_index(model)
-    if spoken_index is not None:
-        group = model.skill_groups[spoken_index]
-        for atom in profile.spoken_languages:
-            value = atom_value(atom)
-            if not value:
-                continue
-            name = _language_name(value)
-            existing = [
-                item for item in group.items if _name_key(_language_name(item)) == _name_key(name)
-            ]
-            if existing:
-                if _name_key(existing[0]) != _name_key(value):
-                    warnings.append(
-                        prefix(
-                            f"spoken language `{name}` wording differs: resume `{existing[0]}` "
-                            f"vs LinkedIn `{value}`; existing entry preserved"
-                        )
+    for atom in profile.spoken_languages:
+        value = atom_value(atom)
+        if not value:
+            continue
+        name = _language_name(value)
+        existing: str | None = None
+        for _block_index, _line_index, line in _language_lines(model):
+            match = SKILL_RE.fullmatch(line)
+            if match and _name_key(match.group(1).strip()) == _name_key(name):
+                existing = match.group(1).strip()
+                break
+        if existing is not None:
+            if _name_key(existing) != _name_key(value):
+                warnings.append(
+                    prefix(
+                        f"spoken language `{name}` wording differs: resume `{existing}` "
+                        f"vs LinkedIn `{value}`; existing entry preserved"
                     )
-                continue
-            model = _add_skill_item(model, spoken_index, value)
-            group = model.skill_groups[spoken_index]
-            applied.append(prefix(f"added spoken language `{value}`"))
+                )
+            continue
+        model = _add_language(model, value)
+        applied.append(prefix(f"added spoken language `{value}`"))
 
     identity = atom_value(profile.identity)
     if identity and _name_key(identity) != _name_key(model.name_line[2:].strip()):
@@ -1672,32 +1674,40 @@ def _reconcile_language(
             )
         )
     headline = atom_value(profile.headline)
-    if headline and _text_key(headline) != _text_key(model.preamble_lines[0]):
+    if headline and _text_key(headline) != _text_key(model.headline_line):
         conflicts.append(
             prefix(
-                f"headline differs: resume `{model.preamble_lines[0].strip()}` "
+                f"headline differs: resume `{model.headline_line.strip()}` "
                 f"vs LinkedIn `{headline}`"
             )
         )
     location = atom_value(profile.location)
-    if location and _name_key(location) != _name_key(model.preamble_lines[1]):
+    resume_location = _contact_value(model, "location")
+    if location and resume_location and _name_key(location) != _name_key(resume_location):
         conflicts.append(
             prefix(
-                f"location differs: resume `{model.preamble_lines[1].strip()}` "
-                f"vs LinkedIn `{location}`"
+                f"location differs: resume `{resume_location}` vs LinkedIn `{location}`"
             )
         )
 
-    contact_line = model.preamble_lines[2]
     for kind, label in (("email", "email"), ("linkedin", "LinkedIn"), ("github", "GitHub"), ("phone", "phone")):
         value = atom_value(profile.contact[kind])
         if not value:
             continue
+        resume_line = _contact_value(model, kind)
+        if resume_line is None:
+            warnings.append(
+                prefix(
+                    f"{label} `{value}` from the PDF has no matching resume contact line "
+                    f"and was not added"
+                )
+            )
+            continue
         if kind == "phone":
             digits = re.sub(r"\D", "", value)
-            present = bool(digits) and digits in re.sub(r"\D", "", contact_line)
+            present = bool(digits) and digits in re.sub(r"\D", "", resume_line)
         else:
-            present = _name_key(value) in _name_key(contact_line)
+            present = _name_key(value) in _name_key(resume_line)
         if not present:
             warnings.append(
                 prefix(
@@ -1799,8 +1809,10 @@ def reconcile_masters(
         for item in profile.experience:
             if not item.employer.text:
                 continue
-            index, _variant = _match_employer(models[language].experience, item.employer.text)
-            if index is not None:
+            indices, _variant = _match_employer_entries(
+                models[language].experience, item.employer.text
+            )
+            for index in indices:
                 matched_keys.add(_name_key(models[language].experience[index].employer))
         kept = [
             entry.employer
