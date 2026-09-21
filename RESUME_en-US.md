@@ -16,13 +16,13 @@ Specialized in risk-based test strategy, automation architecture, API and integr
 
 ## Core Competencies
 
-**Quality Strategy & Planning:** Risk-based testing, test planning, coverage analysis, prioritization, and quality advocacy  
+**Quality Strategy & Planning:** Risk-based testing, test strategy, test planning, release readiness, coverage analysis, prioritization, and quality advocacy  
 **Technical Leadership & Mentorship:** Framework architecture, pipeline design, mentoring, code review, and knowledge sharing  
 **Test Automation Architecture:** Maintainable automation across web, mobile, API, E2E, integration, and regression layers  
-**API & Integration Quality:** REST API validation, integration flows, microservices, test data, and root-cause analysis  
+**API & Integration Quality:** REST API validation, integration flows, microservices, and test data management  
 **Continuous Testing & CI/CD:** Automated quality gates, release workflows, pipeline optimization, and feedback-cycle improvement  
-**Web, Mobile & Accessibility Quality:** Cross-platform validation, iOS, Android, WCAG, and assistive technologies  
-**Observability & Incident Investigation:** Logs, metrics, monitoring, operational evidence, and root-cause investigation
+**Web, Mobile & Accessibility Quality:** Cross-browser and cross-platform validation, iOS, Android, WCAG, and assistive technologies  
+**Defect & Incident Analysis:** Defect triage, root-cause analysis, logs, metrics, monitoring, and operational evidence
 
 ## Professional Experience
 
@@ -30,7 +30,7 @@ Specialized in risk-based test strategy, automation architecture, API and integr
 Jan 2026 - Sep 2026 | São Paulo, São Paulo, Brazil | Remote
 
 - Defined and drove risk-based test strategies for critical payment journeys within a frontend squad of 14 developers and 4 QAs, including test-cycle planning in Zephyr Scale for weekly releases.
-- Built and maintained 20+ E2E scenarios with Java, Selenide, and Cucumber, covering sanity and regression flows; reduced manual execution and increased confidence in weekly releases.
+- Automated and maintained 20+ E2E scenarios with Java, Selenide, and Cucumber, covering sanity and regression flows and reducing recurring manual execution for weekly releases.
 - Designed and evolved a 12-scenario visual regression sanity suite using TypeScript, Playwright, BackstopJS, and Cucumber, contributing to framework architecture, CI/CD pipelines, configurable parameters, and migration work.
 - Validated desktop and mobile accessibility with NVDA, JAWS, VoiceOver, and TalkBack against WCAG guidance.
 - Applied GitHub Copilot, Claude Code, and MCP-based workflows to accelerate recurring engineering and testing activities.
@@ -92,12 +92,11 @@ Feb 2018 - Aug 2020
 
 ## Technical Skills
 
-**Quality Practices:** Risk-Based Testing, Test Strategy, Test Planning, Test Case Design, Test Execution, Defect Management, Test Management  
 **Test Automation:** Playwright, Selenium, Selenide, Cypress, Appium, Pytest, Robot Framework, Cucumber, JUnit, TestNG, BackstopJS, Vividus  
 **API & Integration:** REST Assured, Postman, Bruno, Charles Proxy  
 **CI/CD & Observability:** Git, GitHub Actions, Jenkins, Azure DevOps, New Relic, ELK Stack  
 **Programming Languages:** Java, Python, TypeScript, JavaScript, SQL  
-**Testing:** Manual Testing, Functional Testing, Web Testing, Mobile Testing, API Testing, E2E Testing, Integration Testing, Regression Testing, Exploratory Testing, Acceptance Testing (UAT), Accessibility Testing (WCAG), Visual Regression Testing, Performance Testing  
+**Testing Domains:** Smoke Testing, Manual Testing, Functional Testing, Web Testing, Mobile Testing, Cross-browser Testing, API Testing, E2E Testing, Integration Testing, Regression Testing, Exploratory Testing, Acceptance Testing (UAT), Accessibility Testing (WCAG), Visual Regression Testing, Performance Testing  
 **Test Management:** Jira, Zephyr Scale, Xray  
 **Mobile & Product Diagnostics:** Xcode, Android Studio, Firebase Remote Config, Segment, Optimizely  
 **Accessibility & Visual Testing:** NVDA, JAWS, VoiceOver, TalkBack, WCAG, Applitools, Sauce Labs, LambdaTest  
