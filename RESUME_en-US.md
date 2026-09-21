@@ -50,14 +50,14 @@ Dec 2022 - Aug 2024 | São Paulo, Brazil | Remote
 - Helped define the Robot Framework architecture during the migration from Vividus, mentoring junior and mid-level QAs and reviewing Robot Framework code.
 - Integrated Robot Framework with Applitools Eyes, Sauce Labs, and Jenkins, enabling more than 100 visual tests to run in parallel batches across three viewports.
 - Optimized Robot Framework regression execution by parallelizing suites, removing unnecessary waits, and improving Jenkins pipelines with configurable parameters and better artifacts, while increasing coverage of critical user journeys.
-- Designed test strategies and plans across three global client programs in the beverage, medical device, and food industries, aligning coverage with biweekly releases and cross-functional delivery.
+- Designed test strategies and plans within a full-stack team of 8 developers and 2 QAs across three global client programs in the beverage, medical device, and food industries, aligning coverage with biweekly releases and cross-functional delivery.
 - Monitored application behavior with New Relic and investigated incidents using ELK Stack logs, metrics, and operational evidence.
 - Received CI&T's "Mission Accomplished" recognition for consistent delivery, proactive knowledge sharing, test framework improvements, and support for other QAs.
 
 ### Mid-Level QA Engineer | CI&T
 Jan 2022 - Dec 2022 | São Paulo, Brazil | Remote
 
-- Planned and executed functional and non-functional testing within a team of approximately 7 developers and 2 QAs, focusing on risk mitigation.
+- Planned and executed functional and non-functional testing within a backend team of 8 developers and 2 QAs, focusing on risk mitigation.
 - Automated E2E scenarios with Pytest and Selenium.
 - Validated APIs and microservices with Postman and REST Assured.
 - Integrated test execution into Azure DevOps pipelines and monitored application behavior with New Relic.
