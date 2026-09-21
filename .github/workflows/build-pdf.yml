@@ -29,8 +29,8 @@ jobs:
       - name: Generate PDFs
         run: |
           mkdir -p pdf
-          pandoc RESUME_en-US.md --pdf-engine=xelatex -V geometry:margin=0.65in -V fontsize=10pt -V header-includes='\usepackage{needspace}\usepackage{etoolbox}\pretocmd{\subsubsection}{\Needspace{10\baselineskip}}{}{}' -o pdf/Samuel-Andrade-Resume-en-US.pdf
-          pandoc RESUME_pt-BR.md --pdf-engine=xelatex -V geometry:margin=0.65in -V fontsize=10pt -V header-includes='\usepackage{needspace}\usepackage{etoolbox}\pretocmd{\subsubsection}{\Needspace{10\baselineskip}}{}{}' -o pdf/Samuel-Andrade-Resume-pt-BR.pdf
+          pandoc RESUME_en-US.md --pdf-engine=xelatex -V geometry:margin=0.65in -V fontsize=10pt -V header-includes='\usepackage{needspace}\usepackage{etoolbox}\usepackage[none]{hyphenat}\pretocmd{\subsection}{\Needspace{6\baselineskip}}{}{}\pretocmd{\subsubsection}{\Needspace{10\baselineskip}}{}{}\hyphenpenalty=10000\exhyphenpenalty=10000\sloppy' -o pdf/Samuel-Andrade-Resume-en-US.pdf
+          pandoc RESUME_pt-BR.md --pdf-engine=xelatex -V geometry:margin=0.65in -V fontsize=10pt -V header-includes='\usepackage{needspace}\usepackage{etoolbox}\usepackage[none]{hyphenat}\pretocmd{\subsection}{\Needspace{6\baselineskip}}{}{}\pretocmd{\subsubsection}{\Needspace{10\baselineskip}}{}{}\hyphenpenalty=10000\exhyphenpenalty=10000\sloppy' -o pdf/Samuel-Andrade-Resume-pt-BR.pdf
 
       - name: Commit updated PDFs
         run: |
