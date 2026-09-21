@@ -10,9 +10,9 @@ GitHub: [github.com/Samska](https://github.com/Samska)
 
 ## Resumo Profissional
 
-Senior QA Engineer com mais de 7 anos de experiência em desenvolvimento de software e engenharia de qualidade, com especialização em estratégias de testes baseadas em risco e automação para aplicações web e mobile, APIs, acessibilidade, regressão visual e sistemas distribuídos.
+Senior QA Engineer com mais de 7 anos de experiência em desenvolvimento de software e engenharia de qualidade, com especialização em estratégia de testes baseada em risco, arquitetura de automação e engenharia de qualidade para aplicações web e mobile, APIs, acessibilidade, regressão visual e sistemas distribuídos.
 
-Experiência ao longo de todo o ciclo de desenvolvimento com Java, Python, TypeScript, CI/CD e observabilidade, colaborando com as equipes de produto e engenharia para antecipar riscos e aumentar a confiabilidade das entregas.
+Combino Java, Python, TypeScript, CI/CD e observabilidade para construir automações sustentáveis, encurtar ciclos de feedback e aumentar a confiança nas entregas. Tenho experiência em definir estratégias de testes, evoluir frameworks e pipelines, mentorar QAs e colaborar com produto e engenharia para antecipar riscos.
 
 ## Competências Principais
 
@@ -29,39 +29,39 @@ Experiência ao longo de todo o ciclo de desenvolvimento com Java, Python, TypeS
 ### Senior QA Engineer | Trustly
 Jan 2026 - Set 2026 | São Paulo, São Paulo, Brasil | Remoto
 
-- Definição e execução de estratégias de testes baseadas em risco para jornadas críticas de pagamentos em um squad de frontend com 14 desenvolvedores e 4 QAs, apoiando releases semanais.
-- Criação e manutenção de mais de 20 cenários E2E cobrindo fluxos de sanity e regressão, reduzindo a execução manual e aumentando a confiança nas entregas semanais.
-- Criação de uma suite de regressão visual para sanity com 12 cenários e contribuição para sua arquitetura, pipelines, parâmetros customizáveis e migrações.
-- Validação de acessibilidade desktop e mobile com NVDA, JAWS, VoiceOver e TalkBack, seguindo diretrizes WCAG.
-- Aplicação de GitHub Copilot, Claude Code e workflows baseados em MCP para acelerar atividades recorrentes de engenharia e testes.
+- Defini e conduzi estratégias de testes baseadas em risco para jornadas críticas de pagamentos em um squad de frontend com 14 desenvolvedores e 4 QAs, incluindo o planejamento de ciclos no Zephyr Scale para releases semanais.
+- Criei e mantive mais de 20 cenários E2E com Java, Selenide e Cucumber, cobrindo fluxos de sanity e regressão; reduzi a execução manual e aumentei a confiança nas entregas semanais.
+- Desenhei e evoluí uma suite de regressão visual para sanity com 12 cenários usando TypeScript, Playwright, BackstopJS e Cucumber, contribuindo para a arquitetura do framework, pipelines CI/CD, parâmetros customizáveis e migrações.
+- Validei acessibilidade desktop e mobile com NVDA, JAWS, VoiceOver e TalkBack, seguindo diretrizes WCAG.
+- Apliquei GitHub Copilot, Claude Code e workflows baseados em MCP para acelerar atividades recorrentes de engenharia e testes.
 
 ### Senior QA Engineer | AB InBev
 Set 2024 - Jan 2026 | Campinas, São Paulo, Brasil | Híbrido
 
-- Definição da estratégia de testes para jornadas de comércio web e mobile do BEES Customer em um time de 8 desenvolvedores e 2 QAs, apoiando releases quinzenais em iOS e Android.
-- Estabelecimento de abordagens de testes locais e integrados usando mocks, ambientes INT e UAT, Firebase Remote Config, feature flags e testes A/B no Optimizely.
-- Desenvolvimento de automações E2E com Python, Pytest, Selenium e Appium.
-- Atuação como referência do time na reprodução de cenários complexos e identificação da causa raiz de bugs usando Charles Proxy e New Relic; validação de APIs com Postman.
-- Validação de implementações de analytics e eventos no Segment, contribuindo para a confiabilidade dos dados do produto.
+- Defini e conduzi a estratégia de testes para jornadas de comércio web e mobile do BEES Customer em um time de 8 desenvolvedores e 2 QAs, apoiando releases quinzenais em iOS e Android e utilizando Xcode, Android Studio e LambdaTest na validação multiplataforma.
+- Estruturei abordagens de testes locais e integrados usando mocks, ambientes INT e UAT, Firebase Remote Config, feature flags e testes A/B no Optimizely.
+- Desenvolvi e mantive automações E2E com Python, Pytest, Selenium e Appium para jornadas críticas web e mobile.
+- Fui referência técnica do time na reprodução de cenários complexos e isolamento da causa raiz de bugs com Charles Proxy e New Relic; validei APIs e integrações com Postman.
+- Validei implementações de analytics e eventos no Segment, contribuindo para a confiabilidade dos dados do produto.
 
 ### Senior QA Engineer | CI&T
 Dez 2022 - Ago 2024 | São Paulo, SP | Remoto
 
-- Definição de estratégias e planos de testes em três programas globais de clientes nos setores de bebidas, dispositivos médicos e alimentos, apoiando releases quinzenais.
-- Apoio à definição da arquitetura do Robot Framework durante a migração do Vividus, com mentoria de QAs juniores e plenos e revisão de código Robot Framework.
-- Integração do Robot Framework com Applitools e Jenkins, permitindo a execução de mais de 100 testes visuais em batches paralelos e em três viewports.
-- Otimização da execução de regressão por meio de paralelismo, remoção de waits desnecessários e aumento da cobertura de jornadas críticas.
-- Monitoramento do comportamento das aplicações com New Relic e investigação de incidentes utilizando logs, métricas e evidências operacionais no ELK Stack.
-- Recebeu o reconhecimento "Mission Accomplished" da CI&T por entregas consistentes, compartilhamento proativo de conhecimento, melhorias no framework de testes e apoio a outros QAs.
+- Estruturei estratégias e planos de testes em três programas globais de clientes dos setores de bebidas, dispositivos médicos e alimentos, alinhando a cobertura às releases quinzenais e à entrega entre diferentes áreas.
+- Apoiei a definição da arquitetura do Robot Framework durante a migração do Vividus, mentorando QAs juniores e plenos e revisando código Robot Framework.
+- Integrei Robot Framework com Applitools Eyes, Sauce Labs e Jenkins, permitindo a execução de mais de 100 testes visuais em batches paralelos e em três viewports.
+- Otimizei a execução da regressão no Robot Framework por meio do paralelismo, remoção de waits desnecessários e melhoria das pipelines Jenkins com parâmetros customizáveis e artefatos melhores, aumentando também a cobertura de jornadas críticas.
+- Monitorei o comportamento das aplicações com New Relic e investiguei incidentes usando logs, métricas e evidências operacionais no ELK Stack.
+- Recebi o reconhecimento "Mission Accomplished" da CI&T por entregas consistentes, compartilhamento proativo de conhecimento, melhorias no framework de testes e apoio a outros QAs.
 
 ### Mid-Level QA Engineer | CI&T
 Jan 2022 - Dez 2022 | São Paulo, SP | Remoto
 
-- Planejamento e execução de testes funcionais e não funcionais em um time de aproximadamente 7 desenvolvedores e 2 QAs, com foco na mitigação de riscos.
-- Automação de cenários E2E com Pytest e Selenium.
-- Validação de APIs e microsserviços com Postman e REST Assured.
-- Integração da execução de testes em pipelines Azure DevOps e monitoramento do comportamento das aplicações com New Relic.
-- Recebeu o reconhecimento "Client Satisfaction" da CI&T pela rápida adaptação, comunicação profissional, resolução de problemas e conquista da confiança do cliente.
+- Planejei e executei testes funcionais e não funcionais em um time de aproximadamente 7 desenvolvedores e 2 QAs, com foco na mitigação de riscos.
+- Automatizei cenários E2E com Pytest e Selenium.
+- Validei APIs e microsserviços com Postman e REST Assured.
+- Integrei a execução de testes em pipelines Azure DevOps e monitorei o comportamento das aplicações com New Relic.
+- Recebi o reconhecimento "Client Satisfaction" da CI&T pela rápida adaptação, comunicação profissional, resolução de problemas e conquista da confiança do cliente.
 
 ### Software QA Engineer | e.Mix
 Jul 2021 - Jan 2022 | São Paulo, SP | Remoto
