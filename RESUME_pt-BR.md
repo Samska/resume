@@ -16,7 +16,7 @@ Especializado em estratégia de testes baseada em risco, arquitetura de automaç
 
 ## Competências Principais
 
-**Estratégia e Planejamento de Qualidade:** Testes baseados em risco, estratégia e planejamento de testes, release readiness, análise de cobertura, priorização e atuação em qualidade  
+**Estratégia e Planejamento de Qualidade:** Testes baseados em risco, estratégia e planejamento de testes, release readiness, análise de cobertura, priorização e avaliação de riscos de release  
 **Liderança Técnica e Mentoria:** Arquitetura de frameworks, desenho de pipelines, mentoria, code review e compartilhamento de conhecimento  
 **Arquitetura de Automação de Testes:** Automações sustentáveis para web, mobile, API, E2E, integração e regressão  
 **Qualidade de APIs e Integrações:** Validação de APIs REST, fluxos de integração, microsserviços e gestão de dados de teste  
@@ -97,7 +97,7 @@ Fev 2018 - Ago 2020
 **CI/CD e Observabilidade:** Git, GitHub Actions, Jenkins, Azure DevOps, New Relic, ELK Stack  
 **Linguagens de Programação:** Java, Python, TypeScript, JavaScript, SQL  
 **Domínios de Teste:** Smoke Testing, Testes Manuais, Testes Funcionais, Testes Web, Testes Mobile, Cross-browser Testing, Testes de API, Testes E2E, Testes de Integração, Testes de Regressão, Testes Exploratórios, Testes de Aceitação (UAT), Testes de Acessibilidade (WCAG), Testes de Regressão Visual, Testes de Performance  
-**Gestão de Testes:** Jira, Zephyr Scale, Xray  
+**Gestão e Execução de Testes:** Jira, Zephyr Scale, Xray, desenho de casos de teste, execução de testes, gestão de defeitos  
 **Mobile e Diagnóstico de Produto:** Xcode, Android Studio, Firebase Remote Config, Segment, Optimizely  
 **Acessibilidade e Testes Visuais:** NVDA, JAWS, VoiceOver, TalkBack, WCAG, Applitools, Sauce Labs, LambdaTest  
 **Testes de Performance:** JMeter, k6  
