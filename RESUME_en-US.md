@@ -47,7 +47,7 @@ Sep 2024 - Jan 2026 | Campinas, São Paulo, Brazil | Hybrid
 ### Senior QA Engineer | CI&T
 Dec 2022 - Aug 2024 | São Paulo, Brazil | Remote
 
-- Helped define the Robot Framework architecture during the migration from Vividus, mentoring junior and mid-level QAs and reviewing Robot Framework code.
+- Co-defined the Robot Framework architecture with the QA Lead during the migration from Vividus, mentoring junior and mid-level QAs and reviewing Robot Framework code.
 - Integrated Robot Framework with Applitools Eyes, Sauce Labs, and Jenkins, enabling more than 100 visual tests to run in parallel batches across three viewports.
 - Optimized Robot Framework regression execution by parallelizing suites, removing unnecessary waits, and improving Jenkins pipelines with configurable parameters and better artifacts, while increasing coverage of critical user journeys.
 - Designed test strategies and plans within a full-stack team of 8 developers and 2 QAs across three global client programs in the beverage, medical device, and food industries, aligning coverage with biweekly releases and cross-functional delivery.
