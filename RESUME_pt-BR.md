@@ -16,13 +16,13 @@ Especializado em estratégia de testes baseada em risco, arquitetura de automaç
 
 ## Competências Principais
 
-**Estratégia e Planejamento de Qualidade:** Testes baseados em risco, planejamento, análise de cobertura, priorização e atuação em qualidade  
+**Estratégia e Planejamento de Qualidade:** Testes baseados em risco, estratégia e planejamento de testes, release readiness, análise de cobertura, priorização e avaliação de riscos de release  
 **Liderança Técnica e Mentoria:** Arquitetura de frameworks, desenho de pipelines, mentoria, code review e compartilhamento de conhecimento  
 **Arquitetura de Automação de Testes:** Automações sustentáveis para web, mobile, API, E2E, integração e regressão  
-**Qualidade de APIs e Integrações:** Validação de APIs REST, fluxos de integração, microsserviços, dados de teste e análise de causa raiz  
+**Qualidade de APIs e Integrações:** Validação de APIs REST, fluxos de integração, microsserviços e gestão de dados de teste  
 **Testes Contínuos e CI/CD:** Gates automatizados de qualidade, fluxos de release, otimização de pipelines e melhoria dos ciclos de feedback  
-**Qualidade Web, Mobile e Acessibilidade:** Validação multiplataforma, iOS, Android, WCAG e tecnologias assistivas  
-**Observabilidade e Investigação de Incidentes:** Logs, métricas, monitoramento, evidências operacionais e investigação de causa raiz
+**Qualidade Web, Mobile e Acessibilidade:** Validação cross-browser e multiplataforma, iOS, Android, WCAG e tecnologias assistivas  
+**Análise de Defeitos e Incidentes:** Triagem de defeitos, análise de causa raiz, logs, métricas, monitoramento e evidências operacionais
 
 ## Experiência Profissional
 
@@ -30,7 +30,7 @@ Especializado em estratégia de testes baseada em risco, arquitetura de automaç
 Jan 2026 - Set 2026 | São Paulo, São Paulo, Brasil | Remoto
 
 - Defini e conduzi estratégias de testes baseadas em risco para jornadas críticas de pagamentos em um squad de frontend com 14 desenvolvedores e 4 QAs, incluindo o planejamento de ciclos no Zephyr Scale para releases semanais.
-- Criei e mantive mais de 20 cenários E2E com Java, Selenide e Cucumber, cobrindo fluxos de sanity e regressão; reduzi a execução manual e aumentei a confiança nas entregas semanais.
+- Automatizei e mantive mais de 20 cenários E2E com Java, Selenide e Cucumber, cobrindo fluxos de sanity e regressão e reduzindo a execução manual recorrente nas releases semanais.
 - Desenhei e evoluí uma suite de regressão visual para sanity com 12 cenários usando TypeScript, Playwright, BackstopJS e Cucumber, contribuindo para a arquitetura do framework, pipelines CI/CD, parâmetros customizáveis e migrações.
 - Validei acessibilidade desktop e mobile com NVDA, JAWS, VoiceOver e TalkBack, seguindo diretrizes WCAG.
 - Apliquei GitHub Copilot, Claude Code e workflows baseados em MCP para acelerar atividades recorrentes de engenharia e testes.
@@ -47,7 +47,7 @@ Set 2024 - Jan 2026 | Campinas, São Paulo, Brasil | Híbrido
 ### Senior QA Engineer | CI&T
 Dez 2022 - Ago 2024 | São Paulo, SP | Remoto
 
-- Apoiei a definição da arquitetura do Robot Framework durante a migração do Vividus, mentorando QAs juniores e plenos e revisando código Robot Framework.
+- Atuei na definição da arquitetura do Robot Framework, em parceria com o QA Lead, durante a migração do Vividus; mentorei QAs juniores e plenos e revisei código Robot Framework.
 - Integrei Robot Framework com Applitools Eyes, Sauce Labs e Jenkins, permitindo a execução de mais de 100 testes visuais em batches paralelos e em três viewports.
 - Otimizei a execução da regressão no Robot Framework por meio do paralelismo, remoção de waits desnecessários e melhoria das pipelines Jenkins com parâmetros customizáveis e artefatos melhores, aumentando também a cobertura de jornadas críticas.
 - Estruturei estratégias e planos de testes em um time full-stack com 8 desenvolvedores e 2 QAs, atuando em três programas globais de clientes dos setores de bebidas, dispositivos médicos e alimentos e alinhando a cobertura às releases quinzenais e à entrega entre diferentes áreas.
@@ -92,13 +92,12 @@ Fev 2018 - Ago 2020
 
 ## Habilidades Técnicas
 
-**Práticas de Qualidade:** Testes Baseados em Risco, Estratégia de Testes, Planejamento de Testes, Desenho de Casos de Teste, Execução de Testes, Gestão de Defeitos, Gestão de Testes  
 **Automação de Testes:** Playwright, Selenium, Selenide, Cypress, Appium, Pytest, Robot Framework, Cucumber, JUnit, TestNG, BackstopJS, Vividus  
 **API e Integração:** REST Assured, Postman, Bruno, Charles Proxy  
 **CI/CD e Observabilidade:** Git, GitHub Actions, Jenkins, Azure DevOps, New Relic, ELK Stack  
 **Linguagens de Programação:** Java, Python, TypeScript, JavaScript, SQL  
-**Testes:** Testes Manuais, Testes Funcionais, Testes Web, Testes Mobile, Testes de API, Testes E2E, Testes de Integração, Testes de Regressão, Testes Exploratórios, Testes de Aceitação (UAT), Testes de Acessibilidade (WCAG), Testes de Regressão Visual, Testes de Performance  
-**Gestão de Testes:** Jira, Zephyr Scale, Xray  
+**Domínios de Teste:** Smoke Testing, Testes Manuais, Testes Funcionais, Testes Web, Testes Mobile, Cross-browser Testing, Testes de API, Testes E2E, Testes de Integração, Testes de Regressão, Testes Exploratórios, Testes de Aceitação (UAT), Testes de Acessibilidade (WCAG), Testes de Regressão Visual, Testes de Performance  
+**Gestão e Execução de Testes:** Jira, Zephyr Scale, Xray, desenho de casos de teste, execução de testes, gestão de defeitos  
 **Mobile e Diagnóstico de Produto:** Xcode, Android Studio, Firebase Remote Config, Segment, Optimizely  
 **Acessibilidade e Testes Visuais:** NVDA, JAWS, VoiceOver, TalkBack, WCAG, Applitools, Sauce Labs, LambdaTest  
 **Testes de Performance:** JMeter, k6  
