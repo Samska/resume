@@ -8,6 +8,12 @@ E-mail: [samuel.andradetp@live.com](mailto:samuel.andradetp@live.com)
 LinkedIn: [linkedin.com/in/Samska](https://linkedin.com/in/Samska)  
 GitHub: [github.com/Samska](https://github.com/Samska)
 
+## Resumo Profissional
+
+Profissional de engenharia de software com mais de 7 anos de experiência combinada em desenvolvimento e qualidade, incluindo atuação como Senior QA Engineer em produtos digitais globais nos setores de fintech, saúde e comércio. Experiência prática na definição de estratégias e automação de testes web, mobile, APIs, acessibilidade, regressão visual e integrações distribuídas.
+
+Atuação ao longo de todo o ciclo de desenvolvimento com Java, Python, TypeScript, CI/CD, observabilidade e práticas de engenharia assistidas por IA para antecipar riscos e aumentar a confiabilidade das entregas.
+
 ## Competências Principais
 
 **Engenharia de Qualidade e Shift-Left:** Estratégia baseada em risco, planejamento de testes, identificação antecipada de riscos e atuação em qualidade  
@@ -20,12 +26,6 @@ GitHub: [github.com/Samska](https://github.com/Samska)
 **Observabilidade e Investigação de Incidentes:** Uso de logs, métricas, monitoramento e evidências operacionais para analisar o comportamento das aplicações  
 **Engenharia Assistida por IA e Workflows de Testes:** Uso de ferramentas de IA e workflows baseados em agentes para melhorar atividades recorrentes de engenharia e testes  
 **Colaboração Ágil e Atuação em Qualidade:** Colaboração entre produto, engenharia e equipes de entrega para melhorar decisões de qualidade
-
-## Resumo Profissional
-
-Profissional de engenharia de software com mais de 7 anos de experiência combinada em desenvolvimento e qualidade, incluindo atuação como Senior QA Engineer em produtos digitais globais nos setores de fintech, saúde e comércio. Experiência prática na definição de estratégias e automação de testes web, mobile, APIs, acessibilidade, regressão visual e integrações distribuídas.
-
-Atuação ao longo de todo o ciclo de desenvolvimento com Java, Python, TypeScript, CI/CD, observabilidade e práticas de engenharia assistidas por IA para antecipar riscos e aumentar a confiabilidade das entregas.
 
 ## Experiência Profissional
 
