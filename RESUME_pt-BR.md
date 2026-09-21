@@ -29,37 +29,39 @@ Experiência ao longo de todo o ciclo de desenvolvimento com Java, Python, TypeS
 ### Senior QA Engineer | Trustly
 Jan 2026 - Set 2026 | São Paulo, São Paulo, Brasil | Remoto
 
-- Definição e execução de estratégias de testes baseadas em risco para jornadas críticas de pagamentos em ambientes de integração e aceitação.
-- Desenvolvimento e manutenção de automações E2E com Java, Selenide e Cucumber para fluxos críticos de frontend.
-- Criação de cobertura de regressão visual com TypeScript, Playwright, BackstopJS e Cucumber.
-- Validação de acessibilidade desktop e mobile com VoiceOver, TalkBack, NVDA e JAWS, seguindo diretrizes WCAG.
+- Definição e execução de estratégias de testes baseadas em risco para jornadas críticas de pagamentos em um squad de frontend com 14 desenvolvedores e 4 QAs, apoiando releases semanais.
+- Criação e manutenção de mais de 20 cenários E2E cobrindo fluxos de sanity e regressão, reduzindo a execução manual e aumentando a confiança nas entregas semanais.
+- Criação de uma suite de regressão visual para sanity com 12 cenários e contribuição para sua arquitetura, pipelines, parâmetros customizáveis e migrações.
+- Validação de acessibilidade desktop e mobile com NVDA, JAWS, VoiceOver e TalkBack, seguindo diretrizes WCAG.
 - Aplicação de GitHub Copilot, Claude Code e workflows baseados em MCP para acelerar atividades recorrentes de engenharia e testes.
 
 ### Senior QA Engineer | AB InBev
 Set 2024 - Jan 2026 | Campinas, São Paulo, Brasil | Híbrido
 
-- Planejamento e execução de estratégias de qualidade para jornadas de comércio web e mobile do BEES Customer em iOS e Android.
+- Definição da estratégia de testes para jornadas de comércio web e mobile do BEES Customer em um time de 8 desenvolvedores e 2 QAs, apoiando releases quinzenais em iOS e Android.
+- Estabelecimento de abordagens de testes locais e integrados usando mocks, ambientes INT e UAT, Firebase Remote Config, feature flags e testes A/B no Optimizely.
 - Desenvolvimento de automações E2E com Python, Pytest, Selenium e Appium.
-- Investigação de integrações e validação de APIs utilizando Charles Proxy e Postman.
+- Atuação como referência do time na reprodução de cenários complexos e identificação da causa raiz de bugs usando Charles Proxy e New Relic; validação de APIs com Postman.
 - Validação de implementações de analytics e eventos no Segment, contribuindo para a confiabilidade dos dados do produto.
-- Uso de Xcode, Android Studio, LambdaTest, Firebase Remote Config, New Relic, Jira e Zephyr Scale nas entregas multiplataforma.
 
 ### Senior QA Engineer | CI&T
 Dez 2022 - Ago 2024 | São Paulo, SP | Remoto
 
-- Definição de estratégias de testes para produtos digitais globais de grande escala nos setores de bebidas, dispositivos médicos e alimentos.
-- Automação de cenários E2E com Vividus e Robot Framework.
-- Implementação de regressão visual com Applitools Eyes e cobertura cross-browser e de dispositivos com Sauce Labs.
-- Integração de testes contínuos por meio de pipelines Jenkins e Azure DevOps.
+- Definição de estratégias e planos de testes em três programas globais de clientes nos setores de bebidas, dispositivos médicos e alimentos, apoiando releases quinzenais.
+- Apoio à definição da arquitetura do Robot Framework durante a migração do Vividus, com mentoria de QAs juniores e plenos e revisão de código Robot Framework.
+- Integração do Robot Framework com Applitools e Jenkins, permitindo a execução de mais de 100 testes visuais em batches paralelos e em três viewports.
+- Otimização da execução de regressão por meio de paralelismo, remoção de waits desnecessários e aumento da cobertura de jornadas críticas.
 - Monitoramento do comportamento das aplicações com New Relic e investigação de incidentes utilizando logs, métricas e evidências operacionais no ELK Stack.
+- Recebeu o reconhecimento "Mission Accomplished" da CI&T por entregas consistentes, compartilhamento proativo de conhecimento, melhorias no framework de testes e apoio a outros QAs.
 
 ### Mid-Level QA Engineer | CI&T
 Jan 2022 - Dez 2022 | São Paulo, SP | Remoto
 
-- Planejamento e execução de testes funcionais e não funcionais com foco na mitigação de riscos.
+- Planejamento e execução de testes funcionais e não funcionais em um time de aproximadamente 7 desenvolvedores e 2 QAs, com foco na mitigação de riscos.
 - Automação de cenários E2E com Pytest e Selenium.
 - Validação de APIs e microsserviços com Postman e REST Assured.
 - Integração da execução de testes em pipelines Azure DevOps e monitoramento do comportamento das aplicações com New Relic.
+- Recebeu o reconhecimento "Client Satisfaction" da CI&T pela rápida adaptação, comunicação profissional, resolução de problemas e conquista da confiança do cliente.
 
 ### Software QA Engineer | e.Mix
 Jul 2021 - Jan 2022 | São Paulo, SP | Remoto
@@ -94,6 +96,8 @@ Fev 2018 - Ago 2020
 **Linguagens de Programação:** Java, Python, TypeScript, JavaScript, SQL  
 **Automação de Testes:** Playwright, Selenium, Selenide, Cypress, Appium, Pytest, Robot Framework, REST Assured, Cucumber, JUnit, TestNG, BackstopJS, Vividus  
 **Testes:** Testes Manuais, Testes Funcionais, Testes Web, Testes Mobile, Testes de API, Testes E2E, Testes de Integração, Testes de Regressão, Testes Exploratórios, Testes de Aceitação (UAT), Testes de Acessibilidade (WCAG), Testes de Regressão Visual, Testes de Performance  
-**Entrega e Observabilidade:** GitHub Actions, Jenkins, Azure DevOps, New Relic, ELK Stack  
-**Ferramentas:** Git, Postman, Bruno, JMeter, Applitools, Sauce Labs, LambdaTest, Charles Proxy, Jira, Zephyr Scale, Xray  
+**Entrega e Observabilidade:** Git, GitHub Actions, Jenkins, Azure DevOps, New Relic, ELK Stack  
+**Gestão de Testes:** Jira, Zephyr Scale, Xray  
+**API, Mobile e Diagnóstico:** Postman, Bruno, Charles Proxy, Xcode, Android Studio, Firebase Remote Config, Segment, Optimizely  
+**Performance e Testes Visuais:** JMeter, k6, Applitools, Sauce Labs, LambdaTest  
 **Engenharia Assistida por IA:** GitHub Copilot, Claude Code, Cursor, workflows com MCP
