@@ -1,6 +1,6 @@
 # Samuel Andrade
 
-Engenharia de Software | Engenharia de Qualidade | Automação de Testes
+Senior QA Engineer | Automação de Testes | Engenharia de Qualidade
 
 Localização: Jundiaí, SP, Brasil  
 Telefone: +55 11 983168056  
@@ -10,22 +10,19 @@ GitHub: [github.com/Samska](https://github.com/Samska)
 
 ## Resumo Profissional
 
-Profissional de engenharia de software com mais de 7 anos de experiência combinada em desenvolvimento e qualidade, incluindo atuação como Senior QA Engineer em produtos digitais globais nos setores de fintech, saúde e comércio. Experiência prática na definição de estratégias e automação de testes web, mobile, APIs, acessibilidade, regressão visual e integrações distribuídas.
+Senior QA Engineer com mais de 7 anos de experiência em desenvolvimento de software e engenharia de qualidade, com especialização em estratégias de testes baseadas em risco e automação para aplicações web e mobile, APIs, acessibilidade, regressão visual e sistemas distribuídos.
 
-Atuação ao longo de todo o ciclo de desenvolvimento com Java, Python, TypeScript, CI/CD, observabilidade e práticas de engenharia assistidas por IA para antecipar riscos e aumentar a confiabilidade das entregas.
+Experiência ao longo de todo o ciclo de desenvolvimento com Java, Python, TypeScript, CI/CD e observabilidade, colaborando com as equipes de produto e engenharia para antecipar riscos e aumentar a confiabilidade das entregas.
 
 ## Competências Principais
 
-**Engenharia de Qualidade e Shift-Left:** Estratégia baseada em risco, planejamento de testes, identificação antecipada de riscos e atuação em qualidade  
+**Engenharia de Qualidade Baseada em Risco:** Estratégia e planejamento de testes, identificação antecipada de riscos e atuação em qualidade ao longo do SDLC  
 **Arquitetura de Automação de Testes:** Construção de automações sustentáveis para camadas web, mobile, API, E2E, integração e regressão  
-**Qualidade ao Longo do SDLC:** Testes funcionais, não funcionais, exploratórios, de aceitação, acessibilidade, visuais e de performance  
+**Qualidade ao Longo do SDLC:** Testes funcionais, não funcionais, exploratórios, de aceitação, regressão, acessibilidade, visuais e de performance  
 **Qualidade de APIs e Sistemas Distribuídos:** Validação de APIs, fluxos de integração, microsserviços, dados de teste e análise de riscos  
-**Acessibilidade e Qualidade Inclusiva:** Validação orientada a WCAG em experiências desktop e mobile  
 **Testes Contínuos e Entrega:** Integração de verificações automatizadas de qualidade a pipelines CI/CD e fluxos de release  
 **Engenharia de Qualidade Multiplataforma:** Gestão de riscos de compatibilidade entre navegadores, dispositivos, iOS e Android  
-**Observabilidade e Investigação de Incidentes:** Uso de logs, métricas, monitoramento e evidências operacionais para analisar o comportamento das aplicações  
-**Engenharia Assistida por IA e Workflows de Testes:** Uso de ferramentas de IA e workflows baseados em agentes para melhorar atividades recorrentes de engenharia e testes  
-**Colaboração Ágil e Atuação em Qualidade:** Colaboração entre produto, engenharia e equipes de entrega para melhorar decisões de qualidade
+**Qualidade Transversal e Observabilidade:** Colaboração entre produto e engenharia, investigação de incidentes e uso de logs, métricas, monitoramento e evidências operacionais para melhorar decisões de qualidade
 
 ## Experiência Profissional
 
@@ -93,9 +90,10 @@ Fev 2018 - Ago 2020
 
 ## Habilidades Técnicas
 
+**Práticas de Qualidade:** Testes Baseados em Risco, Estratégia de Testes, Planejamento de Testes, Desenho de Casos de Teste, Gestão de Defeitos, Gestão de Testes  
 **Linguagens de Programação:** Java, Python, TypeScript, JavaScript, SQL  
 **Automação de Testes:** Playwright, Selenium, Selenide, Cypress, Appium, Pytest, Robot Framework, REST Assured, Cucumber, JUnit, TestNG, BackstopJS, Vividus  
-**Testes:** Testes Web, Testes Mobile, Testes de API, Testes E2E, Testes de Integração, Testes Exploratórios, Testes de Acessibilidade (WCAG), Testes de Regressão Visual, Testes de Performance  
+**Testes:** Testes Manuais, Testes Funcionais, Testes Web, Testes Mobile, Testes de API, Testes E2E, Testes de Integração, Testes de Regressão, Testes Exploratórios, Testes de Aceitação (UAT), Testes de Acessibilidade (WCAG), Testes de Regressão Visual, Testes de Performance  
 **Entrega e Observabilidade:** GitHub Actions, Jenkins, Azure DevOps, New Relic, ELK Stack  
 **Ferramentas:** Git, Postman, Bruno, JMeter, Applitools, Sauce Labs, LambdaTest, Charles Proxy, Jira, Zephyr Scale, Xray  
 **Engenharia Assistida por IA:** GitHub Copilot, Claude Code, Cursor, workflows com MCP

@@ -1,6 +1,6 @@
 # Samuel Andrade
 
-Software Engineering | Quality Engineering | Test Automation
+Senior QA Engineer | Test Automation | Quality Engineering
 
 Location: Jundiaí, SP, Brazil  
 Phone: +55 11 983168056  
@@ -10,22 +10,19 @@ GitHub: [github.com/Samska](https://github.com/Samska)
 
 ## Professional Summary
 
-Software engineering professional with 7+ years of combined experience in software development and quality, including Senior QA Engineer roles supporting global digital products across fintech, healthcare, and commerce. Hands-on experience defining test strategies and building automation for web, mobile, APIs, accessibility, visual regression, and distributed integrations.
+Senior QA Engineer with 7+ years of experience across software development and quality engineering, specializing in risk-based test strategy and automation for web, mobile, APIs, accessibility, visual regression, and distributed systems.
 
-Works across the software development lifecycle with Java, Python, TypeScript, CI/CD, observability, and AI-assisted engineering practices to identify risks early and improve delivery confidence.
+Experienced across the software development lifecycle with Java, Python, TypeScript, CI/CD, and observability, partnering with product and engineering teams to identify risks early and improve delivery confidence.
 
 ## Core Competencies
 
-**Quality Engineering & Shift-Left:** Risk-based strategy, test planning, early risk identification, and quality advocacy  
+**Risk-Based Quality Engineering:** Test strategy, test planning, early risk identification, and quality advocacy across the SDLC  
 **Test Automation Architecture:** Designing maintainable automation across web, mobile, API, E2E, integration, and regression layers  
-**Quality Across the SDLC:** Functional, non-functional, exploratory, acceptance, accessibility, visual, and performance testing  
+**Quality Across the SDLC:** Functional, non-functional, exploratory, acceptance, regression, accessibility, visual, and performance testing  
 **API & Distributed Systems Quality:** API validation, integration flows, microservices, test data, and risk analysis  
-**Accessibility & Inclusive Quality:** WCAG-oriented validation across desktop and mobile experiences  
 **Continuous Testing & Delivery:** Embedding automated quality checks into CI/CD pipelines and release workflows  
 **Cross-Platform Quality Engineering:** Managing browser, device, iOS, Android, and compatibility risks  
-**Observability & Incident Investigation:** Using logs, metrics, monitoring, and operational evidence to analyze application behavior  
-**AI-Assisted Engineering & Test Workflows:** Applying AI tools and agent-based workflows to improve repeatable engineering and testing activities  
-**Agile Collaboration & Quality Advocacy:** Working across product, engineering, and delivery teams to improve quality decisions
+**Cross-Functional Quality & Observability:** Collaborating across product and engineering teams, using logs, metrics, monitoring, and operational evidence to investigate incidents and improve quality decisions
 
 ## Professional Experience
 
@@ -93,9 +90,10 @@ Feb 2018 - Aug 2020
 
 ## Technical Skills
 
+**Quality Practices:** Risk-Based Testing, Test Strategy, Test Planning, Test Case Design, Defect Management, Test Management  
 **Programming Languages:** Java, Python, TypeScript, JavaScript, SQL  
 **Test Automation:** Playwright, Selenium, Selenide, Cypress, Appium, Pytest, Robot Framework, REST Assured, Cucumber, JUnit, TestNG, BackstopJS, Vividus  
-**Testing:** Web Testing, Mobile Testing, API Testing, E2E Testing, Integration Testing, Exploratory Testing, Accessibility Testing (WCAG), Visual Regression Testing, Performance Testing  
+**Testing:** Manual Testing, Functional Testing, Web Testing, Mobile Testing, API Testing, E2E Testing, Integration Testing, Regression Testing, Exploratory Testing, Acceptance Testing (UAT), Accessibility Testing (WCAG), Visual Regression Testing, Performance Testing  
 **Delivery and Observability:** GitHub Actions, Jenkins, Azure DevOps, New Relic, ELK Stack  
 **Tools:** Git, Postman, Bruno, JMeter, Applitools, Sauce Labs, LambdaTest, Charles Proxy, Jira, Zephyr Scale, Xray  
 **AI-Assisted Engineering:** GitHub Copilot, Claude Code, Cursor, MCP workflows
