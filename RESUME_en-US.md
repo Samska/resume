@@ -8,6 +8,12 @@ Email: [samuel.andradetp@live.com](mailto:samuel.andradetp@live.com)
 LinkedIn: [linkedin.com/in/Samska](https://linkedin.com/in/Samska)  
 GitHub: [github.com/Samska](https://github.com/Samska)
 
+## Professional Summary
+
+Software engineering professional with 7+ years of combined experience in software development and quality, including Senior QA Engineer roles supporting global digital products across fintech, healthcare, and commerce. Hands-on experience defining test strategies and building automation for web, mobile, APIs, accessibility, visual regression, and distributed integrations.
+
+Works across the software development lifecycle with Java, Python, TypeScript, CI/CD, observability, and AI-assisted engineering practices to identify risks early and improve delivery confidence.
+
 ## Core Competencies
 
 **Quality Engineering & Shift-Left:** Risk-based strategy, test planning, early risk identification, and quality advocacy  
@@ -20,12 +26,6 @@ GitHub: [github.com/Samska](https://github.com/Samska)
 **Observability & Incident Investigation:** Using logs, metrics, monitoring, and operational evidence to analyze application behavior  
 **AI-Assisted Engineering & Test Workflows:** Applying AI tools and agent-based workflows to improve repeatable engineering and testing activities  
 **Agile Collaboration & Quality Advocacy:** Working across product, engineering, and delivery teams to improve quality decisions
-
-## Professional Summary
-
-Software engineering professional with 7+ years of combined experience in software development and quality, including Senior QA Engineer roles supporting global digital products across fintech, healthcare, and commerce. Hands-on experience defining test strategies and building automation for web, mobile, APIs, accessibility, visual regression, and distributed integrations.
-
-Works across the software development lifecycle with Java, Python, TypeScript, CI/CD, observability, and AI-assisted engineering practices to identify risks early and improve delivery confidence.
 
 ## Professional Experience
 
