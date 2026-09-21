@@ -1,0 +1,43 @@
+name: Preview resume PDFs
+
+on:
+  pull_request:
+    paths:
+      - "RESUME_*.md"
+      - ".github/workflows/build-pdf.yml"
+      - ".github/workflows/preview-pdf.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install PDF tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pandoc texlive-xetex
+
+      - name: Generate preview PDFs
+        run: |
+          mkdir -p preview
+          pandoc RESUME_en-US.md --pdf-engine=xelatex -V geometry:margin=0.65in -V fontsize=10pt -V header-includes='\usepackage{needspace}\usepackage{etoolbox}\usepackage[none]{hyphenat}\pretocmd{\subsection}{\Needspace{12\baselineskip}}{}{}\pretocmd{\subsubsection}{\Needspace{10\baselineskip}}{}{}\hyphenpenalty=10000\exhyphenpenalty=10000\sloppy' -o preview/Samuel-Andrade-Resume-en-US.pdf
+          pandoc RESUME_pt-BR.md --pdf-engine=xelatex -V geometry:margin=0.65in -V fontsize=10pt -V header-includes='\usepackage{needspace}\usepackage{etoolbox}\usepackage[none]{hyphenat}\pretocmd{\subsection}{\Needspace{12\baselineskip}}{}{}\pretocmd{\subsubsection}{\Needspace{10\baselineskip}}{}{}\hyphenpenalty=10000\exhyphenpenalty=10000\sloppy' -o preview/Samuel-Andrade-Resume-pt-BR.pdf
+
+      - name: Verify preview files
+        run: |
+          test -s preview/Samuel-Andrade-Resume-en-US.pdf
+          test -s preview/Samuel-Andrade-Resume-pt-BR.pdf
+
+      - name: Upload preview PDFs
+        uses: actions/upload-artifact@v4
+        with:
+          name: resume-pdf-preview-${{ github.run_number }}
+          path: preview/*.pdf
+          if-no-files-found: error
+          retention-days: 7
