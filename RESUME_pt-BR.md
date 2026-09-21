@@ -2,7 +2,7 @@
 
 Senior QA Engineer | QA Automation | Engenharia de Qualidade
 
-Localização: Jundiaí, SP, Brasil  
+Localização: Jundiaí, São Paulo, Brasil  
 Telefone: +55 11 983168056  
 E-mail: [samuel.andradetp@live.com](mailto:samuel.andradetp@live.com)  
 LinkedIn: [linkedin.com/in/Samska](https://linkedin.com/in/Samska)  
@@ -45,7 +45,7 @@ Set 2024 - Jan 2026 | Campinas, São Paulo, Brasil | Híbrido
 - Validei implementações de analytics e eventos no Segment, contribuindo para a confiabilidade dos dados do produto.
 
 ### Senior QA Engineer | CI&T
-Dez 2022 - Ago 2024 | São Paulo, SP | Remoto
+Dez 2022 - Ago 2024 | São Paulo, São Paulo, Brasil | Remoto
 
 - Atuei na definição da arquitetura do Robot Framework, em parceria com o QA Lead, durante a migração do Vividus; mentorei QAs juniores e plenos e revisei código Robot Framework.
 - Integrei Robot Framework com Applitools Eyes, Sauce Labs e Jenkins, permitindo a execução de mais de 100 testes visuais em batches paralelos e em três viewports.
@@ -55,7 +55,7 @@ Dez 2022 - Ago 2024 | São Paulo, SP | Remoto
 - Recebi o reconhecimento "Mission Accomplished" da CI&T por entregas consistentes, compartilhamento proativo de conhecimento, melhorias no framework de testes e apoio a outros QAs.
 
 ### Mid-Level QA Engineer | CI&T
-Jan 2022 - Dez 2022 | São Paulo, SP | Remoto
+Jan 2022 - Dez 2022 | São Paulo, São Paulo, Brasil | Remoto
 
 - Planejei e executei testes funcionais e não funcionais em um time backend com 8 desenvolvedores e 2 QAs, com foco na mitigação de riscos.
 - Automatizei cenários E2E com Pytest e Selenium.
