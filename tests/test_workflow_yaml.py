@@ -43,7 +43,12 @@ class WorkflowYamlTests(unittest.TestCase):
             document["permissions"], {"contents": "write", "pull-requests": "write"}
         )
         job = document["jobs"]["import"]
+        self.assertIn("github.ref == 'refs/heads/main'", job["if"])
         self.assertEqual(job["runs-on"], "ubuntu-latest")
+        self.assertEqual(
+            job["env"]["LINKEDIN_MAX_RESPONSE_TOKENS"],
+            "${{ vars.LINKEDIN_MAX_RESPONSE_TOKENS || '24000' }}",
+        )
         names = [step.get("name") for step in job["steps"]]
         self.assertEqual(names[0], "Validate workflow inputs")
         self.assertIn("Resolve the input PDF", names)

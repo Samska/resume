@@ -34,7 +34,7 @@ import urllib.error
 import urllib.request
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any, Callable, Mapping
 
 try:
     from scripts.resume_source import (
@@ -82,7 +82,10 @@ MODEL_ID_RE = re.compile(r"^~?[A-Za-z0-9][A-Za-z0-9._:-]*(?:/[A-Za-z0-9][A-Za-z0
 IMPORT_SCHEMA_VERSION = 1
 LANGUAGES = ("en-US", "pt-BR")
 DEFAULT_MODEL = "openrouter/auto"
-MAX_RESPONSE_TOKENS = 12000
+MAX_RESPONSE_TOKENS_ENV = "LINKEDIN_MAX_RESPONSE_TOKENS"
+DEFAULT_MAX_RESPONSE_TOKENS = 24000
+MIN_MAX_RESPONSE_TOKENS = 1000
+MAX_MAX_RESPONSE_TOKENS = 100_000
 MAX_EXTRACTED_CHARS = 200_000
 MAX_NOTES = 30
 MAX_NOTE_CHARS = 300
@@ -101,7 +104,7 @@ MAX_DATES_CHARS = 80
 MAX_DESCRIPTION_CHARS = 400
 MAX_CREDENTIAL_CHARS = 200
 MAX_CERTIFICATION_CHARS = 200
-MAX_EVIDENCE_CHARS = 500
+MAX_EVIDENCE_CHARS = 200
 
 MAX_SUMMARY_BLOCKS = 5
 MAX_SKILLS = 60
@@ -237,6 +240,43 @@ def validate_model_configuration(model: str) -> str:
             "set the OPENROUTER_MODEL repository variable to a valid model identifier",
         )
     return candidate
+
+
+def validate_token_budget(value: int, field: str) -> int:
+    """Fail closed when an output token budget is unusable."""
+
+    if (
+        not isinstance(value, int)
+        or isinstance(value, bool)
+        or not (MIN_MAX_RESPONSE_TOKENS <= value <= MAX_MAX_RESPONSE_TOKENS)
+    ):
+        _fail(
+            "MODEL_CONFIG",
+            f"{field} must be an integer between {MIN_MAX_RESPONSE_TOKENS} and "
+            f"{MAX_MAX_RESPONSE_TOKENS}",
+        )
+    return value
+
+
+def resolve_max_response_tokens(environ: Mapping[str, str] | None = None) -> int:
+    """Resolve the configurable model output budget, fail closed if invalid.
+
+    The repository variable ``LINKEDIN_MAX_RESPONSE_TOKENS`` overrides the
+    default through the workflow environment. It never contains secrets.
+    """
+
+    source = os.environ if environ is None else environ
+    raw = source.get(MAX_RESPONSE_TOKENS_ENV, "").strip()
+    if not raw:
+        return DEFAULT_MAX_RESPONSE_TOKENS
+    try:
+        value = int(raw)
+    except ValueError:
+        _fail(
+            "MODEL_CONFIG",
+            f"{MAX_RESPONSE_TOKENS_ENV} must be an integer number of tokens",
+        )
+    return validate_token_budget(value, MAX_RESPONSE_TOKENS_ENV)
 
 
 # ---------------------------------------------------------------------------
@@ -1936,7 +1976,7 @@ def build_profile_prompt(extracted_text: str) -> str:
                 "dates": {"text": "Jan 2024 - Present", "evidence": "Jan 2024 - Present", "translation": "Jan 2024 - Atual"},
                 "location": {"text": "Remote", "evidence": "Remote", "translation": "Remoto"},
                 "description": [
-                    {"text": "Built API automation with Python.", "evidence": "Built API automation with Python.", "translation": "Construiu automacao de API com Python."}
+                    {"text": "Built API automation with Python and Pytest.", "evidence": "API automation with Python", "translation": "Construiu automacao de API com Python e Pytest."}
                 ],
             }
         ],
@@ -1966,8 +2006,11 @@ EXTRACTION CONTRACT
 - The extracted text is the only source of truth. Never infer values that it does not state.
 - "text" must be in the PDF's dominant language ("source_language" is "pt-BR" for Portuguese,
   otherwise "en-US").
-- "evidence" is a short verbatim quote copied from the extracted text that proves "text". Never
-  translate, paraphrase, or reformat evidence.
+- "evidence" is the shortest verbatim quote copied from the extracted text that still proves
+  "text". Keep it within 200 characters and prefer under 160. Use only the exact phrase that
+  contains the fact, such as a job title, employer name, date line, skill, or metric. Never
+  translate, paraphrase, summarize, or reformat evidence, and never include extra surrounding
+  context that is not needed to prove the value.
 - "translation" is the same fact in the other supported language ("en-US" or "pt-BR"). Preserve
   numbers, dates, technology names, employer names, institution names, and person names exactly.
   Repeat proper nouns unchanged. If the value is language-neutral, repeat it unchanged.
@@ -2000,11 +2043,20 @@ EXTRACTED LINKEDIN PDF TEXT (UNTRUSTED DATA)
 """
 
 
-def build_request_body(model: str, prompt: str) -> dict[str, Any]:
+def build_request_body(
+    model: str,
+    prompt: str,
+    max_response_tokens: int | None = None,
+) -> dict[str, Any]:
+    budget = (
+        resolve_max_response_tokens()
+        if max_response_tokens is None
+        else validate_token_budget(max_response_tokens, "max_response_tokens")
+    )
     request_body: dict[str, Any] = {
         "model": model,
         "temperature": 0.0,
-        "max_tokens": MAX_RESPONSE_TOKENS,
+        "max_tokens": budget,
         "provider": {"require_parameters": True},
         "response_format": {
             "type": "json_schema",

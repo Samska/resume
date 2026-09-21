@@ -48,7 +48,7 @@ You do not need to run Python or any local script.
 
 - Extracts the PDF text locally with `pdftotext -layout` inside the runner.
 - Detects the source language (a LinkedIn export is normally `pt-BR`).
-- Sends only the extracted text to one OpenRouter model using the existing `OPENROUTER_API_KEY` repository secret and the `OPENROUTER_MODEL` repository variable (default: `openrouter/auto`).
+- Sends only the extracted text to one OpenRouter model using the existing `OPENROUTER_API_KEY` repository secret and the `OPENROUTER_MODEL` repository variable (default: `openrouter/auto`). The model output budget is configurable through the `LINKEDIN_MAX_RESPONSE_TOKENS` repository variable (default: `24000`); neither variable contains secrets.
 - Requires a strict JSON response where every value carries a verbatim evidence quote from the PDF and a translation of the same fact for the other resume language. The model never writes Markdown.
 - Validates employers, titles, dates, locations, technologies, metrics, certifications, education, project names, URLs, and contact information, and fails closed on malformed, unsupported, or contradictory responses. There are no automatic paid retries.
 - Reconciles the profile against the current resumes without deleting existing content, and reports new facts, conflicts, and missing information.

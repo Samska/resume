@@ -43,6 +43,9 @@ concurrency:
 
 jobs:
   import:
+    # Auxiliary branches that first introduce this workflow must not process
+    # anything automatically; only main pushes and explicit manual runs do.
+    if: github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     env:
       EVENT_NAME: ${{ github.event_name }}
@@ -54,6 +57,7 @@ jobs:
       OUTPUT_BRANCH: sync/linkedin-profile-${{ github.run_id }}
       OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
       OPENROUTER_MODEL: ${{ vars.OPENROUTER_MODEL || 'openrouter/auto' }}
+      LINKEDIN_MAX_RESPONSE_TOKENS: ${{ vars.LINKEDIN_MAX_RESPONSE_TOKENS || '24000' }}
       # The runner context is only available inside steps, so use a static
       # runner-only temporary path outside the checkout.
       REPORT_PATH: /tmp/linkedin-import-report.md

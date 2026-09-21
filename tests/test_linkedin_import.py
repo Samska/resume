@@ -363,6 +363,20 @@ class ProfileValidationTests(unittest.TestCase):
         with self.assertRaisesRegex(ResumeImportError, "verbatim quote"):
             self._parse(data)
 
+    def test_evidence_is_limited_to_short_literal_quotes(self):
+        data = profile_response()
+        data["experience"][0]["description"][0]["evidence"] = "x" * 201
+        with self.assertRaisesRegex(ResumeImportError, "exceeds 200 characters"):
+            self._parse(data)
+        data = profile_response()
+        data["experience"][0]["description"][0]["evidence"] = "API automation"
+        profile = self._parse(data)
+        self.assertEqual(profile.experience[0].description[0].evidence, "API automation")
+        data = profile_response()
+        data["summary"][0]["evidence"] = "a summary paraphrase that is not in the pdf"
+        with self.assertRaisesRegex(ResumeImportError, "verbatim quote"):
+            self._parse(data)
+
     def test_empty_atom_requires_empty_evidence_and_translation(self):
         data = profile_response()
         data["contact"]["phone"] = {"text": "", "evidence": "Example Candidate", "translation": ""}
@@ -960,6 +974,26 @@ class RequestTests(unittest.TestCase):
         )
         for key in ("warnings", "conflicts", "source_language"):
             self.assertIn(key, IMPORT_PROFILE_SCHEMA["properties"])
+        evidence_schema = IMPORT_PROFILE_SCHEMA["properties"]["identity"]["properties"]["evidence"]
+        self.assertEqual(evidence_schema["maxLength"], 200)
+
+    def test_max_response_tokens_default_and_override(self):
+        self.assertEqual(build_request_body("example/model", "prompt")["max_tokens"], 24000)
+        explicit = build_request_body("example/model", "prompt", max_response_tokens=31000)
+        self.assertEqual(explicit["max_tokens"], 31000)
+        with patch.dict(os.environ, {"LINKEDIN_MAX_RESPONSE_TOKENS": "28000"}, clear=False):
+            overridden = build_request_body("example/model", "prompt")
+        self.assertEqual(overridden["max_tokens"], 28000)
+
+    def test_max_response_tokens_configuration_fails_closed(self):
+        with patch.dict(os.environ, {"LINKEDIN_MAX_RESPONSE_TOKENS": "not-a-number"}, clear=False):
+            with self.assertRaisesRegex(ResumeImportError, "LINKEDIN_MAX_RESPONSE_TOKENS"):
+                build_request_body("example/model", "prompt")
+        with patch.dict(os.environ, {"LINKEDIN_MAX_RESPONSE_TOKENS": "10"}, clear=False):
+            with self.assertRaisesRegex(ResumeImportError, "LINKEDIN_MAX_RESPONSE_TOKENS"):
+                build_request_body("example/model", "prompt")
+        with self.assertRaisesRegex(ResumeImportError, "max_response_tokens"):
+            build_request_body("example/model", "prompt", max_response_tokens=999_999)
 
     def test_anthropic_models_get_the_response_healing_plugin(self):
         anthropic = build_request_body("anthropic/claude-3.5-sonnet", "prompt")
@@ -1285,6 +1319,15 @@ class WorkflowContractTests(unittest.TestCase):
         ):
             with self.subTest(forbidden=forbidden):
                 self.assertNotIn(forbidden, workflow)
+
+    def test_workflow_has_main_branch_guard_and_token_budget_variable(self):
+        workflow = self._workflow()
+        self.assertIn(
+            "if: github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main'",
+            workflow,
+        )
+        self.assertIn("LINKEDIN_MAX_RESPONSE_TOKENS", workflow)
+        self.assertIn("vars.LINKEDIN_MAX_RESPONSE_TOKENS", workflow)
 
     def test_manual_inputs_are_required_and_have_no_implicit_pdf(self):
         workflow = self._workflow()
