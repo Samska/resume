@@ -16,7 +16,7 @@ Specialized in risk-based test strategy, automation architecture, API and integr
 
 ## Core Competencies
 
-**Quality Strategy & Planning:** Risk-based testing, test strategy, test planning, release readiness, coverage analysis, prioritization, and quality advocacy  
+**Quality Strategy & Planning:** Risk-based testing, test strategy, test planning, release readiness, coverage analysis, prioritization, and release risk assessment  
 **Technical Leadership & Mentorship:** Framework architecture, pipeline design, mentoring, code review, and knowledge sharing  
 **Test Automation Architecture:** Maintainable automation across web, mobile, API, E2E, integration, and regression layers  
 **API & Integration Quality:** REST API validation, integration flows, microservices, and test data management  
@@ -97,7 +97,7 @@ Feb 2018 - Aug 2020
 **CI/CD & Observability:** Git, GitHub Actions, Jenkins, Azure DevOps, New Relic, ELK Stack  
 **Programming Languages:** Java, Python, TypeScript, JavaScript, SQL  
 **Testing Domains:** Smoke Testing, Manual Testing, Functional Testing, Web Testing, Mobile Testing, Cross-browser Testing, API Testing, E2E Testing, Integration Testing, Regression Testing, Exploratory Testing, Acceptance Testing (UAT), Accessibility Testing (WCAG), Visual Regression Testing, Performance Testing  
-**Test Management:** Jira, Zephyr Scale, Xray  
+**Test Management & Execution:** Jira, Zephyr Scale, Xray, test case design, test execution, defect management  
 **Mobile & Product Diagnostics:** Xcode, Android Studio, Firebase Remote Config, Segment, Optimizely  
 **Accessibility & Visual Testing:** NVDA, JAWS, VoiceOver, TalkBack, WCAG, Applitools, Sauce Labs, LambdaTest  
 **Performance Testing:** JMeter, k6  
