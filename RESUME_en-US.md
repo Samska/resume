@@ -1,6 +1,6 @@
 # Samuel Andrade
 
-Senior QA Engineer | SDET | QA Automation | Quality Engineering
+Senior QA Engineer | QA Automation | Quality Engineering
 
 Location: Jundiaí, SP, Brazil  
 Phone: +55 11 983168056  
@@ -10,7 +10,7 @@ GitHub: [github.com/Samska](https://github.com/Samska)
 
 ## Professional Summary
 
-Senior QA Engineer / SDET with 7+ years of experience in test automation and quality engineering across web and mobile products, APIs, accessibility, visual regression, and distributed systems.
+Senior QA Engineer with 7+ years of experience in test automation and quality engineering across web and mobile products, APIs, accessibility, visual regression, and distributed systems.
 
 Specialized in risk-based test strategy, automation architecture, API and integration testing, CI/CD, and observability. Combines Java, Python, and TypeScript to evolve frameworks and pipelines, mentor QAs, and improve release confidence across the SDLC.
 
