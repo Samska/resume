@@ -90,6 +90,7 @@ Fev 2018 - Ago 2020
 
 ## Habilidades Técnicas
 
+**Práticas de Qualidade:** Testes Baseados em Risco, Estratégia de Testes, Planejamento de Testes, Desenho de Casos de Teste, Execução de Testes, Gestão de Defeitos, Gestão de Testes  
 **Automação de Testes:** Playwright, Selenium, Selenide, Cypress, Appium, Pytest, Robot Framework, Cucumber, JUnit, TestNG, BackstopJS, Vividus  
 **API e Integração:** REST Assured, Postman, Bruno, Charles Proxy  
 **CI/CD e Observabilidade:** Git, GitHub Actions, Jenkins, Azure DevOps, New Relic, ELK Stack  
