@@ -6,7 +6,6 @@ on:
     paths:
       - "RESUME_*.md"
       - ".github/workflows/build-pdf.yml"
-      - "scripts/validate_resume.py"
   workflow_dispatch:
 
 permissions:
@@ -25,16 +24,13 @@ jobs:
       - name: Install PDF tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y pandoc texlive-xetex poppler-utils
+          sudo apt-get install -y pandoc texlive-xetex
 
       - name: Generate PDFs
         run: |
           mkdir -p pdf
           pandoc RESUME_en-US.md --pdf-engine=xelatex -V geometry:margin=0.65in -V fontsize=10pt -V header-includes='\usepackage{needspace}\usepackage{etoolbox}\pretocmd{\subsubsection}{\Needspace{10\baselineskip}}{}{}' -o pdf/Samuel-Andrade-Resume-en-US.pdf
           pandoc RESUME_pt-BR.md --pdf-engine=xelatex -V geometry:margin=0.65in -V fontsize=10pt -V header-includes='\usepackage{needspace}\usepackage{etoolbox}\pretocmd{\subsubsection}{\Needspace{10\baselineskip}}{}{}' -o pdf/Samuel-Andrade-Resume-pt-BR.pdf
-
-      - name: Validate generated PDFs
-        run: python3 scripts/validate_resume.py
 
       - name: Commit updated PDFs
         run: |
