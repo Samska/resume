@@ -38,7 +38,7 @@ Jan 2026 - Set 2026 | São Paulo, São Paulo, Brasil | Remoto
 ### Senior QA Engineer | AB InBev
 Set 2024 - Jan 2026 | Campinas, São Paulo, Brasil | Híbrido
 
-- Defini e conduzi a estratégia de testes para jornadas de comércio web e mobile do BEES Customer em um time de 8 desenvolvedores e 2 QAs, apoiando releases quinzenais em iOS e Android e utilizando Xcode, Android Studio e LambdaTest na validação multiplataforma.
+- Defini e conduzi a estratégia de testes para jornadas de comércio web e mobile do BEES Customer em um time mobile com 4 desenvolvedores (2 iOS e 2 Android) e 1 QA, apoiando releases quinzenais em iOS e Android e utilizando Xcode, Android Studio e LambdaTest na validação multiplataforma.
 - Estruturei abordagens de testes locais e integrados usando mocks, ambientes INT e UAT, Firebase Remote Config, feature flags e testes A/B no Optimizely.
 - Desenvolvi e mantive automações E2E com Python, Pytest, Selenium e Appium para jornadas críticas web e mobile.
 - Fui referência técnica do time na reprodução de cenários complexos e isolamento da causa raiz de bugs com Charles Proxy e New Relic; validei APIs e integrações com Postman.
