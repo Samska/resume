@@ -90,6 +90,7 @@ Feb 2018 - Aug 2020
 
 ## Technical Skills
 
+**Quality Practices:** Risk-Based Testing, Test Strategy, Test Planning, Test Case Design, Test Execution, Defect Management, Test Management  
 **Test Automation:** Playwright, Selenium, Selenide, Cypress, Appium, Pytest, Robot Framework, Cucumber, JUnit, TestNG, BackstopJS, Vividus  
 **API & Integration:** REST Assured, Postman, Bruno, Charles Proxy  
 **CI/CD & Observability:** Git, GitHub Actions, Jenkins, Azure DevOps, New Relic, ELK Stack  
