@@ -1,12 +1,7 @@
 # Samuel Andrade
 
-Senior QA Engineer | QA Automation | Engenharia de Qualidade
-
-Localização: Jundiaí, São Paulo, Brasil  
-Telefone: +55 11 983168056  
-E-mail: [samuel.andradetp@live.com](mailto:samuel.andradetp@live.com)  
-LinkedIn: [linkedin.com/in/Samska](https://linkedin.com/in/Samska)  
-GitHub: [github.com/Samska](https://github.com/Samska)
+Jundiaí, São Paulo, Brasil | +55 11 983168056 | [samuel.andradetp@live.com](mailto:samuel.andradetp@live.com)  
+LinkedIn: [linkedin.com/in/Samska](https://linkedin.com/in/Samska) | GitHub: [github.com/Samska](https://github.com/Samska)
 
 ## Resumo Profissional
 
@@ -14,22 +9,13 @@ Senior QA Engineer com mais de 7 anos de experiência em automação de testes e
 
 Especializado em estratégia de testes baseada em risco, arquitetura de automação, testes de API e integração, CI/CD e observabilidade. Combino Java, Python e TypeScript para evoluir frameworks e pipelines, mentorar QAs e aumentar a confiança nas entregas ao longo do SDLC.
 
-## Competências Principais
-
-**Estratégia e Planejamento de Qualidade:** Testes baseados em risco, estratégia e planejamento de testes, release readiness, análise de cobertura, priorização e avaliação de riscos de release  
-**Liderança Técnica e Mentoria:** Arquitetura de frameworks, desenho de pipelines, mentoria, code review e compartilhamento de conhecimento  
-**Arquitetura de Automação de Testes:** Automações sustentáveis para web, mobile, API, E2E, integração e regressão  
-**Qualidade de APIs e Integrações:** Validação de APIs REST, fluxos de integração, microsserviços e gestão de dados de teste  
-**Testes Contínuos e CI/CD:** Gates automatizados de qualidade, fluxos de release, otimização de pipelines e melhoria dos ciclos de feedback  
-**Qualidade Web, Mobile e Acessibilidade:** Validação cross-browser e multiplataforma, iOS, Android, WCAG e tecnologias assistivas  
-**Análise de Defeitos e Incidentes:** Triagem de defeitos, análise de causa raiz, logs, métricas, monitoramento e evidências operacionais
-
 ## Experiência Profissional
 
 ### Senior QA Engineer | Trustly
 Jan 2026 - Set 2026 | São Paulo, São Paulo, Brasil | Remoto
 
-- Defini e conduzi estratégias de testes baseadas em risco para jornadas críticas de pagamentos em um squad de frontend com 14 desenvolvedores e 4 QAs, incluindo o planejamento de ciclos no Zephyr Scale para releases semanais.
+- No time Consumer Experience, trabalhei nas jornadas de frontend do Trustly Pay (Pay by Bank): seleção do banco e autorização da conta para pagamentos, com captura dos fundos em etapa posterior e possibilidade de reutilizar a autorização em novas transações.
+- Defini e conduzi estratégias de testes baseadas em risco para jornadas críticas de pagamentos em um squad com 14 desenvolvedores e 4 QAs, incluindo o planejamento de ciclos no Zephyr Scale para releases semanais.
 - Automatizei e mantive mais de 20 cenários E2E com Java, Selenide e Cucumber, cobrindo fluxos de sanity e regressão e reduzindo a execução manual recorrente nas releases semanais.
 - Desenhei e evoluí uma suite de regressão visual para sanity com 12 cenários usando TypeScript, Playwright, BackstopJS e Cucumber, contribuindo para a arquitetura do framework, pipelines CI/CD, parâmetros customizáveis e migrações.
 - Validei acessibilidade desktop e mobile com NVDA, JAWS, VoiceOver e TalkBack, seguindo diretrizes WCAG.
@@ -38,25 +24,30 @@ Jan 2026 - Set 2026 | São Paulo, São Paulo, Brasil | Remoto
 ### Senior QA Engineer | AB InBev
 Set 2024 - Jan 2026 | Campinas, São Paulo, Brasil | Híbrido
 
-- Defini e conduzi a estratégia de testes para jornadas de comércio web e mobile do BEES Customer em um time mobile com 4 desenvolvedores (2 iOS e 2 Android) e 1 QA, apoiando releases quinzenais em iOS e Android e utilizando Xcode, Android Studio e LambdaTest na validação multiplataforma.
+- No time de Purchase Management do BEES Customer, trabalhei na experiência mobile que centraliza histórico de pedidos e faturas, status das compras e acompanhamento de entregas para varejistas, em conjunto com as soluções de pagamentos e logística do ecossistema BEES.
+- Defini e conduzi a estratégia de testes para fluxos de histórico e acompanhamento de pedidos em um time mobile com 4 desenvolvedores (2 iOS e 2 Android) e 1 QA, apoiando releases quinzenais e utilizando Xcode, Android Studio e LambdaTest na validação multiplataforma.
 - Estruturei abordagens de testes locais e integrados usando mocks, ambientes INT e UAT, Firebase Remote Config, feature flags e testes A/B no Optimizely.
-- Desenvolvi e mantive automações E2E com Python, Pytest, Selenium e Appium para jornadas críticas web e mobile.
+- Desenvolvi e mantive automações E2E com Python, Pytest, Selenium e Appium para jornadas críticas do aplicativo mobile.
 - Fui referência técnica do time na reprodução de cenários complexos e isolamento da causa raiz de bugs com Charles Proxy e New Relic; validei APIs e integrações com Postman.
 - Validei implementações de analytics e eventos no Segment, contribuindo para a confiabilidade dos dados do produto.
+- Usei Cursor e ferramentas integradas via MCP para apoiar análise, automação de testes e investigação de defeitos nas atividades de QA.
 
 ### Senior QA Engineer | CI&T
 Dez 2022 - Ago 2024 | São Paulo, São Paulo, Brasil | Remoto
 
+- Em um dos projetos desse período, atuei na qualidade de uma plataforma web de dispositivos médicos que disponibiliza informações de produtos e recursos clínicos para profissionais de saúde em diferentes mercados, exigindo consistência funcional e visual entre sites.
 - Atuei na definição da arquitetura do Robot Framework, em parceria com o QA Lead, durante a migração do Vividus; mentorei QAs juniores e plenos e revisei código Robot Framework.
 - Integrei Robot Framework com Applitools Eyes, Sauce Labs e Jenkins, permitindo a execução de mais de 100 testes visuais em batches paralelos e em três viewports.
 - Otimizei a execução da regressão no Robot Framework por meio do paralelismo, remoção de waits desnecessários e melhoria das pipelines Jenkins com parâmetros customizáveis e artefatos melhores, aumentando também a cobertura de jornadas críticas.
-- Estruturei estratégias e planos de testes em um time full-stack com 8 desenvolvedores e 2 QAs, atuando em três programas globais de clientes dos setores de bebidas, dispositivos médicos e alimentos e alinhando a cobertura às releases quinzenais e à entrega entre diferentes áreas.
+- Estruturei estratégias e planos de testes em um time full-stack com 8 desenvolvedores e 2 QAs, alinhando a cobertura às releases quinzenais e à entrega entre diferentes áreas.
 - Monitorei o comportamento das aplicações com New Relic e investiguei incidentes usando logs, métricas e evidências operacionais no ELK Stack.
+- Usei CI&T FLOW, plataforma de IA generativa da CI&T, para apoiar atividades de análise e testes durante o desenvolvimento de software.
 - Recebi o reconhecimento "Mission Accomplished" da CI&T por entregas consistentes, compartilhamento proativo de conhecimento, melhorias no framework de testes e apoio a outros QAs.
 
 ### Mid-Level QA Engineer | CI&T
 Jan 2022 - Dez 2022 | São Paulo, São Paulo, Brasil | Remoto
 
+- No time de EDI (Electronic Data Interchange), trabalhei com a troca automatizada de pedidos de compra entre sistemas de varejistas e uma plataforma de comércio B2B, um fluxo que depende da consistência dos dados no recebimento e processamento dos pedidos.
 - Planejei e executei testes funcionais e não funcionais em um time backend com 8 desenvolvedores e 2 QAs, com foco na mitigação de riscos.
 - Automatizei cenários E2E com Pytest e Selenium.
 - Validei APIs e microsserviços com Postman e REST Assured.
@@ -66,6 +57,7 @@ Jan 2022 - Dez 2022 | São Paulo, São Paulo, Brasil | Remoto
 ### Software QA Engineer | e.Mix
 Jul 2021 - Jan 2022 | São Paulo, São Paulo, Brasil | Remoto
 
+- Atuei no FollowNet, plataforma web de comércio exterior que centraliza eventos, documentos e alertas de importação e exportação para agentes de carga e despachantes aduaneiros, permitindo acompanhar operações e identificar exceções em um só lugar.
 - Planejei e executei testes funcionais e não funcionais para aplicações web e APIs REST.
 - Automatizei cenários de API e E2E com Postman, Newman e Robot Framework.
 - Executei testes de performance, carga e estresse com JMeter e integrei a execução dos testes em pipelines Azure DevOps.
@@ -90,15 +82,16 @@ Fev 2018 - Ago 2020
 **Português:** Nativo  
 **Inglês:** C2 Proficient (EF SET English Certificate 73/100)
 
-## Habilidades Técnicas
+## Competências e Habilidades Técnicas
 
-**Automação de Testes:** Playwright, Selenium, Selenide, Cypress, Appium, Pytest, Robot Framework, Cucumber, JUnit, TestNG, BackstopJS, Vividus  
-**API e Integração:** REST Assured, Postman, Bruno, Charles Proxy  
-**CI/CD e Observabilidade:** Git, GitHub Actions, Jenkins, Azure DevOps, New Relic, ELK Stack  
+**Estratégia de QA e Liderança Técnica:** Testes baseados em risco, estratégia e planejamento de testes, análise de cobertura, priorização, avaliação de riscos de release, release readiness, arquitetura de frameworks, desenho de pipelines, mentoria, code review, compartilhamento de conhecimento  
+**Arquitetura de Automação de Testes:** Automações sustentáveis para web, mobile, API, E2E, integração e regressão; Playwright, Selenium, Selenide, Cypress, Appium, Pytest, Robot Framework, Cucumber, JUnit, TestNG, BackstopJS, Vividus  
+**Qualidade de APIs e Integrações:** Validação de APIs REST, fluxos de integração, microsserviços, gestão de dados de teste; REST Assured, Postman, Bruno, Charles Proxy  
+**Testes Contínuos, CI/CD e Observabilidade:** Gates automatizados de qualidade, fluxos de release, otimização de pipelines, melhoria dos ciclos de feedback, logs, métricas, monitoramento, evidências operacionais; Git, GitHub Actions, Jenkins, Azure DevOps, New Relic, ELK Stack  
 **Linguagens de Programação:** Java, Python, TypeScript, JavaScript, SQL  
 **Domínios de Teste:** Smoke Testing, Testes Manuais, Testes Funcionais, Testes Web, Testes Mobile, Cross-browser Testing, Testes de API, Testes E2E, Testes de Integração, Testes de Regressão, Testes Exploratórios, Testes de Aceitação (UAT), Testes de Acessibilidade (WCAG), Testes de Regressão Visual, Testes de Performance  
-**Gestão e Execução de Testes:** Jira, Zephyr Scale, Xray, desenho de casos de teste, execução de testes, gestão de defeitos  
-**Mobile e Diagnóstico de Produto:** Xcode, Android Studio, Firebase Remote Config, Segment, Optimizely  
-**Acessibilidade e Testes Visuais:** NVDA, JAWS, VoiceOver, TalkBack, WCAG, Applitools, Sauce Labs, LambdaTest  
+**Gestão de Testes e Análise de Incidentes:** Jira, Zephyr Scale, Xray, desenho de casos de teste, execução de testes, gestão de defeitos, triagem de defeitos, análise de causa raiz  
+**Mobile e Diagnóstico de Produto:** Validação multiplataforma, iOS, Android, Xcode, Android Studio, Firebase Remote Config, Segment, Optimizely  
+**Acessibilidade e Testes Visuais:** Conformidade com WCAG, tecnologias assistivas, NVDA, JAWS, VoiceOver, TalkBack, Applitools, Sauce Labs, LambdaTest  
 **Testes de Performance:** JMeter, k6  
 **Engenharia Assistida por IA:** GitHub Copilot, Claude Code, Cursor, workflows com MCP

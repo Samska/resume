@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - "RESUME_*.md"
+      - "resume-style.tex"
       - ".github/workflows/build-pdf.yml"
       - ".github/workflows/preview-pdf.yml"
   workflow_dispatch:
@@ -21,13 +22,13 @@ jobs:
       - name: Install PDF tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y pandoc texlive-xetex
+          sudo apt-get install -y pandoc texlive-xetex texlive-latex-extra fonts-lmodern
 
       - name: Generate preview PDFs
         run: |
           mkdir -p preview
-          pandoc RESUME_en-US.md --pdf-engine=xelatex -V geometry:margin=0.65in -V fontsize=10pt -V header-includes='\usepackage{needspace}\usepackage{etoolbox}\usepackage[none]{hyphenat}\pretocmd{\subsection}{\Needspace{12\baselineskip}}{}{}\pretocmd{\subsubsection}{\Needspace{10\baselineskip}}{}{}\hyphenpenalty=10000\exhyphenpenalty=10000\sloppy' -o preview/Samuel-Andrade-Resume-en-US.pdf
-          pandoc RESUME_pt-BR.md --pdf-engine=xelatex -V geometry:margin=0.65in -V fontsize=10pt -V header-includes='\usepackage{needspace}\usepackage{etoolbox}\usepackage[none]{hyphenat}\pretocmd{\subsection}{\Needspace{12\baselineskip}}{}{}\pretocmd{\subsubsection}{\Needspace{10\baselineskip}}{}{}\hyphenpenalty=10000\exhyphenpenalty=10000\sloppy' -o preview/Samuel-Andrade-Resume-pt-BR.pdf
+          pandoc RESUME_en-US.md --pdf-engine=xelatex -V geometry:margin=0.68in -V fontsize=10pt -V 'mainfont=Latin Modern Sans' -H resume-style.tex -o preview/Samuel-Andrade-Resume-en-US.pdf
+          pandoc RESUME_pt-BR.md --pdf-engine=xelatex -V geometry:margin=0.68in -V fontsize=10pt -V 'mainfont=Latin Modern Sans' -H resume-style.tex -o preview/Samuel-Andrade-Resume-pt-BR.pdf
 
       - name: Verify preview files
         run: |
