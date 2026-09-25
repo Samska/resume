@@ -29,7 +29,7 @@ Especializado em estratégia de testes baseada em risco, arquitetura de automaç
 ### Senior QA Engineer | Trustly
 Jan 2026 - Set 2026 | São Paulo, São Paulo, Brasil | Remoto
 
-- Testei fluxos do Trustly Pay nos componentes Widget e Lightbox, incluindo busca e seleção de instituições financeiras ou entrada manual, login nativo ou OAuth, escolha da conta bancária e autorização de transações.
+- A jornada de pagamento do Trustly Pay passava pelo Widget, para acesso rápido ou entrada manual de instituições financeiras, e pelo Lightbox, para busca, autenticação nativa ou OAuth, seleção da conta e autorização da transação.
 - Defini e conduzi estratégias de testes baseadas em risco para jornadas críticas de pagamento no time de Consumer Experience, em um squad de frontend com 14 desenvolvedores e 4 QAs, incluindo o planejamento de ciclos no Zephyr Scale para releases semanais.
 - Automatizei e mantive mais de 20 cenários E2E com Java, Selenide e Cucumber, cobrindo fluxos de sanity e regressão e reduzindo a execução manual recorrente nas releases semanais.
 - Desenhei e evoluí uma suite de regressão visual para sanity com 12 cenários usando TypeScript, Playwright, BackstopJS e Cucumber, contribuindo para a arquitetura do framework, pipelines CI/CD, parâmetros customizáveis e migrações.
@@ -39,7 +39,8 @@ Jan 2026 - Set 2026 | São Paulo, São Paulo, Brasil | Remoto
 ### Senior QA Engineer | AB InBev
 Set 2024 - Jan 2026 | Campinas, São Paulo, Brasil | Híbrido
 
-- Defini e conduzi a estratégia de testes para jornadas mobile de Purchase Management do BEES Customer, envolvendo pedidos e faturas, em um time com 4 desenvolvedores (2 iOS e 2 Android) e 1 QA, apoiando releases quinzenais em iOS e Android e utilizando Xcode, Android Studio e LambdaTest na validação multiplataforma.
+- O Purchase Management do BEES Customer reunia, no aplicativo mobile, as jornadas de pedidos e faturas dos clientes.
+- Defini e conduzi a estratégia de testes para essas jornadas em um time com 4 desenvolvedores (2 iOS e 2 Android) e 1 QA, apoiando releases quinzenais em iOS e Android e utilizando Xcode, Android Studio e LambdaTest na validação multiplataforma.
 - Estruturei abordagens de testes locais e integrados usando mocks, ambientes INT e UAT, Firebase Remote Config, feature flags e testes A/B no Optimizely.
 - Contribuí para a entrega do Track My Delivery, com rastreamento do pedido em tempo real, e do Orders and Invoice Unification, que consolidou a visibilidade das faturas em cada pedido e criou um ponto de entrada para pagamentos.
 - Usei Cursor e workflows baseados em MCP para acelerar atividades recorrentes de engenharia e testes.
@@ -62,7 +63,8 @@ Dez 2022 - Ago 2024 | São Paulo, São Paulo, Brasil | Remoto
 ### Mid-Level QA Engineer | CI&T
 Jan 2022 - Dez 2022 | São Paulo, São Paulo, Brasil | Remoto
 
-- Planejei e executei testes funcionais e não funcionais em um time backend com 8 desenvolvedores e 2 QAs, com foco na mitigação de riscos em integrações de intercâmbio eletrônico de dados (EDI).
+- O BEES EDI viabilizava a troca automatizada e padronizada de documentos e dados comerciais entre sistemas, integrando fluxos de negócio sem intervenção manual.
+- Planejei e executei testes funcionais e não funcionais em um time backend com 8 desenvolvedores e 2 QAs, priorizando a mitigação de riscos nos fluxos de integração.
 - Automatizei cenários E2E com Pytest e Selenium.
 - Validei APIs e integrações EDI com Postman e REST Assured.
 - Integrei a execução de testes em pipelines Azure DevOps e monitorei o comportamento das aplicações com New Relic.
@@ -71,7 +73,8 @@ Jan 2022 - Dez 2022 | São Paulo, São Paulo, Brasil | Remoto
 ### Software QA Engineer | e.Mix
 Jul 2021 - Jan 2022 | São Paulo, São Paulo, Brasil | Remoto
 
-- Planejei e executei testes funcionais e não funcionais em aplicações web e APIs REST do FollowNet. A plataforma de comércio exterior atende agentes de carga, comissárias de despacho e trading companies; centraliza eventos, documentos, alertas, pedidos de compra, part numbers e KPIs de importação/exportação, além de automatizar consultas ao Siscomex e portais aduaneiros.
+- O FollowNet é uma plataforma de comércio exterior para agentes de carga, comissárias de despacho e trading companies. Centraliza eventos, documentos, alertas, pedidos de compra, part numbers e KPIs de importação e exportação, além de automatizar consultas ao Siscomex e ao Mantra.
+- Planejei e executei testes funcionais e não funcionais em aplicações web e APIs REST.
 - Automatizei cenários de API e E2E com Postman, Newman e Robot Framework.
 - Executei testes de performance, carga e estresse com JMeter e integrei a execução dos testes em pipelines Azure DevOps.
 
