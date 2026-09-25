@@ -51,7 +51,7 @@ Set 2024 - Jan 2026 | Campinas, São Paulo, Brasil | Híbrido
 ### Senior QA Engineer | CI&T
 Dez 2022 - Ago 2024 | São Paulo, São Paulo, Brasil | Remoto
 
-- Atuei em um time de plataforma medtech responsável por manter o core da plataforma funcionando e aplicar patches de segurança.
+- O projeto de tecnologia médica tinha como desafio manter o núcleo da plataforma estável e aplicar patches de segurança.
 - Criei agentes e workflows no CI&T Flow para acelerar atividades recorrentes do meu dia a dia como QA Engineer.
 - Atuei na definição da arquitetura do Robot Framework, em parceria com o QA Lead, durante a migração do Vividus; mentorei QAs juniores e plenos e revisei código Robot Framework.
 - Integrei Robot Framework com Applitools Eyes, Sauce Labs e Jenkins, permitindo a execução de mais de 100 testes visuais em batches paralelos e em três viewports.
