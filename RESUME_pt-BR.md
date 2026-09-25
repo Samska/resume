@@ -29,7 +29,8 @@ Especializado em estratégia de testes baseada em risco, arquitetura de automaç
 ### Senior QA Engineer | Trustly
 Jan 2026 - Set 2026 | São Paulo, São Paulo, Brasil | Remoto
 
-- Defini e conduzi estratégias de testes baseadas em risco para jornadas críticas de pagamentos em um squad de frontend com 14 desenvolvedores e 4 QAs, incluindo o planejamento de ciclos no Zephyr Scale para releases semanais.
+- No time Consumer Experience, trabalhei nas jornadas de frontend do Trustly Pay (Pay by Bank): seleção do banco e autorização da conta para pagamentos, com captura dos fundos em etapa posterior e possibilidade de reutilizar a autorização em novas transações.
+- Defini e conduzi estratégias de testes baseadas em risco para jornadas críticas de pagamentos em um squad com 14 desenvolvedores e 4 QAs, incluindo o planejamento de ciclos no Zephyr Scale para releases semanais.
 - Automatizei e mantive mais de 20 cenários E2E com Java, Selenide e Cucumber, cobrindo fluxos de sanity e regressão e reduzindo a execução manual recorrente nas releases semanais.
 - Desenhei e evoluí uma suite de regressão visual para sanity com 12 cenários usando TypeScript, Playwright, BackstopJS e Cucumber, contribuindo para a arquitetura do framework, pipelines CI/CD, parâmetros customizáveis e migrações.
 - Validei acessibilidade desktop e mobile com NVDA, JAWS, VoiceOver e TalkBack, seguindo diretrizes WCAG.
@@ -38,25 +39,28 @@ Jan 2026 - Set 2026 | São Paulo, São Paulo, Brasil | Remoto
 ### Senior QA Engineer | AB InBev
 Set 2024 - Jan 2026 | Campinas, São Paulo, Brasil | Híbrido
 
-- Defini e conduzi a estratégia de testes para jornadas de comércio web e mobile do BEES Customer em um time mobile com 4 desenvolvedores (2 iOS e 2 Android) e 1 QA, apoiando releases quinzenais em iOS e Android e utilizando Xcode, Android Studio e LambdaTest na validação multiplataforma.
+- No time de Purchase Management do BEES Customer, trabalhei na experiência mobile que centraliza histórico de pedidos e faturas, status das compras e acompanhamento de entregas para varejistas, em conjunto com as soluções de pagamentos e logística do ecossistema BEES.
+- Defini e conduzi a estratégia de testes para fluxos de histórico e acompanhamento de pedidos em um time mobile com 4 desenvolvedores (2 iOS e 2 Android) e 1 QA, apoiando releases quinzenais e utilizando Xcode, Android Studio e LambdaTest na validação multiplataforma.
 - Estruturei abordagens de testes locais e integrados usando mocks, ambientes INT e UAT, Firebase Remote Config, feature flags e testes A/B no Optimizely.
-- Desenvolvi e mantive automações E2E com Python, Pytest, Selenium e Appium para jornadas críticas web e mobile.
+- Desenvolvi e mantive automações E2E com Python, Pytest, Selenium e Appium para jornadas críticas do aplicativo mobile.
 - Fui referência técnica do time na reprodução de cenários complexos e isolamento da causa raiz de bugs com Charles Proxy e New Relic; validei APIs e integrações com Postman.
 - Validei implementações de analytics e eventos no Segment, contribuindo para a confiabilidade dos dados do produto.
 
 ### Senior QA Engineer | CI&T
 Dez 2022 - Ago 2024 | São Paulo, São Paulo, Brasil | Remoto
 
+- Em um dos projetos desse período, atuei na qualidade de uma plataforma web de dispositivos médicos que disponibiliza informações de produtos e recursos clínicos para profissionais de saúde em diferentes mercados, exigindo consistência funcional e visual entre sites.
 - Atuei na definição da arquitetura do Robot Framework, em parceria com o QA Lead, durante a migração do Vividus; mentorei QAs juniores e plenos e revisei código Robot Framework.
 - Integrei Robot Framework com Applitools Eyes, Sauce Labs e Jenkins, permitindo a execução de mais de 100 testes visuais em batches paralelos e em três viewports.
 - Otimizei a execução da regressão no Robot Framework por meio do paralelismo, remoção de waits desnecessários e melhoria das pipelines Jenkins com parâmetros customizáveis e artefatos melhores, aumentando também a cobertura de jornadas críticas.
-- Estruturei estratégias e planos de testes em um time full-stack com 8 desenvolvedores e 2 QAs, atuando em três programas globais de clientes dos setores de bebidas, dispositivos médicos e alimentos e alinhando a cobertura às releases quinzenais e à entrega entre diferentes áreas.
+- Estruturei estratégias e planos de testes em um time full-stack com 8 desenvolvedores e 2 QAs, alinhando a cobertura às releases quinzenais e à entrega entre diferentes áreas.
 - Monitorei o comportamento das aplicações com New Relic e investiguei incidentes usando logs, métricas e evidências operacionais no ELK Stack.
 - Recebi o reconhecimento "Mission Accomplished" da CI&T por entregas consistentes, compartilhamento proativo de conhecimento, melhorias no framework de testes e apoio a outros QAs.
 
 ### Mid-Level QA Engineer | CI&T
 Jan 2022 - Dez 2022 | São Paulo, São Paulo, Brasil | Remoto
 
+- No time de EDI (Electronic Data Interchange), trabalhei com a troca automatizada de pedidos de compra entre sistemas de varejistas e uma plataforma de comércio B2B, um fluxo que depende da consistência dos dados no recebimento e processamento dos pedidos.
 - Planejei e executei testes funcionais e não funcionais em um time backend com 8 desenvolvedores e 2 QAs, com foco na mitigação de riscos.
 - Automatizei cenários E2E com Pytest e Selenium.
 - Validei APIs e microsserviços com Postman e REST Assured.
@@ -66,6 +70,7 @@ Jan 2022 - Dez 2022 | São Paulo, São Paulo, Brasil | Remoto
 ### Software QA Engineer | e.Mix
 Jul 2021 - Jan 2022 | São Paulo, São Paulo, Brasil | Remoto
 
+- Atuei no FollowNet, plataforma web de comércio exterior que centraliza eventos, documentos e alertas de importação e exportação para agentes de carga e despachantes aduaneiros, permitindo acompanhar operações e identificar exceções em um só lugar.
 - Planejei e executei testes funcionais e não funcionais para aplicações web e APIs REST.
 - Automatizei cenários de API e E2E com Postman, Newman e Robot Framework.
 - Executei testes de performance, carga e estresse com JMeter e integrei a execução dos testes em pipelines Azure DevOps.
