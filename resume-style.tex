@@ -13,6 +13,13 @@
 \titlespacing*{\subsubsection}{0pt}{0.85em}{0.12em}
 
 \pretocmd{\subsection}{\Needspace{11\baselineskip}}{}{}
+% Avoid starting the skills inventory at the bottom of a page.
+\let\resumeOldSubsection\subsection
+\renewcommand{\subsection}[1]{%
+  \ifstrequal{#1}{Skills and Competencies}{\Needspace{25\baselineskip}}{}%
+  \ifstrequal{#1}{Competências e Habilidades Técnicas}{\Needspace{25\baselineskip}}{}%
+  \resumeOldSubsection{#1}%
+}
 \pretocmd{\subsubsection}{\Needspace{9\baselineskip}}{}{}
 \hyphenpenalty=10000
 \exhyphenpenalty=10000
