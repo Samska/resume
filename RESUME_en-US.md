@@ -1,7 +1,5 @@
 # Samuel Andrade
 
-Senior QA Engineer | QA Automation | Quality Engineering
-
 Location: Jundiaí, São Paulo, Brazil  
 Phone: +55 11 983168056  
 Email: [samuel.andradetp@live.com](mailto:samuel.andradetp@live.com)  
@@ -45,6 +43,7 @@ Sep 2024 - Jan 2026 | Campinas, São Paulo, Brazil | Hybrid
 - Developed and maintained E2E automation with Python, Pytest, Selenium, and Appium for critical mobile app journeys.
 - Served as the team's technical reference for reproducing complex scenarios and isolating bug root causes with Charles Proxy and New Relic; validated APIs and integrations with Postman.
 - Verified analytics implementations and event data with Segment, supporting reliable product insights.
+- Used Cursor and MCP-integrated tools to support test analysis, automation, and defect investigation in QA workflows.
 
 ### Senior QA Engineer | CI&T
 Dec 2022 - Aug 2024 | São Paulo, São Paulo, Brazil | Remote
@@ -55,6 +54,7 @@ Dec 2022 - Aug 2024 | São Paulo, São Paulo, Brazil | Remote
 - Optimized Robot Framework regression execution by parallelizing suites, removing unnecessary waits, and improving Jenkins pipelines with configurable parameters and better artifacts, while increasing coverage of critical user journeys.
 - Designed test strategies and plans within a full-stack team of 8 developers and 2 QAs, aligning coverage with biweekly releases and cross-functional delivery.
 - Monitored application behavior with New Relic and investigated incidents using ELK Stack logs, metrics, and operational evidence.
+- Used CI&T FLOW, CI&T's generative AI platform, to support QA analysis and testing throughout software development.
 - Received CI&T's "Mission Accomplished" recognition for consistent delivery, proactive knowledge sharing, test framework improvements, and support for other QAs.
 
 ### Mid-Level QA Engineer | CI&T
