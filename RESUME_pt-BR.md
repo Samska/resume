@@ -29,7 +29,7 @@ Especializado em estratégia de testes baseada em risco, arquitetura de automaç
 ### Senior QA Engineer | Trustly
 Jan 2026 - Set 2026 | São Paulo, São Paulo, Brasil | Remoto
 
-- Testei fluxos do Trustly Pay, incluindo o Widget de seleção de bancos (JavaScript) e o Lightbox de autenticação, da busca e seleção da instituição ao login nativo ou OAuth, à escolha da conta bancária e à autorização da transação.
+- Testei fluxos do Trustly Pay nos componentes Widget e Lightbox, incluindo busca e seleção de instituições financeiras, login nativo ou OAuth, escolha da conta bancária e autorização de transações.
 - Defini e conduzi estratégias de testes baseadas em risco para jornadas críticas de pagamento no time de Consumer Experience, em um squad de frontend com 14 desenvolvedores e 4 QAs, incluindo o planejamento de ciclos no Zephyr Scale para releases semanais.
 - Automatizei e mantive mais de 20 cenários E2E com Java, Selenide e Cucumber, cobrindo fluxos de sanity e regressão e reduzindo a execução manual recorrente nas releases semanais.
 - Desenhei e evoluí uma suite de regressão visual para sanity com 12 cenários usando TypeScript, Playwright, BackstopJS e Cucumber, contribuindo para a arquitetura do framework, pipelines CI/CD, parâmetros customizáveis e migrações.
@@ -50,7 +50,7 @@ Set 2024 - Jan 2026 | Campinas, São Paulo, Brasil | Híbrido
 ### Senior QA Engineer | CI&T
 Dez 2022 - Ago 2024 | São Paulo, São Paulo, Brasil | Remoto
 
-- Atuei em um time de plataforma responsável pela manutenção do core de uma plataforma medtech em Drupal, incluindo manutenção de PHP e aplicação de patches de segurança.
+- Atuei em um time de plataforma medtech responsável por manter o core da plataforma funcionando e aplicar patches de segurança.
 - Criei agentes e workflows no CI&T Flow para acelerar atividades recorrentes do meu dia a dia como QA Engineer.
 - Atuei na definição da arquitetura do Robot Framework, em parceria com o QA Lead, durante a migração do Vividus; mentorei QAs juniores e plenos e revisei código Robot Framework.
 - Integrei Robot Framework com Applitools Eyes, Sauce Labs e Jenkins, permitindo a execução de mais de 100 testes visuais em batches paralelos e em três viewports.
@@ -64,14 +64,14 @@ Jan 2022 - Dez 2022 | São Paulo, São Paulo, Brasil | Remoto
 
 - Planejei e executei testes funcionais e não funcionais em um time backend com 8 desenvolvedores e 2 QAs, com foco na mitigação de riscos em integrações de intercâmbio eletrônico de dados (EDI).
 - Automatizei cenários E2E com Pytest e Selenium.
-- Validei APIs e microsserviços Java com Postman e REST Assured, em fluxos que utilizavam Redis e Kafka.
+- Validei APIs e integrações EDI com Postman e REST Assured.
 - Integrei a execução de testes em pipelines Azure DevOps e monitorei o comportamento das aplicações com New Relic.
 - Recebi o reconhecimento "Client Satisfaction" da CI&T pela rápida adaptação, comunicação profissional, resolução de problemas e conquista da confiança do cliente.
 
 ### Software QA Engineer | e.Mix
 Jul 2021 - Jan 2022 | São Paulo, São Paulo, Brasil | Remoto
 
-- Planejei e executei testes funcionais e não funcionais em aplicações web e APIs REST do FollowNet, plataforma .NET com frontend em Vue.js para comércio exterior que centraliza eventos, documentos, alertas, pedidos de compra, part numbers e KPIs de importação/exportação e automatiza consultas ao Siscomex e portais aduaneiros.
+- Planejei e executei testes funcionais e não funcionais em aplicações web e APIs REST do FollowNet. A plataforma de comércio exterior atende agentes de carga, comissárias de despacho e trading companies; centraliza eventos, documentos, alertas, pedidos de compra, part numbers e KPIs de importação/exportação, além de automatizar consultas ao Siscomex e portais aduaneiros.
 - Automatizei cenários de API e E2E com Postman, Newman e Robot Framework.
 - Executei testes de performance, carga e estresse com JMeter e integrei a execução dos testes em pipelines Azure DevOps.
 
@@ -101,7 +101,6 @@ Fev 2018 - Ago 2020
 **API e Integração:** REST Assured, Postman, Bruno, Charles Proxy  
 **CI/CD e Observabilidade:** Git, GitHub Actions, Jenkins, Azure DevOps, New Relic, ELK Stack  
 **Linguagens de Programação:** Java, Python, TypeScript, JavaScript, SQL  
-**Frameworks e Plataformas:** .NET, Vue.js, Drupal, PHP  
 **Domínios de Teste:** Smoke Testing, Testes Manuais, Testes Funcionais, Testes Web, Testes Mobile, Cross-browser Testing, Testes de API, Testes E2E, Testes de Integração, Testes de Regressão, Testes Exploratórios, Testes de Aceitação (UAT), Testes de Acessibilidade (WCAG), Testes de Regressão Visual, Testes de Performance  
 **Gestão e Execução de Testes:** Jira, Zephyr Scale, Xray, desenho de casos de teste, execução de testes, gestão de defeitos  
 **Mobile e Diagnóstico de Produto:** Xcode, Android Studio, Firebase Remote Config, Segment, Optimizely  
