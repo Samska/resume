@@ -29,7 +29,7 @@ Specialized in risk-based test strategy, automation architecture, API and integr
 ### Senior QA Engineer | Trustly
 Jan 2026 - Sep 2026 | São Paulo, São Paulo, Brazil | Remote
 
-- Tested Trustly Pay flows across the Widget and Lightbox, including financial institution discovery and selection, native or OAuth login, bank account selection, and transaction authorization.
+- Tested Trustly Pay flows across the Widget and Lightbox, including financial institution discovery, selection, or manual entry, native or OAuth login, bank account selection, and transaction authorization.
 - Defined and drove risk-based test strategies for critical payment journeys on the Consumer Experience team, within a frontend squad of 14 developers and 4 QAs, including test-cycle planning in Zephyr Scale for weekly releases.
 - Automated and maintained 20+ E2E scenarios with Java, Selenide, and Cucumber, covering sanity and regression flows and reducing recurring manual execution for weekly releases.
 - Designed and evolved a 12-scenario visual regression sanity suite using TypeScript, Playwright, BackstopJS, and Cucumber, contributing to framework architecture, CI/CD pipelines, configurable parameters, and migration work.
