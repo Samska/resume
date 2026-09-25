@@ -29,7 +29,7 @@ Specialized in risk-based test strategy, automation architecture, API and integr
 ### Senior QA Engineer | Trustly
 Jan 2026 - Sep 2026 | São Paulo, São Paulo, Brazil | Remote
 
-- Tested Widget and Lightbox component flows, including financial institution discovery and selection, native or OAuth login, bank account selection, and transaction authorization.
+- Tested Trustly Pay flows through the JavaScript bank-selection Widget and authentication Lightbox, from institution discovery to native or OAuth login, bank account selection, and transaction authorization.
 - Defined and drove risk-based test strategies for critical payment journeys on the Consumer Experience team, within a frontend squad of 14 developers and 4 QAs, including test-cycle planning in Zephyr Scale for weekly releases.
 - Automated and maintained 20+ E2E scenarios with Java, Selenide, and Cucumber, covering sanity and regression flows and reducing recurring manual execution for weekly releases.
 - Designed and evolved a 12-scenario visual regression sanity suite using TypeScript, Playwright, BackstopJS, and Cucumber, contributing to framework architecture, CI/CD pipelines, configurable parameters, and migration work.
@@ -39,10 +39,11 @@ Jan 2026 - Sep 2026 | São Paulo, São Paulo, Brazil | Remote
 ### Senior QA Engineer | AB InBev
 Sep 2024 - Jan 2026 | Campinas, São Paulo, Brazil | Hybrid
 
-- Defined and drove the test strategy for BEES Customer Purchase Management web and mobile journeys involving orders and invoices, within a team of 4 developers (2 iOS and 2 Android) and 1 QA, supporting biweekly releases across iOS and Android and using Xcode, Android Studio, and LambdaTest for cross-platform validation.
+- Defined and drove the test strategy for BEES Customer Purchase Management mobile journeys involving orders and invoices, within a team of 4 developers (2 iOS and 2 Android) and 1 QA, supporting biweekly releases across iOS and Android and using Xcode, Android Studio, and LambdaTest for cross-platform validation.
 - Established local and integrated testing approaches using mocks, INT and UAT environments, Firebase Remote Config, feature flags, and Optimizely A/B tests.
 - Contributed to the delivery of Track My Delivery, with real-time order tracking, and Orders and Invoice Unification, which improved invoice visibility within each order and provided a payment entry point.
-- Developed and maintained E2E automation with Python, Pytest, Selenium, and Appium to cover critical web and mobile journeys.
+- Used Cursor and MCP-based workflows to accelerate recurring engineering and testing activities.
+- Developed and maintained E2E automation with Python, Pytest, Selenium, and Appium to cover critical mobile journeys.
 - Served as the team's technical reference for reproducing complex scenarios and isolating bug root causes with Charles Proxy and New Relic; validated APIs and integrations with Postman.
 - Verified analytics implementations and event data with Segment, supporting reliable product insights.
 
@@ -50,6 +51,7 @@ Sep 2024 - Jan 2026 | Campinas, São Paulo, Brazil | Hybrid
 Dec 2022 - Aug 2024 | São Paulo, São Paulo, Brazil | Remote
 
 - Worked on a platform team responsible for maintaining the core of a medical technology platform built on Drupal, including PHP maintenance and security patches.
+- Created agents and workflows in CI&T Flow to accelerate recurring tasks in my day-to-day work as a QA Engineer.
 - Co-defined the Robot Framework architecture with the QA Lead during the migration from Vividus, mentoring junior and mid-level QAs and reviewing Robot Framework code.
 - Integrated Robot Framework with Applitools Eyes, Sauce Labs, and Jenkins, enabling more than 100 visual tests to run in parallel batches across three viewports.
 - Optimized Robot Framework regression execution by parallelizing suites, removing unnecessary waits, and improving Jenkins pipelines with configurable parameters and better artifacts, while increasing coverage of critical user journeys.
@@ -69,7 +71,7 @@ Jan 2022 - Dec 2022 | São Paulo, São Paulo, Brazil | Remote
 ### Software QA Engineer | e.Mix
 Jul 2021 - Jan 2022 | São Paulo, São Paulo, Brazil | Remote
 
-- Planned and executed functional and non-functional tests for FollowNet, a .NET platform with a Vue.js frontend for international trade, across web applications and REST APIs; covered event, document, alert, purchase order, part number, and import/export KPI workflows.
+- Planned and executed functional and non-functional tests across FollowNet web applications and REST APIs, a .NET platform with a Vue.js frontend for international trade that centralizes events, documents, alerts, purchase orders, part numbers, and import/export KPIs and automates queries to Siscomex and customs portals.
 - Automated API and E2E scenarios with Postman, Newman, and Robot Framework.
 - Executed performance, load, and stress tests with JMeter and integrated test execution into Azure DevOps pipelines.
 
