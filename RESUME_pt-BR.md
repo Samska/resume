@@ -29,7 +29,7 @@ Especializado em estratégia de testes baseada em risco, arquitetura de automaç
 ### Senior QA Engineer | Trustly
 Jan 2026 - Set 2026 | São Paulo, São Paulo, Brasil | Remoto
 
-- Testei fluxos do Trustly Pay nos componentes Widget e Lightbox, incluindo busca e seleção de instituições financeiras, login nativo ou OAuth, escolha da conta bancária e autorização de transações.
+- Testei fluxos do Trustly Pay nos componentes Widget e Lightbox, incluindo busca e seleção de instituições financeiras ou entrada manual, login nativo ou OAuth, escolha da conta bancária e autorização de transações.
 - Defini e conduzi estratégias de testes baseadas em risco para jornadas críticas de pagamento no time de Consumer Experience, em um squad de frontend com 14 desenvolvedores e 4 QAs, incluindo o planejamento de ciclos no Zephyr Scale para releases semanais.
 - Automatizei e mantive mais de 20 cenários E2E com Java, Selenide e Cucumber, cobrindo fluxos de sanity e regressão e reduzindo a execução manual recorrente nas releases semanais.
 - Desenhei e evoluí uma suite de regressão visual para sanity com 12 cenários usando TypeScript, Playwright, BackstopJS e Cucumber, contribuindo para a arquitetura do framework, pipelines CI/CD, parâmetros customizáveis e migrações.
