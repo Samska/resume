@@ -29,7 +29,8 @@ Especializado em estratégia de testes baseada em risco, arquitetura de automaç
 ### Senior QA Engineer | Trustly
 Jan 2026 - Set 2026 | São Paulo, São Paulo, Brasil | Remoto
 
-- Defini e conduzi estratégias de testes baseadas em risco para jornadas críticas de pagamentos em um squad de frontend com 14 desenvolvedores e 4 QAs, incluindo o planejamento de ciclos no Zephyr Scale para releases semanais.
+- Testei fluxos dos componentes Widget e Lightbox, incluindo busca e seleção de instituições financeiras, login nativo ou OAuth, seleção de conta bancária e autorização de transações.
+- Defini e conduzi estratégias de testes baseadas em risco para jornadas críticas de pagamento no time de Consumer Experience, em um squad de frontend com 14 desenvolvedores e 4 QAs, incluindo o planejamento de ciclos no Zephyr Scale para releases semanais.
 - Automatizei e mantive mais de 20 cenários E2E com Java, Selenide e Cucumber, cobrindo fluxos de sanity e regressão e reduzindo a execução manual recorrente nas releases semanais.
 - Desenhei e evoluí uma suite de regressão visual para sanity com 12 cenários usando TypeScript, Playwright, BackstopJS e Cucumber, contribuindo para a arquitetura do framework, pipelines CI/CD, parâmetros customizáveis e migrações.
 - Validei acessibilidade desktop e mobile com NVDA, JAWS, VoiceOver e TalkBack, seguindo diretrizes WCAG.
@@ -38,8 +39,9 @@ Jan 2026 - Set 2026 | São Paulo, São Paulo, Brasil | Remoto
 ### Senior QA Engineer | AB InBev
 Set 2024 - Jan 2026 | Campinas, São Paulo, Brasil | Híbrido
 
-- Defini e conduzi a estratégia de testes para jornadas de comércio web e mobile do BEES Customer em um time mobile com 4 desenvolvedores (2 iOS e 2 Android) e 1 QA, apoiando releases quinzenais em iOS e Android e utilizando Xcode, Android Studio e LambdaTest na validação multiplataforma.
+- Defini e conduzi a estratégia de testes para jornadas web e mobile de Purchase Management do BEES Customer, envolvendo pedidos e faturas, em um time com 4 desenvolvedores (2 iOS e 2 Android) e 1 QA, apoiando releases quinzenais em iOS e Android e utilizando Xcode, Android Studio e LambdaTest na validação multiplataforma.
 - Estruturei abordagens de testes locais e integrados usando mocks, ambientes INT e UAT, Firebase Remote Config, feature flags e testes A/B no Optimizely.
+- Contribuí para a entrega do Track My Delivery, com rastreamento do pedido em tempo real, e do Orders and Invoice Unification, que consolidou a visibilidade das faturas em cada pedido e criou um ponto de entrada para pagamentos.
 - Desenvolvi e mantive automações E2E com Python, Pytest, Selenium e Appium para jornadas críticas web e mobile.
 - Fui referência técnica do time na reprodução de cenários complexos e isolamento da causa raiz de bugs com Charles Proxy e New Relic; validei APIs e integrações com Postman.
 - Validei implementações de analytics e eventos no Segment, contribuindo para a confiabilidade dos dados do produto.
@@ -47,6 +49,7 @@ Set 2024 - Jan 2026 | Campinas, São Paulo, Brasil | Híbrido
 ### Senior QA Engineer | CI&T
 Dez 2022 - Ago 2024 | São Paulo, São Paulo, Brasil | Remoto
 
+- Atuei em um time de plataforma responsável pela manutenção do core de uma plataforma medtech em Drupal, incluindo manutenção de PHP e aplicação de patches de segurança.
 - Atuei na definição da arquitetura do Robot Framework, em parceria com o QA Lead, durante a migração do Vividus; mentorei QAs juniores e plenos e revisei código Robot Framework.
 - Integrei Robot Framework com Applitools Eyes, Sauce Labs e Jenkins, permitindo a execução de mais de 100 testes visuais em batches paralelos e em três viewports.
 - Otimizei a execução da regressão no Robot Framework por meio do paralelismo, remoção de waits desnecessários e melhoria das pipelines Jenkins com parâmetros customizáveis e artefatos melhores, aumentando também a cobertura de jornadas críticas.
@@ -57,16 +60,16 @@ Dez 2022 - Ago 2024 | São Paulo, São Paulo, Brasil | Remoto
 ### Mid-Level QA Engineer | CI&T
 Jan 2022 - Dez 2022 | São Paulo, São Paulo, Brasil | Remoto
 
-- Planejei e executei testes funcionais e não funcionais em um time backend com 8 desenvolvedores e 2 QAs, com foco na mitigação de riscos.
+- Planejei e executei testes funcionais e não funcionais em um time backend com 8 desenvolvedores e 2 QAs, com foco na mitigação de riscos em integrações de intercâmbio eletrônico de dados (EDI).
 - Automatizei cenários E2E com Pytest e Selenium.
-- Validei APIs e microsserviços com Postman e REST Assured.
+- Validei APIs e microsserviços Java com Postman e REST Assured, em fluxos que utilizavam Redis e Kafka.
 - Integrei a execução de testes em pipelines Azure DevOps e monitorei o comportamento das aplicações com New Relic.
 - Recebi o reconhecimento "Client Satisfaction" da CI&T pela rápida adaptação, comunicação profissional, resolução de problemas e conquista da confiança do cliente.
 
 ### Software QA Engineer | e.Mix
 Jul 2021 - Jan 2022 | São Paulo, São Paulo, Brasil | Remoto
 
-- Planejei e executei testes funcionais e não funcionais para aplicações web e APIs REST.
+- Planejei e executei testes funcionais e não funcionais para o FollowNet, uma plataforma .NET com frontend em Vue.js para comércio exterior, em aplicações web e APIs REST; cobri fluxos de eventos, documentos, alertas, pedidos de compra, part numbers e KPIs de importação e exportação.
 - Automatizei cenários de API e E2E com Postman, Newman e Robot Framework.
 - Executei testes de performance, carga e estresse com JMeter e integrei a execução dos testes em pipelines Azure DevOps.
 
@@ -96,6 +99,7 @@ Fev 2018 - Ago 2020
 **API e Integração:** REST Assured, Postman, Bruno, Charles Proxy  
 **CI/CD e Observabilidade:** Git, GitHub Actions, Jenkins, Azure DevOps, New Relic, ELK Stack  
 **Linguagens de Programação:** Java, Python, TypeScript, JavaScript, SQL  
+**Frameworks e Plataformas:** .NET, Vue.js, Drupal, PHP  
 **Domínios de Teste:** Smoke Testing, Testes Manuais, Testes Funcionais, Testes Web, Testes Mobile, Cross-browser Testing, Testes de API, Testes E2E, Testes de Integração, Testes de Regressão, Testes Exploratórios, Testes de Aceitação (UAT), Testes de Acessibilidade (WCAG), Testes de Regressão Visual, Testes de Performance  
 **Gestão e Execução de Testes:** Jira, Zephyr Scale, Xray, desenho de casos de teste, execução de testes, gestão de defeitos  
 **Mobile e Diagnóstico de Produto:** Xcode, Android Studio, Firebase Remote Config, Segment, Optimizely  
