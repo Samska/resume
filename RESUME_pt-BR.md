@@ -1,26 +1,13 @@
 # Samuel Andrade
 
-Localização: Jundiaí, São Paulo, Brasil  
-Telefone: +55 11 983168056  
-E-mail: [samuel.andradetp@live.com](mailto:samuel.andradetp@live.com)  
-LinkedIn: [linkedin.com/in/Samska](https://linkedin.com/in/Samska)  
-GitHub: [github.com/Samska](https://github.com/Samska)
+Jundiaí, São Paulo, Brasil | +55 11 983168056 | [samuel.andradetp@live.com](mailto:samuel.andradetp@live.com)  
+LinkedIn: [linkedin.com/in/Samska](https://linkedin.com/in/Samska) | GitHub: [github.com/Samska](https://github.com/Samska)
 
 ## Resumo Profissional
 
 Senior QA Engineer com mais de 7 anos de experiência em automação de testes e engenharia de qualidade para produtos web e mobile, APIs, acessibilidade, regressão visual e sistemas distribuídos.
 
 Especializado em estratégia de testes baseada em risco, arquitetura de automação, testes de API e integração, CI/CD e observabilidade. Combino Java, Python e TypeScript para evoluir frameworks e pipelines, mentorar QAs e aumentar a confiança nas entregas ao longo do SDLC.
-
-## Competências Principais
-
-**Estratégia e Planejamento de Qualidade:** Testes baseados em risco, estratégia e planejamento de testes, release readiness, análise de cobertura, priorização e avaliação de riscos de release  
-**Liderança Técnica e Mentoria:** Arquitetura de frameworks, desenho de pipelines, mentoria, code review e compartilhamento de conhecimento  
-**Arquitetura de Automação de Testes:** Automações sustentáveis para web, mobile, API, E2E, integração e regressão  
-**Qualidade de APIs e Integrações:** Validação de APIs REST, fluxos de integração, microsserviços e gestão de dados de teste  
-**Testes Contínuos e CI/CD:** Gates automatizados de qualidade, fluxos de release, otimização de pipelines e melhoria dos ciclos de feedback  
-**Qualidade Web, Mobile e Acessibilidade:** Validação cross-browser e multiplataforma, iOS, Android, WCAG e tecnologias assistivas  
-**Análise de Defeitos e Incidentes:** Triagem de defeitos, análise de causa raiz, logs, métricas, monitoramento e evidências operacionais
 
 ## Experiência Profissional
 
@@ -94,6 +81,16 @@ Fev 2018 - Ago 2020
 
 **Português:** Nativo  
 **Inglês:** C2 Proficient (EF SET English Certificate 73/100)
+
+## Competências Principais
+
+**Estratégia e Planejamento de Qualidade:** Testes baseados em risco, estratégia e planejamento de testes, release readiness, análise de cobertura, priorização e avaliação de riscos de release  
+**Liderança Técnica e Mentoria:** Arquitetura de frameworks, desenho de pipelines, mentoria, code review e compartilhamento de conhecimento  
+**Arquitetura de Automação de Testes:** Automações sustentáveis para web, mobile, API, E2E, integração e regressão  
+**Qualidade de APIs e Integrações:** Validação de APIs REST, fluxos de integração, microsserviços e gestão de dados de teste  
+**Testes Contínuos e CI/CD:** Gates automatizados de qualidade, fluxos de release, otimização de pipelines e melhoria dos ciclos de feedback  
+**Qualidade Web, Mobile e Acessibilidade:** Validação cross-browser e multiplataforma, iOS, Android, WCAG e tecnologias assistivas  
+**Análise de Defeitos e Incidentes:** Triagem de defeitos, análise de causa raiz, logs, métricas, monitoramento e evidências operacionais
 
 ## Habilidades Técnicas
 

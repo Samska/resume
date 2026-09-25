@@ -1,26 +1,13 @@
 # Samuel Andrade
 
-Location: Jundiaí, São Paulo, Brazil  
-Phone: +55 11 983168056  
-Email: [samuel.andradetp@live.com](mailto:samuel.andradetp@live.com)  
-LinkedIn: [linkedin.com/in/Samska](https://linkedin.com/in/Samska)  
-GitHub: [github.com/Samska](https://github.com/Samska)
+Jundiaí, São Paulo, Brazil | +55 11 983168056 | [samuel.andradetp@live.com](mailto:samuel.andradetp@live.com)  
+LinkedIn: [linkedin.com/in/Samska](https://linkedin.com/in/Samska) | GitHub: [github.com/Samska](https://github.com/Samska)
 
 ## Professional Summary
 
 Senior QA Engineer with 7+ years of experience in test automation and quality engineering across web and mobile products, APIs, accessibility, visual regression, and distributed systems.
 
 Specialized in risk-based test strategy, automation architecture, API and integration testing, CI/CD, and observability. Combines Java, Python, and TypeScript to evolve frameworks and pipelines, mentor QAs, and improve release confidence across the SDLC.
-
-## Core Competencies
-
-**Quality Strategy & Planning:** Risk-based testing, test strategy, test planning, release readiness, coverage analysis, prioritization, and release risk assessment  
-**Technical Leadership & Mentorship:** Framework architecture, pipeline design, mentoring, code review, and knowledge sharing  
-**Test Automation Architecture:** Maintainable automation across web, mobile, API, E2E, integration, and regression layers  
-**API & Integration Quality:** REST API validation, integration flows, microservices, and test data management  
-**Continuous Testing & CI/CD:** Automated quality gates, release workflows, pipeline optimization, and feedback-cycle improvement  
-**Web, Mobile & Accessibility Quality:** Cross-browser and cross-platform validation, iOS, Android, WCAG, and assistive technologies  
-**Defect & Incident Analysis:** Defect triage, root-cause analysis, logs, metrics, monitoring, and operational evidence
 
 ## Professional Experience
 
@@ -94,6 +81,16 @@ Feb 2018 - Aug 2020
 
 **Portuguese:** Native  
 **English:** C2 Proficient (EF SET English Certificate 73/100)
+
+## Core Competencies
+
+**Quality Strategy & Planning:** Risk-based testing, test strategy, test planning, release readiness, coverage analysis, prioritization, and release risk assessment  
+**Technical Leadership & Mentorship:** Framework architecture, pipeline design, mentoring, code review, and knowledge sharing  
+**Test Automation Architecture:** Maintainable automation across web, mobile, API, E2E, integration, and regression layers  
+**API & Integration Quality:** REST API validation, integration flows, microservices, and test data management  
+**Continuous Testing & CI/CD:** Automated quality gates, release workflows, pipeline optimization, and feedback-cycle improvement  
+**Web, Mobile & Accessibility Quality:** Cross-browser and cross-platform validation, iOS, Android, WCAG, and assistive technologies  
+**Defect & Incident Analysis:** Defect triage, root-cause analysis, logs, metrics, monitoring, and operational evidence
 
 ## Technical Skills
 

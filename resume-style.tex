@@ -1,0 +1,19 @@
+% Shared styling for the English and Portuguese resume PDFs.
+% Keep the document in a single text flow for predictable PDF extraction.
+\usepackage{titlesec}
+\usepackage{needspace}
+\usepackage{etoolbox}
+\usepackage[none]{hyphenat}
+
+\titleformat{\section}{\fontsize{19}{23}\selectfont\bfseries}{}{0pt}{}
+\titlespacing*{\section}{0pt}{0pt}{0.35em}
+\titleformat{\subsection}{\fontsize{11}{14}\selectfont\bfseries}{}{0pt}{}[\vspace{0.18em}\titlerule]
+\titlespacing*{\subsection}{0pt}{1.15em}{0.5em}
+\titleformat{\subsubsection}{\fontsize{10.5}{13}\selectfont\bfseries}{}{0pt}{}
+\titlespacing*{\subsubsection}{0pt}{0.85em}{0.12em}
+
+\pretocmd{\subsection}{\Needspace{11\baselineskip}}{}{}
+\pretocmd{\subsubsection}{\Needspace{9\baselineskip}}{}{}
+\hyphenpenalty=10000
+\exhyphenpenalty=10000
+\AtBeginDocument{\raggedright\pagestyle{empty}}
