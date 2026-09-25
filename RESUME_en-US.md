@@ -29,7 +29,7 @@ Specialized in risk-based test strategy, automation architecture, API and integr
 ### Senior QA Engineer | Trustly
 Jan 2026 - Sep 2026 | São Paulo, São Paulo, Brazil | Remote
 
-- Tested Trustly Pay flows across the Widget and Lightbox, including financial institution discovery, selection, or manual entry, native or OAuth login, bank account selection, and transaction authorization.
+- Trustly Pay’s payment journey connected users to their financial institutions: the Widget provided quick institution access or manual entry, while the Lightbox supported search, native or OAuth authentication, account selection, and transaction authorization.
 - Defined and drove risk-based test strategies for critical payment journeys on the Consumer Experience team, within a frontend squad of 14 developers and 4 QAs, including test-cycle planning in Zephyr Scale for weekly releases.
 - Automated and maintained 20+ E2E scenarios with Java, Selenide, and Cucumber, covering sanity and regression flows and reducing recurring manual execution for weekly releases.
 - Designed and evolved a 12-scenario visual regression sanity suite using TypeScript, Playwright, BackstopJS, and Cucumber, contributing to framework architecture, CI/CD pipelines, configurable parameters, and migration work.
@@ -39,7 +39,8 @@ Jan 2026 - Sep 2026 | São Paulo, São Paulo, Brazil | Remote
 ### Senior QA Engineer | AB InBev
 Sep 2024 - Jan 2026 | Campinas, São Paulo, Brazil | Hybrid
 
-- Defined and drove the test strategy for BEES Customer Purchase Management mobile journeys involving orders and invoices, within a team of 4 developers (2 iOS and 2 Android) and 1 QA, supporting biweekly releases across iOS and Android and using Xcode, Android Studio, and LambdaTest for cross-platform validation.
+- BEES Customer Purchase Management brought customer order and invoice journeys together in the mobile app.
+- Defined and drove the test strategy for these journeys within a team of 4 developers (2 iOS and 2 Android) and 1 QA, supporting biweekly releases across iOS and Android and using Xcode, Android Studio, and LambdaTest for cross-platform validation.
 - Established local and integrated testing approaches using mocks, INT and UAT environments, Firebase Remote Config, feature flags, and Optimizely A/B tests.
 - Contributed to the delivery of Track My Delivery, with real-time order tracking, and Orders and Invoice Unification, which improved invoice visibility within each order and provided a payment entry point.
 - Used Cursor and MCP-based workflows to accelerate recurring engineering and testing activities.
@@ -62,7 +63,8 @@ Dec 2022 - Aug 2024 | São Paulo, São Paulo, Brazil | Remote
 ### Mid-Level QA Engineer | CI&T
 Jan 2022 - Dec 2022 | São Paulo, São Paulo, Brazil | Remote
 
-- Planned and executed functional and non-functional testing within a backend team of 8 developers and 2 QAs, focusing on risk mitigation across Electronic Data Interchange (EDI) integrations.
+- BEES EDI enabled standardized, automated exchange of commercial documents and data between systems, supporting business flows without manual intervention.
+- Planned and executed functional and non-functional testing within a backend team of 8 developers and 2 QAs, prioritizing risk mitigation across integration flows.
 - Automated E2E scenarios with Pytest and Selenium.
 - Validated APIs and EDI integrations with Postman and REST Assured.
 - Integrated test execution into Azure DevOps pipelines and monitored application behavior with New Relic.
@@ -71,7 +73,8 @@ Jan 2022 - Dec 2022 | São Paulo, São Paulo, Brazil | Remote
 ### Software QA Engineer | e.Mix
 Jul 2021 - Jan 2022 | São Paulo, São Paulo, Brazil | Remote
 
-- Planned and executed functional and non-functional tests across FollowNet web applications and REST APIs. The international trade platform serves freight forwarders, customs brokerage firms, and trading companies; it centralizes events, documents, alerts, purchase orders, part numbers, and import/export KPIs, and automates queries to Siscomex and customs portals.
+- FollowNet is a foreign trade platform for freight forwarders, customs brokers, and trading companies. It centralizes import/export events, documents, alerts, purchase orders, part numbers, and KPIs, and automates customs-system queries such as Siscomex and Mantra.
+- Planned and executed functional and non-functional tests for web applications and REST APIs.
 - Automated API and E2E scenarios with Postman, Newman, and Robot Framework.
 - Executed performance, load, and stress tests with JMeter and integrated test execution into Azure DevOps pipelines.
 
