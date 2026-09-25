@@ -51,7 +51,7 @@ Sep 2024 - Jan 2026 | Campinas, São Paulo, Brazil | Hybrid
 ### Senior QA Engineer | CI&T
 Dec 2022 - Aug 2024 | São Paulo, São Paulo, Brazil | Remote
 
-- Worked on a medical technology platform team responsible for keeping the platform core running and applying security patches.
+- The medical technology project focused on maintaining the platform core and applying security patches to keep it stable and secure.
 - Created agents and workflows in CI&T Flow to accelerate recurring tasks in my day-to-day work as a QA Engineer.
 - Co-defined the Robot Framework architecture with the QA Lead during the migration from Vividus, mentoring junior and mid-level QAs and reviewing Robot Framework code.
 - Integrated Robot Framework with Applitools Eyes, Sauce Labs, and Jenkins, enabling more than 100 visual tests to run in parallel batches across three viewports.
