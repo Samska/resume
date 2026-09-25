@@ -82,25 +82,16 @@ Feb 2018 - Aug 2020
 **Portuguese:** Native  
 **English:** C2 Proficient (EF SET English Certificate 73/100)
 
-## Core Competencies
+## Skills and Competencies
 
-**Quality Strategy & Planning:** Risk-based testing, test strategy, test planning, release readiness, coverage analysis, prioritization, and release risk assessment  
-**Technical Leadership & Mentorship:** Framework architecture, pipeline design, mentoring, code review, and knowledge sharing  
-**Test Automation Architecture:** Maintainable automation across web, mobile, API, E2E, integration, and regression layers  
-**API & Integration Quality:** REST API validation, integration flows, microservices, and test data management  
-**Continuous Testing & CI/CD:** Automated quality gates, release workflows, pipeline optimization, and feedback-cycle improvement  
-**Web, Mobile & Accessibility Quality:** Cross-browser and cross-platform validation, iOS, Android, WCAG, and assistive technologies  
-**Defect & Incident Analysis:** Defect triage, root-cause analysis, logs, metrics, monitoring, and operational evidence
-
-## Technical Skills
-
-**Test Automation:** Playwright, Selenium, Selenide, Cypress, Appium, Pytest, Robot Framework, Cucumber, JUnit, TestNG, BackstopJS, Vividus  
-**API & Integration:** REST Assured, Postman, Bruno, Charles Proxy  
-**CI/CD & Observability:** Git, GitHub Actions, Jenkins, Azure DevOps, New Relic, ELK Stack  
+**QA Strategy & Leadership:** Risk-based testing, test strategy, test planning, coverage analysis, prioritization, release risk assessment, release readiness, framework architecture, pipeline design, mentoring, code review, knowledge sharing  
+**Test Automation Architecture:** Maintainable automation for web, mobile, API, E2E, integration, and regression; Playwright, Selenium, Selenide, Cypress, Appium, Pytest, Robot Framework, Cucumber, JUnit, TestNG, BackstopJS, Vividus  
+**API & Integration Quality:** REST API validation, integration flows, microservices, test data management; REST Assured, Postman, Bruno, Charles Proxy  
+**Continuous Testing, CI/CD & Observability:** Automated quality gates, release workflows, pipeline optimization, feedback-cycle improvement, logs, metrics, monitoring, operational evidence; Git, GitHub Actions, Jenkins, Azure DevOps, New Relic, ELK Stack  
 **Programming Languages:** Java, Python, TypeScript, JavaScript, SQL  
 **Testing Domains:** Smoke Testing, Manual Testing, Functional Testing, Web Testing, Mobile Testing, Cross-browser Testing, API Testing, E2E Testing, Integration Testing, Regression Testing, Exploratory Testing, Acceptance Testing (UAT), Accessibility Testing (WCAG), Visual Regression Testing, Performance Testing  
-**Test Management & Execution:** Jira, Zephyr Scale, Xray, test case design, test execution, defect management  
-**Mobile & Product Diagnostics:** Xcode, Android Studio, Firebase Remote Config, Segment, Optimizely  
-**Accessibility & Visual Testing:** NVDA, JAWS, VoiceOver, TalkBack, WCAG, Applitools, Sauce Labs, LambdaTest  
+**Test Management & Incident Analysis:** Jira, Zephyr Scale, Xray, test case design, test execution, defect management, defect triage, root-cause analysis  
+**Mobile & Product Diagnostics:** Cross-platform validation, iOS, Android, Xcode, Android Studio, Firebase Remote Config, Segment, Optimizely  
+**Accessibility & Visual Testing:** WCAG compliance, assistive technologies, NVDA, JAWS, VoiceOver, TalkBack, Applitools, Sauce Labs, LambdaTest  
 **Performance Testing:** JMeter, k6  
 **AI-Assisted Engineering:** GitHub Copilot, Claude Code, Cursor, MCP workflows
