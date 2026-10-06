@@ -5,7 +5,7 @@ LinkedIn: [linkedin.com/in/Samska](https://linkedin.com/in/Samska) | GitHub: [gi
 
 ## Resumo Profissional
 
-Senior QA Engineer com mais de 7 anos de experiência em automação de testes e engenharia de qualidade para produtos web e mobile, APIs, acessibilidade, regressão visual e sistemas distribuídos.
+Senior QA Engineer com mais de 7 anos de experiência em desenvolvimento de software e engenharia de qualidade, sendo mais de 5 anos em QA e automação de testes para produtos web e mobile, APIs e sistemas distribuídos.
 
 Especializado em estratégia de testes baseada em risco, arquitetura de automação, testes de API e integração, CI/CD e observabilidade. Combino Java, Python e TypeScript para evoluir frameworks e pipelines, mentorar QAs e aumentar a confiança nas entregas ao longo do SDLC.
 
@@ -15,7 +15,7 @@ Especializado em estratégia de testes baseada em risco, arquitetura de automaç
 Jan 2026 - Set 2026 | São Paulo, São Paulo, Brasil | Remoto
 
 - No time Consumer Experience, atuei nas jornadas de frontend do Trustly Pay (Pay by Bank): seleção do banco e autorização da conta para pagamentos, com captura posterior dos fundos e reutilização da autorização em novas transações.
-- Conduzi a estratégia de testes baseada em risco para jornadas críticas de pagamentos em um squad com 14 desenvolvedores e 4 QAs, planejando ciclos no Zephyr Scale para releases semanais.
+- Conduzi a estratégia de testes baseada em risco para jornadas críticas de pagamentos em um squad com 14 desenvolvedores e 4 QAs, planejando ciclos no Zephyr Scale e avaliando riscos para releases semanais.
 - Criei e mantive mais de 20 cenários E2E automatizados com Java, Selenide e Cucumber para ciclos semanais de sanity e regressão, reduzindo as verificações manuais recorrentes antes das releases.
 - Evoluí uma suíte de 12 cenários de sanity para regressão visual em TypeScript, Playwright, BackstopJS e Cucumber; contribuí para a arquitetura do framework, pipelines CI/CD, parâmetros customizáveis e migrações.
 - Avaliei a acessibilidade desktop e mobile com NVDA, JAWS, VoiceOver e TalkBack, seguindo diretrizes WCAG.
@@ -26,10 +26,10 @@ Set 2024 - Jan 2026 | Campinas, São Paulo, Brasil | Híbrido
 
 - No time de Purchase Management do BEES Customer, contribuí para a qualidade da experiência mobile que centraliza histórico de pedidos e faturas, status das compras e acompanhamento de entregas para varejistas, junto às soluções de pagamentos e logística do ecossistema BEES.
 - Planejei testes baseados em risco para histórico de compras e acompanhamento de entregas em um time mobile com 4 desenvolvedores (2 iOS e 2 Android) e 1 QA; validei as duas plataformas com Xcode, Android Studio e LambdaTest para releases quinzenais.
-- Estruturei abordagens de testes locais e integrados usando mocks, ambientes INT e UAT, Firebase Remote Config, feature flags e testes A/B no Optimizely.
+- Estruturei abordagens de testes locais e integrados usando mocks, ambientes INT e UAT, Firebase Remote Config, feature flags e testes A/B no Optimizely para validar diferentes configurações e comportamentos das jornadas mobile.
 - Criei automações E2E com Python, Pytest, Selenium e Appium para jornadas do aplicativo mobile BEES Customer.
-- Investiguei a causa raiz de defeitos complexos com Charles Proxy e New Relic como referência técnica do time; verifiquei APIs e integrações com Postman.
-- Verifiquei a instrumentação de analytics e os dados de eventos no Segment para jornadas mobile do BEES Customer.
+- Investiguei a causa raiz de defeitos complexos correlacionando tráfego de rede no Charles Proxy e evidências no New Relic, como referência técnica do time; validei APIs e integrações com Postman.
+- Validei a instrumentação de analytics e os dados de eventos no Segment, verificando se as jornadas mobile do BEES Customer geravam a telemetria esperada.
 - Incorporei Cursor e ferramentas integradas via MCP à análise, automação de testes e investigação de defeitos.
 
 ### Senior QA Engineer | CI&T
@@ -48,17 +48,17 @@ Dez 2022 - Ago 2024 | São Paulo, São Paulo, Brasil | Remoto
 Jan 2022 - Dez 2022 | São Paulo, São Paulo, Brasil | Remoto
 
 - Testei fluxos de EDI (Electronic Data Interchange) que trocam pedidos de compra entre sistemas de varejistas e uma plataforma de comércio B2B, com foco na consistência dos dados no recebimento e processamento dos pedidos.
-- Priorizei testes funcionais e não funcionais para um time backend de 8 desenvolvedores e 2 QAs, com foco na mitigação de riscos.
-- Criei cenários E2E com Pytest e Selenium.
-- Testei APIs e microsserviços com Postman e REST Assured.
-- Adicionei a execução de testes do backend de EDI aos pipelines Azure DevOps e monitorei o comportamento das aplicações com New Relic.
+- Priorizei testes funcionais e não funcionais para um time backend de 8 desenvolvedores e 2 QAs, concentrando a cobertura nos riscos de integração e de inconsistência dos dados dos pedidos.
+- Criei cenários E2E com Python, Pytest e Selenium para validar jornadas integradas de recebimento e processamento de pedidos.
+- Validei APIs REST e microsserviços com Postman e REST Assured, cobrindo contratos, respostas de erro e condições de integração dos fluxos de pedidos.
+- Integrei testes automatizados do backend de EDI aos pipelines Azure DevOps para fornecer feedback contínuo sobre os fluxos de integração; monitorei o comportamento das aplicações com New Relic.
 - Conquistei o reconhecimento "Client Satisfaction" da CI&T pela rápida adaptação, comunicação profissional, resolução de problemas e conquista da confiança do cliente.
 
 ### Software QA Engineer | e.Mix
 Jul 2021 - Jan 2022 | São Paulo, São Paulo, Brasil | Remoto
 
 - Cobri fluxos web e APIs REST do FollowNet, plataforma de comércio exterior que centraliza eventos, documentos e alertas de importação e exportação para agentes de carga e despachantes aduaneiros, por meio de testes funcionais e não funcionais.
-- Automatizei cenários de API e E2E do FollowNet com Postman, Newman e Robot Framework.
+- Automatizei cenários de API e E2E do FollowNet com Postman, Newman e Robot Framework, estabelecendo verificações repetíveis para regressão dos fluxos web e de integração.
 - Realizei testes de performance, carga e estresse com JMeter e integrei sua execução aos pipelines Azure DevOps.
 
 ### Software Engineer | DNGX
@@ -66,7 +66,7 @@ Mar 2019 - Jul 2021 | Santo André, São Paulo, Brasil | Híbrido
 
 - Criei aplicações web e mobile com GeneXus e customizei suas interfaces com WorkWithPlus e Smart Devices Plus.
 - Modelei e implementei soluções com SQL Server, PostgreSQL e MySQL.
-- Mantive pipelines de entrega Jenkins e adicionei automações de testes funcionais com GXTest.
+- Mantive pipelines de entrega Jenkins e integrei testes funcionais com GXTest, incorporando verificações automatizadas ao fluxo de entrega das aplicações.
 
 ## Formação
 
