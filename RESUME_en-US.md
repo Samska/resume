@@ -42,6 +42,7 @@ Dec 2022 - Aug 2024 | São Paulo, São Paulo, Brazil | Remote
 - Aligned test strategies and plans with biweekly releases in a full-stack team of 8 developers and 2 QAs, coordinating coverage across functions.
 - Investigated incidents using New Relic and ELK Stack logs, metrics, and operational evidence.
 - Used CI&T FLOW, CI&T's generative AI platform, during QA analysis and test work.
+- Used Linux environments to run automated tests from the command line, inspect logs, and access remote environments via SSH for test execution and troubleshooting.
 - Earned CI&T's "Mission Accomplished" recognition for consistent delivery, proactive knowledge sharing, framework improvements, and support for other QAs.
 
 ### Mid-Level QA Engineer | CI&T
@@ -52,6 +53,7 @@ Jan 2022 - Dec 2022 | São Paulo, São Paulo, Brazil | Remote
 - Created E2E scenarios with Pytest and Selenium.
 - Tested APIs and microservices with Postman and REST Assured.
 - Added EDI backend test execution to Azure DevOps pipelines and monitored application behavior with New Relic.
+- Used Linux command-line tools to execute API test automation, review logs, and access remote environments via SSH for backend test execution and troubleshooting.
 - Earned CI&T's "Client Satisfaction" recognition for rapid adaptation, professional communication, problem solving, and becoming a trusted member of the client team.
 
 ### Software QA Engineer | e.Mix
@@ -87,6 +89,7 @@ Feb 2018 - Aug 2020
 **Test Automation Architecture:** Maintainable automation for web, mobile, API, E2E, integration, and regression; Playwright, Selenium, Selenide, Cypress, Appium, Pytest, Robot Framework, Cucumber, JUnit, TestNG, BackstopJS, Vividus  
 **API & Integration Quality:** REST API validation, integration flows, microservices, test data management; REST Assured, Postman, Bruno, Charles Proxy  
 **Continuous Testing, CI/CD & Observability:** Automated quality gates, release workflows, pipeline optimization, feedback-cycle improvement, logs, metrics, monitoring, operational evidence; Git, GitHub Actions, Jenkins, Azure DevOps, New Relic, ELK Stack  
+**Linux:** Command-line usage, automated test execution, log inspection, SSH  
 **Programming Languages:** Java, Python, TypeScript, JavaScript, SQL  
 **Testing Domains:** Smoke Testing, Manual Testing, Functional Testing, Web Testing, Mobile Testing, Cross-browser Testing, API Testing, E2E Testing, Integration Testing, Regression Testing, Exploratory Testing, Acceptance Testing (UAT), Accessibility Testing (WCAG), Visual Regression Testing, Performance Testing  
 **Test Management & Incident Analysis:** Jira, Zephyr Scale, Xray, test case design, test execution, defect management, defect triage, root-cause analysis  
