@@ -17,7 +17,7 @@ Jan 2026 - Sep 2026 | São Paulo, São Paulo, Brazil | Remote
 - Focused on Trustly Pay's Pay by Bank frontend journeys within the Consumer Experience team: bank selection and account authorization for payments, with later fund capture and authorization reuse in subsequent transactions.
 - Led risk-based test strategy for critical payment journeys in a squad of 14 developers and 4 QAs, planning test cycles in Zephyr Scale and assessing risks for weekly releases.
 - Built and maintained 20+ automated E2E scenarios with Java, Selenide, and Cucumber for weekly sanity and regression cycles, reducing recurring manual checks before releases.
-- Evolved a 12-scenario visual regression sanity suite with TypeScript, Playwright, BackstopJS, and Cucumber; contributed to framework architecture, CI/CD pipelines, configurable parameters, and migration work.
+- Evolved a 12-scenario visual regression sanity suite with TypeScript, Playwright, BackstopJS, and Cucumber; contributed to framework architecture and migration, and to CI/CD execution with configurable parameters.
 - Assessed desktop and mobile accessibility with NVDA, JAWS, VoiceOver, and TalkBack against WCAG guidance.
 - Used GitHub Copilot, Claude Code, and MCP-based workflows in test analysis, automation work, and recurring engineering tasks.
 
@@ -27,7 +27,7 @@ Sep 2024 - Jan 2026 | Campinas, São Paulo, Brazil | Hybrid
 - Supported quality for BEES Customer's Purchase Management mobile experience, bringing together order and invoice history, purchase status, and delivery tracking for retailers alongside BEES payment and logistics solutions.
 - Planned risk-based tests for purchase history and delivery tracking in a mobile team of 4 developers (2 iOS and 2 Android) and 1 QA; checked both platforms with Xcode, Android Studio, and LambdaTest for biweekly releases.
 - Established local and integrated testing approaches using mocks, INT and UAT environments, Firebase Remote Config, feature flags, and Optimizely A/B tests to validate different configurations and behaviors across mobile journeys.
-- Created E2E automation with Python, Pytest, Selenium, and Appium for BEES Customer mobile app journeys.
+- Developed E2E automation with Python, Pytest, Selenium, and Appium to include BEES Customer mobile app journeys in automated regression testing.
 - Investigated root causes of complex defects by correlating network traffic in Charles Proxy with evidence in New Relic as the team's technical reference; validated APIs and integrations with Postman.
 - Validated analytics instrumentation and event data in Segment, checking that BEES Customer mobile journeys generated the expected telemetry.
 - Incorporated Cursor and MCP-integrated tools into test analysis, automation, and defect investigation.
@@ -36,11 +36,12 @@ Sep 2024 - Jan 2026 | Campinas, São Paulo, Brazil | Hybrid
 Dec 2022 - Aug 2024 | São Paulo, São Paulo, Brazil | Remote
 
 - Tested functional and visual consistency across sites on a medical device web platform providing product information and clinical resources to healthcare professionals in multiple markets.
-- Partnered with the QA Lead to define Robot Framework architecture during the Vividus migration; mentored junior and mid-level QAs and reviewed framework code.
-- Integrated Robot Framework with Applitools Eyes, Sauce Labs, and Jenkins to enable parallel execution of 100+ visual tests across three viewports.
+- Partnered with the QA Lead to define automation architecture with Robot Framework during the Vividus migration.
+- Mentored junior and mid-level QAs and reviewed framework code contributions, supporting the team's technical development and automation maintenance.
+- Integrated Robot Framework with Applitools Eyes, Sauce Labs, and Jenkins to enable parallel execution of 100+ visual tests across three viewports, validating interface consistency across screen sizes.
 - Streamlined Robot Framework regression execution by parallelizing suites, removing unnecessary waits, and improving Jenkins pipelines with configurable parameters and better artifacts; expanded coverage of critical user journeys.
 - Aligned test strategies and plans with biweekly releases in a full-stack team of 8 developers and 2 QAs, coordinating coverage across functions.
-- Investigated incidents using New Relic and ELK Stack logs, metrics, and operational evidence.
+- Investigated incidents by correlating logs, metrics, and operational evidence in New Relic and ELK Stack to support developer diagnosis and resolution.
 - Used CI&T FLOW, CI&T's generative AI platform, during QA analysis and test work.
 - Earned CI&T's "Mission Accomplished" recognition for consistent delivery, proactive knowledge sharing, framework improvements, and support for other QAs.
 
@@ -58,15 +59,18 @@ Jan 2022 - Dec 2022 | São Paulo, São Paulo, Brazil | Remote
 Jul 2021 - Jan 2022 | São Paulo, São Paulo, Brazil | Remote
 
 - Covered the web and REST API workflows of FollowNet, a foreign trade platform centralizing import and export events, documents, and alerts for freight forwarders and customs brokers, through functional and non-functional testing.
-- Automated FollowNet API and E2E scenarios with Postman, Newman, and Robot Framework, establishing repeatable regression checks for web and integration flows.
+- Developed automated API tests with Postman and Newman to establish repeatable checks for FollowNet integration flows.
+- Automated E2E scenarios with Robot Framework to validate FollowNet web workflows during regression cycles.
 - Ran performance, load, and stress tests with JMeter through Azure DevOps pipelines.
 
 ### Software Engineer | DNGX
 Mar 2019 - Jul 2021 | Santo André, São Paulo, Brazil | Hybrid
 
-- Developed web and mobile applications with GeneXus and customized their interfaces with WorkWithPlus and Smart Devices Plus.
-- Designed and implemented solutions with SQL Server, PostgreSQL, and MySQL.
-- Maintained Jenkins delivery pipelines and integrated functional tests with GXTest, incorporating automated checks into application delivery workflows.
+- Developed web and mobile business applications with GeneXus, implementing functionality to meet project requirements.
+- Customized web and mobile interfaces with WorkWithPlus and Smart Devices Plus to align the user experience with application functionality.
+- Designed and implemented database solutions with SQL Server, PostgreSQL, and MySQL to support application data storage and organization.
+- Maintained Jenkins pipelines to automate application delivery workflows.
+- Developed and integrated functional tests with GXTest into Jenkins pipelines, incorporating automated checks into the delivery process.
 
 ## Education
 
