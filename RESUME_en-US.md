@@ -11,6 +11,15 @@ Specialized in risk-based test strategy, automation architecture, API and integr
 
 ## Professional Experience
 
+### Senior QA Engineer | CI&T
+Nov 2026 - Present | São Paulo, São Paulo, Brazil | Remote
+
+- Work as a Senior QA Engineer on digital solutions for automotive retail, within an ecosystem of SaaS platforms and artificial intelligence serving dealerships and vehicle manufacturers.
+- Contribute to risk-based test strategy, prioritizing critical journeys and defining functional, integration, and regression coverage according to business impact.
+- Help structure and evolve test automation, focusing on reusable components, maintainability, and regression detection throughout development.
+- Collaborate with engineering and product on requirements refinement and acceptance criteria, identifying risks, dependencies, and failure scenarios before implementation.
+- Perform exploratory testing and investigate defects, gathering evidence to support technical diagnosis, fix prioritization, and release quality assessment.
+
 ### Senior QA Engineer | Trustly
 Jan 2026 - Sep 2026 | São Paulo, São Paulo, Brazil | Remote
 
