@@ -12,7 +12,7 @@ Especializado em estratégia de testes baseada em risco, arquitetura de automaç
 ## Experiência Profissional
 
 ### Senior QA Engineer | CI&T
-Nov 2026 - Atual | São Paulo, São Paulo, Brasil | Remoto
+Nov 2026 - Atual | Jundiaí, São Paulo, Brasil | Remoto
 
 - Atuo como Senior QA Engineer em soluções digitais para o varejo automotivo, em um ecossistema de plataformas SaaS e inteligência artificial voltado a concessionárias e fabricantes de veículos.
 - Contribuo para a estratégia de testes baseada em risco, priorizando jornadas críticas e definindo a cobertura funcional, de integração e de regressão conforme o impacto para o negócio.
@@ -21,7 +21,7 @@ Nov 2026 - Atual | São Paulo, São Paulo, Brasil | Remoto
 - Realizo testes exploratórios e investigo defeitos, reunindo evidências para apoiar o diagnóstico técnico, a priorização das correções e a avaliação da qualidade das entregas.
 
 ### Senior QA Engineer | Trustly
-Jan 2026 - Set 2026 | São Paulo, São Paulo, Brasil | Remoto
+Jan 2026 - Set 2026 | Jundiaí, São Paulo, Brasil | Remoto
 
 - No time Consumer Experience, atuei nas jornadas de frontend do Trustly Pay (Pay by Bank): seleção do banco e autorização da conta para pagamentos, com captura posterior dos fundos e reutilização da autorização em novas transações.
 - Conduzi a estratégia de testes e o planejamento da validação de jornadas críticas de Pay by Bank em um squad de 14 desenvolvedores e 4 QAs, organizando ciclos no Zephyr Scale e avaliando riscos para releases semanais.

@@ -12,7 +12,7 @@ Specialized in risk-based test strategy, automation architecture, API and integr
 ## Professional Experience
 
 ### Senior QA Engineer | CI&T
-Nov 2026 - Present | São Paulo, São Paulo, Brazil | Remote
+Nov 2026 - Present | Jundiaí, São Paulo, Brazil | Remote
 
 - Work as a Senior QA Engineer on digital solutions for automotive retail, within an ecosystem of SaaS platforms and artificial intelligence serving dealerships and vehicle manufacturers.
 - Contribute to risk-based test strategy, prioritizing critical journeys and defining functional, integration, and regression coverage according to business impact.
@@ -21,7 +21,7 @@ Nov 2026 - Present | São Paulo, São Paulo, Brazil | Remote
 - Perform exploratory testing and investigate defects, gathering evidence to support technical diagnosis, fix prioritization, and release quality assessment.
 
 ### Senior QA Engineer | Trustly
-Jan 2026 - Sep 2026 | São Paulo, São Paulo, Brazil | Remote
+Jan 2026 - Sep 2026 | Jundiaí, São Paulo, Brazil | Remote
 
 - Focused on Trustly Pay's Pay by Bank frontend journeys within the Consumer Experience team: bank selection and account authorization for payments, with later fund capture and authorization reuse in subsequent transactions.
 - Led test strategy and validation planning for critical Pay by Bank journeys in a squad of 14 developers and 4 QAs, organizing cycles in Zephyr Scale and assessing risks for weekly releases.
