@@ -14,11 +14,11 @@ Specialized in risk-based test strategy, automation architecture, API and integr
 ### Senior QA Engineer | CI&T
 Nov 2026 - Present | Jundiaí, São Paulo, Brazil | Remote
 
-- Work as a Senior QA Engineer on digital solutions for automotive retail, within an ecosystem of SaaS platforms and artificial intelligence serving dealerships and vehicle manufacturers.
-- Contribute to risk-based test strategy, prioritizing critical journeys and defining functional, integration, and regression coverage according to business impact.
-- Help structure and evolve test automation, focusing on reusable components, maintainability, and regression detection throughout development.
-- Collaborate with engineering and product on requirements refinement and acceptance criteria, identifying risks, dependencies, and failure scenarios before implementation.
-- Perform exploratory testing and investigate defects, gathering evidence to support technical diagnosis, fix prioritization, and release quality assessment.
+- Validate the new modular web frontend that replaces the legacy interface of a Dealer Management System (DMS) and uses its existing REST APIs.
+- Prioritize functional, exploratory, and regression testing based on the risks of changes to business rules and workflows across modules. Document defect evidence to support diagnosis.
+- Refine requirements and acceptance criteria with product and engineering to clarify business rules and anticipate failure scenarios. The team's BDD workflow links those criteria to Gherkin scenarios, Azure DevOps test cases, and automated tests.
+- Contribute to improving E2E UI automation with Playwright and TypeScript. The test suites are organized by module and reuse test components to simplify maintenance.
+- Use Claude Code to analyze the structure of modules and test suites. The QA plugin also helps the team turn specifications into validation guides, generate tests with Playwright MCP, and review automation code.
 
 ### Senior QA Engineer | Trustly
 Jan 2026 - Sep 2026 | Jundiaí, São Paulo, Brazil | Remote
