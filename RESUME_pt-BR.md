@@ -14,11 +14,11 @@ Especializado em estratégia de testes baseada em risco, arquitetura de automaç
 ### Senior QA Engineer | CI&T
 Nov 2026 - Atual | Jundiaí, São Paulo, Brasil | Remoto
 
-- Atuo na qualidade da modernização de um sistema de gestão de concessionárias (Dealer Management System, DMS), com a migração da interface web legada para um frontend modular integrado às APIs REST existentes.
-- Priorizo testes funcionais, exploratórios e de regressão pelo impacto das mudanças nas regras de negócio e nos fluxos entre módulos, reunindo evidências para investigar defeitos.
-- Colaboro com produto e engenharia no refinamento de requisitos e critérios de aceite. O fluxo de BDD do time conecta esses critérios a cenários Gherkin, casos de teste no Azure DevOps e testes automatizados.
-- Integro a frente de automação E2E de interface em Playwright e TypeScript, com suítes organizadas por módulo e componentes compartilhados para facilitar a manutenção dos testes.
-- Participo de um fluxo de QA que usa Claude Code para preparar guias de validação a partir das especificações, gerar testes com Playwright MCP e revisar o código de automação conforme as convenções do projeto.
+- Atuo na validação da nova interface web de um sistema de gestão de concessionárias (Dealer Management System, DMS), um frontend modular que substitui a interface legada e consome as APIs REST existentes.
+- Priorizo testes funcionais, exploratórios e de regressão conforme o risco das mudanças nas regras de negócio e nos fluxos entre módulos. Registro evidências dos defeitos para apoiar o diagnóstico.
+- Refino requisitos e critérios de aceite com produto e engenharia para esclarecer regras de negócio e antecipar cenários de falha. O fluxo de BDD do time vincula esses critérios a cenários Gherkin, casos no Azure DevOps e testes automatizados.
+- Contribuo para a evolução da automação E2E da interface com Playwright e TypeScript, em suítes organizadas por módulo que reutilizam componentes de teste para facilitar a manutenção.
+- Uso Claude Code para analisar a estrutura dos módulos e das suítes de teste. O plugin de QA também apoia o time na elaboração de guias de validação a partir das especificações, na geração de testes com Playwright MCP e na revisão do código de automação.
 
 ### Senior QA Engineer | Trustly
 Jan 2026 - Set 2026 | Jundiaí, São Paulo, Brasil | Remoto

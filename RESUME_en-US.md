@@ -14,11 +14,11 @@ Specialized in risk-based test strategy, automation architecture, API and integr
 ### Senior QA Engineer | CI&T
 Nov 2026 - Present | Jundiaí, São Paulo, Brazil | Remote
 
-- Contribute to quality engineering for a Dealer Management System (DMS) modernization that replaces the legacy web interface with a modular frontend integrated with existing REST APIs.
-- Prioritize functional, exploratory, and regression testing based on how changes affect business rules and workflows across modules, gathering evidence to investigate defects.
-- Collaborate with product and engineering to refine requirements and acceptance criteria. The team's BDD workflow traces those criteria through Gherkin scenarios and Azure DevOps test cases to automated tests.
-- Work on E2E UI automation with Playwright and TypeScript, with test suites organized by module and shared components to simplify test maintenance.
-- Participate in a QA workflow that uses Claude Code to prepare validation guides from specifications, generate tests with Playwright MCP, and review automation code against project conventions.
+- Validate the new modular web frontend that replaces the legacy interface of a Dealer Management System (DMS) and uses its existing REST APIs.
+- Prioritize functional, exploratory, and regression testing based on the risks of changes to business rules and workflows across modules. Document defect evidence to support diagnosis.
+- Refine requirements and acceptance criteria with product and engineering to clarify business rules and anticipate failure scenarios. The team's BDD workflow links those criteria to Gherkin scenarios, Azure DevOps test cases, and automated tests.
+- Contribute to improving E2E UI automation with Playwright and TypeScript. The test suites are organized by module and reuse test components to simplify maintenance.
+- Use Claude Code to analyze the structure of modules and test suites. The QA plugin also helps the team turn specifications into validation guides, generate tests with Playwright MCP, and review automation code.
 
 ### Senior QA Engineer | Trustly
 Jan 2026 - Sep 2026 | Jundiaí, São Paulo, Brazil | Remote
