@@ -14,11 +14,11 @@ Especializado em estratégia de testes baseada em risco, arquitetura de automaç
 ### Senior QA Engineer | CI&T
 Nov 2026 - Atual | Jundiaí, São Paulo, Brasil | Remoto
 
-- Atuo como Senior QA Engineer em soluções digitais para o varejo automotivo, em um ecossistema de plataformas SaaS e inteligência artificial voltado a concessionárias e fabricantes de veículos.
-- Contribuo para a estratégia de testes baseada em risco, priorizando jornadas críticas e definindo a cobertura funcional, de integração e de regressão conforme o impacto para o negócio.
-- Trabalho na estruturação e evolução da automação de testes, com foco em componentes reutilizáveis, facilidade de manutenção e identificação de regressões durante o desenvolvimento.
-- Colaboro com engenharia e produto no refinamento de requisitos e critérios de aceite, antecipando riscos, dependências e cenários de falha antes da implementação.
-- Realizo testes exploratórios e investigo defeitos, reunindo evidências para apoiar o diagnóstico técnico, a priorização das correções e a avaliação da qualidade das entregas.
+- Atuo na validação da nova interface web de um sistema de gestão de concessionárias (Dealer Management System, DMS), um frontend modular que substitui a interface legada e consome as APIs REST existentes.
+- Priorizo testes funcionais, exploratórios e de regressão conforme o risco das mudanças nas regras de negócio e nos fluxos entre módulos. Registro evidências dos defeitos para apoiar o diagnóstico.
+- Refino requisitos e critérios de aceite com produto e engenharia para esclarecer regras de negócio e antecipar cenários de falha. O fluxo de BDD do time vincula esses critérios a cenários Gherkin, casos no Azure DevOps e testes automatizados.
+- Contribuo para a evolução da automação E2E da interface com Playwright e TypeScript, em suítes organizadas por módulo que reutilizam componentes de teste para facilitar a manutenção.
+- Uso Claude Code para analisar a estrutura dos módulos e das suítes de teste. O plugin de QA também apoia o time na elaboração de guias de validação a partir das especificações, na geração de testes com Playwright MCP e na revisão do código de automação.
 
 ### Senior QA Engineer | Trustly
 Jan 2026 - Set 2026 | Jundiaí, São Paulo, Brasil | Remoto
